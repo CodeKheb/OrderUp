@@ -10,14 +10,14 @@
       stylesheets="@../stylesheets/stylesheet.css"
       xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.orderup.Scenes.Controllers.OrderController">
+      fx:controller="com.orderup.Scenes.Controllers.PauseController">
 
     <VBox alignment="CENTER" spacing="20.0"
           prefWidth="1280.0" prefHeight="720.0">
 
-        <Text text="Order Scene" styleClass="subtitle" />
-        <Text text="Receipt and cooking area" styleClass="placeholder-text" />
-        <Button text="Back to Waiting Line" styleClass="btn-order" onAction="#onBack" />
+        <Text text="Game Paused" styleClass="subtitle" />
+        <Button text="Resume" styleClass="btn" onAction="#onResume" />
+        <Button text="Main Menu" styleClass="btn" onAction="#onMainMenu" />
 
     </VBox>
 </Pane>

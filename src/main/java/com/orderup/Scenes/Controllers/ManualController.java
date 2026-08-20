@@ -1,13 +1,23 @@
 package com.orderup.Scenes.Controllers;
 
-import com.orderup.Handlers.SceneManager;
-import com.orderup.Scenes.Interfaces.MenuScene;
+import com.almasb.fxgl.dsl.FXGL;
+
 import javafx.fxml.FXML;
 
+/**
+ * Controller for the manual scene.
+ * <br><br>
+ * Handles user interactions on the manual screen, including
+ * navigating back to the main menu via FXGL's game controller.
+ */
 public class ManualController {
 
+    /**
+     * Navigates back to the main menu by calling FXGL's
+     * {@code gotoMainMenu()} method through the game controller.
+     */
     @FXML
     private void onBack() {
-        SceneManager.show(new MenuScene());
+        FXGL.getGameController().gotoMainMenu();
     }
 }

@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox xmlns="http://javafx.com/javafx/21"
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefWidth="1280.0" prefHeight="720.0"
+      stylesheets="@../stylesheets/stylesheet.css"
+      xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.orderup.Scenes.Controllers.MenuController"
-      alignment="CENTER"
-      spacing="20"
-      styleClass="center-container">
+      fx:controller="com.orderup.Scenes.Controllers.MenuController">
 
-    <Text text="Order Up" styleClass="title" />
-    <Button text="Play" styleClass="btn" onAction="#onPlay" />
-    <Button text="Manual" styleClass="btn" onAction="#onManual" />
+    <VBox alignment="CENTER" spacing="20.0"
+          prefWidth="1280.0" prefHeight="720.0">
 
-</VBox>
+        <Text text="Order Up" styleClass="title" />
+        <Button text="Play" styleClass="btn" onAction="#onPlay" />
+        <Button text="Manual" styleClass="btn" onAction="#onManual" />
+        <Button text="Quit" styleClass="btn" onAction="#onQuit" />
+
+    </VBox>
+</Pane>
