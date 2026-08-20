@@ -1,4 +1,4 @@
-# First Serve
+# Order Up 
 
 A 2D scheduling algorithm restaurant game built with FXGL (JavaFX). Customers are processes with Arrival Time and Burst Time, simulating a First Come First Serve scheduling algorithm.
 

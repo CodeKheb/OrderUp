@@ -1,8 +1,12 @@
-/* Global styles for First Serve */
+/* Global Styles */
 
-.root {
+.center-container {
     -fx-alignment: CENTER;
     -fx-padding: 20;
+    -fx-max-width: Infinity;
+    -fx-max-height: Infinity;
+    -fx-pref-width: 1280;
+    -fx-pref-height: 720;
 }
 
 .title {
