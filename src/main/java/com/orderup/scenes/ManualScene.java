@@ -1,6 +1,6 @@
 package com.orderup.scenes;
 
-import com.orderup.SceneManager;
+import com.orderup.handlers.SceneManager;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
