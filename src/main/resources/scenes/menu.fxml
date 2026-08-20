@@ -8,9 +8,10 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.orderup.scenes.controllers.MenuController"
       alignment="CENTER"
-      spacing="20">
+      spacing="20"
+      styleClass="center-container">
 
-    <Text text="First Serve" styleClass="title" />
+    <Text text="Order Up" styleClass="title" />
     <Button text="Play" styleClass="btn" onAction="#onPlay" />
     <Button text="Manual" styleClass="btn" onAction="#onManual" />
 

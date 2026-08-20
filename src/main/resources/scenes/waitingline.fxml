@@ -8,7 +8,8 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.orderup.scenes.controllers.WaitingLineController"
       alignment="CENTER"
-      spacing="20">
+      spacing="20"
+      styleClass="center-container">
 
     <Text text="Waiting Line" styleClass="subtitle" />
     <Text text="Customer line goes here" styleClass="placeholder-text" />

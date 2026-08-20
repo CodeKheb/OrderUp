@@ -11,7 +11,7 @@ public class MenuScene extends VBox {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/menu.fxml"));
             VBox root = loader.load();
-            getChildren().setAll(root.getChildren());
+            getChildren().add(root);
             getStylesheets().add(getClass().getResource("/stylesheets/stylesheet.css").toExternalForm());
             setAlignment(javafx.geometry.Pos.CENTER);
             setSpacing(20);

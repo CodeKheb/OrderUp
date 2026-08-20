@@ -8,7 +8,8 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.orderup.scenes.controllers.ManualController"
       alignment="CENTER"
-      spacing="20">
+      spacing="20"
+      styleClass="center-container">
 
     <Text text="Manual Setup" styleClass="subtitle" />
     <Text text="Input Name, Arrival Time, Burst Time" styleClass="placeholder-text" />

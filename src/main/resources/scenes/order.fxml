@@ -8,7 +8,8 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.orderup.scenes.controllers.OrderController"
       alignment="CENTER"
-      spacing="20">
+      spacing="20"
+      styleClass="center-container">
 
     <Text text="Order Scene" styleClass="subtitle" />
     <Text text="Receipt and cooking area" styleClass="placeholder-text" />
