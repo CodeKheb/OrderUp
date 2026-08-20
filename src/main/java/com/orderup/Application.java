@@ -2,7 +2,7 @@ package com.orderup;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
-import com.orderup.scenes.MenuScene;
+import com.orderup.scenes.interfaces.MenuScene;
 import com.orderup.handlers.SceneManager;
 
 public class Application extends GameApplication {
