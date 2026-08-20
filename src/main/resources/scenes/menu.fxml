@@ -6,7 +6,7 @@
 
 <VBox xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.orderup.scenes.controllers.MenuController"
+      fx:controller="com.orderup.Scenes.Controllers.MenuController"
       alignment="CENTER"
       spacing="20"
       styleClass="center-container">

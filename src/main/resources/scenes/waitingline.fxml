@@ -6,7 +6,7 @@
 
 <VBox xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.orderup.scenes.controllers.WaitingLineController"
+      fx:controller="com.orderup.Scenes.Controllers.WaitingLineController"
       alignment="CENTER"
       spacing="20"
       styleClass="center-container">

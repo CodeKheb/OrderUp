@@ -1,15 +1,15 @@
-package com.orderup.scenes.interfaces;
+package com.orderup.Scenes.Interfaces;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
-public class WaitingLineScene extends VBox {
+public class ManualScene extends VBox {
 
-    public WaitingLineScene() {
+    public ManualScene() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/waitingline.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/manual.fxml"));
             VBox root = loader.load();
             getChildren().add(root);
             getStylesheets().add(getClass().getResource("/stylesheets/stylesheet.css").toExternalForm());

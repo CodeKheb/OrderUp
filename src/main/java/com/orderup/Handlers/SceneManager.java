@@ -1,4 +1,4 @@
-package com.orderup.handlers;
+package com.orderup.Handlers;
 
 import com.almasb.fxgl.dsl.FXGLForKtKt;
 import javafx.scene.Node;

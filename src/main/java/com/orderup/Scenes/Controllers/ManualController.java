@@ -1,7 +1,7 @@
-package com.orderup.scenes.controllers;
+package com.orderup.Scenes.Controllers;
 
-import com.orderup.handlers.SceneManager;
-import com.orderup.scenes.interfaces.MenuScene;
+import com.orderup.Handlers.SceneManager;
+import com.orderup.Scenes.Interfaces.MenuScene;
 import javafx.fxml.FXML;
 
 public class ManualController {

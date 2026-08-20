@@ -1,15 +1,15 @@
-package com.orderup.scenes.interfaces;
+package com.orderup.Scenes.Interfaces;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
-public class MenuScene extends VBox {
+public class OrderScene extends VBox {
 
-    public MenuScene() {
+    public OrderScene() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/menu.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/order.fxml"));
             VBox root = loader.load();
             getChildren().add(root);
             getStylesheets().add(getClass().getResource("/stylesheets/stylesheet.css").toExternalForm());

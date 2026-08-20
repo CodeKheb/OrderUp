@@ -1,8 +1,9 @@
-package com.orderup.scenes.controllers;
+package com.orderup.Scenes.Controllers;
 
-import com.orderup.handlers.SceneManager;
-import com.orderup.scenes.interfaces.WaitingLineScene;
-import com.orderup.scenes.interfaces.ManualScene;
+import com.orderup.Handlers.SceneManager;
+import com.orderup.Scenes.Interfaces.ManualScene;
+import com.orderup.Scenes.Interfaces.WaitingLineScene;
+
 import javafx.fxml.FXML;
 
 public class MenuController {
