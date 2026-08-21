@@ -14,5 +14,6 @@ public class WaitingLineScene extends Pane {
 
     public WaitingLineScene() {
         FXGL.spawn("order_button");
+        FXGL.spawn("waiting_line");
     }
 }
