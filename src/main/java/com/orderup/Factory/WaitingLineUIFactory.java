@@ -5,9 +5,7 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
-import com.almasb.fxgl.ui.UI;
-import com.orderup.Handlers.SceneManager;
-import com.orderup.Scenes.Interfaces.OrderScene;
+import com.orderup.Handlers.ClickHandler;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -33,7 +31,7 @@ public class WaitingLineUIFactory implements EntityFactory{
             .viewWithBBox(button)
             .build();
         entity.getViewComponent().addOnClickHandler(e -> {
-            SceneManager.show(new OrderScene());
+            ClickHandler.onOrder();
             entity.removeFromWorld();
         });
         return entity;
