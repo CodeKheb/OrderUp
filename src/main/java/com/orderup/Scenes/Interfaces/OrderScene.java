@@ -2,6 +2,8 @@ package com.orderup.Scenes.Interfaces;
 
 import java.io.IOException;
 
+import com.almasb.fxgl.dsl.FXGL;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
@@ -29,5 +31,6 @@ public class OrderScene extends VBox {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        FXGL.spawn("counter");
     }
 }

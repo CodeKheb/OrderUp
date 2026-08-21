@@ -3,6 +3,7 @@ package com.orderup;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
+import com.orderup.Factory.OrderSceneUI;
 import com.orderup.Factory.WaitingLineUIFactory;
 import com.orderup.Handlers.MainSceneFactory;
 import com.orderup.Handlers.SceneManager;
@@ -73,6 +74,7 @@ public class Application extends GameApplication {
 
     protected void initFactory() {
         FXGL.getGameWorld().addEntityFactory(new WaitingLineUIFactory());
+        FXGL.getGameWorld().addEntityFactory(new OrderSceneUI());
     }
 
     /**
