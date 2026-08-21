@@ -16,8 +16,8 @@ import javafx.scene.layout.VBox;
 public class ManualScene extends VBox {
 
     /**
-     * Constructs the manual scene by loading the FXML layout,
-     * applying the stylesheet, and configuring alignment and spacing.
+     * Constructs the manual scene by loading the FXML layout
+     * and configuring alignment and spacing.
      */
     public ManualScene() {
         try {

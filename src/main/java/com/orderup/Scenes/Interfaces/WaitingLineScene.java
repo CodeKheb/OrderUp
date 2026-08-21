@@ -12,6 +12,10 @@ import javafx.scene.layout.Pane;
  */
 public class WaitingLineScene extends Pane {
 
+    /**
+     * Constructs the waiting line scene by spawning FXGL entities
+     * for the order button, waiting line, and order list.
+     */
     public WaitingLineScene() {
         FXGL.spawn("order_button");
         FXGL.spawn("waiting_line");

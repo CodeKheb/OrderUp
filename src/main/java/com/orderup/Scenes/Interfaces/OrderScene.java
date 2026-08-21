@@ -19,7 +19,8 @@ public class OrderScene extends VBox {
 
     /**
      * Constructs the order scene by loading the FXML layout,
-     * applying the stylesheet, and configuring alignment and spacing.
+     * configuring alignment and spacing, and spawning counter and stove
+     * entities via FXGL.
      */
     public OrderScene() {
         try {

@@ -12,6 +12,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
+/**
+ * Entity factory for the waiting line scene.
+ * <br><br>
+ * Defines and spawns interactive entities used in the waiting line screen:
+ * an order button with a click handler, a waiting line background texture,
+ * and an order list texture. Each entity type is registered with FXGL's
+ * spawn system via {@link Spawns} annotations.
+ */
 public class WaitingLineUIFactory implements EntityFactory {
     public enum UIType {
         ORDER_BUTTON,

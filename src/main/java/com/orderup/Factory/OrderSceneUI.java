@@ -6,6 +6,13 @@ import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
 
+/**
+ * Entity factory for the order scene.
+ * <br><br>
+ * Defines and spawns entities used in the order screen:
+ * a counter texture and a stove texture. Each entity type is registered
+ * with FXGL's spawn system via {@link Spawns} annotations.
+ */
 public class OrderSceneUI implements EntityFactory {
     public enum OrderUIType {
         COUNTER,

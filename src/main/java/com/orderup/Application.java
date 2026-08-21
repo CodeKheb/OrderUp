@@ -17,7 +17,9 @@ import javafx.scene.Node;
  * <br><br>
  * Extends FXGL's {@link GameApplication} to leverage the FXGL game engine.
  * Configures game settings including window dimensions, title, and the
- * custom {@link MainSceneFactory} for menu and loading scenes.
+ * custom {@link MainSceneFactory} for menu and loading scenes. Registers
+ * entity factories via {@link #initFactory()} and selects the initial
+ * in-game scene based on the {@link SceneType} flag.
  */
 public class Application extends GameApplication {
 
@@ -72,6 +74,12 @@ public class Application extends GameApplication {
         initialScene = scene;
     }
 
+    /**
+     * Registers the entity factories for the game world.
+     * <br><br>
+     * Adds {@link WaitingLineUIFactory} and {@link OrderSceneUI} so
+     * that entities can be spawned during gameplay.
+     */
     protected void initFactory() {
         FXGL.getGameWorld().addEntityFactory(new WaitingLineUIFactory());
         FXGL.getGameWorld().addEntityFactory(new OrderSceneUI());
@@ -80,7 +88,9 @@ public class Application extends GameApplication {
     /**
      * Initializes the game world when a new game starts.
      * <br><br>
-     * Shows the scene determined by {@link #initialScene}.
+     * Clears any existing UI nodes, registers entity factories via
+     * {@link #initFactory()}, and shows the scene determined by
+     * {@link #initialScene}.
      */
     @Override
     protected void initGame() {
