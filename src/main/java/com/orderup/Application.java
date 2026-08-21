@@ -3,7 +3,7 @@ package com.orderup;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
-
+import com.orderup.Factory.WaitingLineUIFactory;
 import com.orderup.Handlers.MainSceneFactory;
 import com.orderup.Handlers.SceneManager;
 import com.orderup.Scenes.Interfaces.ManualScene;
@@ -71,6 +71,10 @@ public class Application extends GameApplication {
         initialScene = scene;
     }
 
+    protected void initFactory() {
+        FXGL.getGameWorld().addEntityFactory(new WaitingLineUIFactory());
+    }
+
     /**
      * Initializes the game world when a new game starts.
      * <br><br>
@@ -89,6 +93,8 @@ public class Application extends GameApplication {
         } catch (Exception e) {
             // Ignore if no nodes exist yet
         }
+
+        initFactory();
 
         switch (initialScene) {
             case ORDER:
