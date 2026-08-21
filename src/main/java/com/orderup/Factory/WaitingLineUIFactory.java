@@ -44,6 +44,7 @@ public class WaitingLineUIFactory implements EntityFactory{
         return FXGL.entityBuilder(data)
             .type(UIType.WAITING_LINE)
             .view(FXGL.texture("waiting_line.png", 0, 0))
+            .scale(2.0, 1.5)
             .build();
     }
 }
