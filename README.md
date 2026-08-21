@@ -15,12 +15,23 @@ src/main/java/com/orderup/
 ├── Application.java                  # Entry point. Extends GameApplication. initSettings configures
 │                                     #   window size, title, menus, and MainSceneFactory. initGame
 │                                     #   shows the initial in-game scene based on SceneType flag.
+│                                     #   initFactory() registers entity factories for the game world.
 │
 ├── Handlers/
 │   ├── MainSceneFactory.java         # Extends SceneFactory. Overrides newMainMenu(), newGameMenu(),
 │   │                                 #   and newLoadingScene() to return custom FXGLMenu/LoadingScene.
-│   └── SceneManager.java             # Utility to swap UI nodes on FXGL's GameScene. Call
-│                                     #   SceneManager.show() to switch in-game scenes.
+│   ├── SceneManager.java             # Utility to swap UI nodes on FXGL's GameScene. Call
+│   │                                 #   SceneManager.show() to switch in-game scenes.
+│   └── ClickHandler.java             # Handles click events on game entities. Routes to scene
+│                                     #   transitions (OrderScene, WaitingLineScene) and removes
+│                                     #   associated entities from the game world.
+│
+├── Factory/
+│   ├── WaitingLineUIFactory.java     # EntityFactory for the waiting line scene. Spawns interactive
+│   │                                 #   order_button, waiting_line, and order_list entities with
+│   │                                 #   click handlers and textures.
+│   └── OrderSceneUI.java             # EntityFactory for the order scene. Spawns counter and stove
+│                                     #   entities with textures and positioning.
 │
 └── Scenes/
     ├── Controllers/                  # FXML controllers handling button actions.
@@ -28,23 +39,23 @@ src/main/java/com/orderup/
     │   │                             #   (MANUAL), Quit → exit. Uses setMenu() pattern.
     │   ├── PauseController.java      # Resume → fireResume(), Main Menu → exitToMainMenu().
     │   ├── ManualController.java     # Back → gotoMainMenu().
-    │   ├── WaitingLineController.java# Take Order → OrderScene via SceneManager.
-    │   └── OrderController.java      # Back → WaitingLineScene via SceneManager.
+    │   └── OrderController.java      # Back → WaitingLineScene via ClickHandler.
     │
     └── Interfaces/                   # Scene views and FXGL menu classes.
         ├── MenuInterface.java        # Extends FXGLMenu (MAIN_MENU). Loads menu.fxml.
         ├── PauseInterface.java       # Extends FXGLMenu (GAME_MENU). Loads pause.fxml.
         │                             #   Has resume() and exitToMainMenu() with confirmation dialog.
         ├── LoadingInterface.java     # Extends LoadingScene. Shows "Loading..." text.
-        ├── WaitingLineScene.java     # In-game VBox scene. Loads waitingline.fxml.
-        ├── OrderScene.java           # In-game VBox scene. Loads order.fxml.
+        ├── WaitingLineScene.java     # In-game Pane scene. Spawns FXGL entities (order_button,
+        │                             #   waiting_line, order_list) instead of loading FXML.
+        ├── OrderScene.java           # In-game VBox scene. Loads order.fxml and spawns counter/stove
+        │                             #   entities.
         └── ManualScene.java          # In-game VBox scene. Loads manual.fxml.
 
 src/main/resources/
 ├── scenes/
 │   ├── menu.fxml                     # Main menu: Play, Manual, Quit buttons.
 │   ├── pause.fxml                    # Pause menu: Resume, Main Menu buttons.
-│   ├── waitingline.fxml              # Waiting line: Take Order button.
 │   ├── order.fxml                    # Order scene: Back to Waiting Line button.
 │   └── manual.fxml                   # Manual scene: Back to Menu button.
 ├── stylesheets/
@@ -57,9 +68,9 @@ src/main/resources/
 
 ```
 FXGL Main Menu (MenuInterface)
-  ├── Play ──────────► Game starts → WaitingLineScene ──► OrderScene
-  ├── Manual ────────► Game starts → ManualScene              │
-  └── Quit ──────────► Exit game                  (back to WaitingLine)
+  ├── Play ──────────► Game starts → WaitingLineScene (FXGL entities) ──► OrderScene (FXML + entities)
+  ├── Manual ────────► Game starts → ManualScene                         │
+  └── Quit ──────────► Exit game                   (back to WaitingLineScene)
 
 FXGL Pause Menu (PauseInterface) [press ESC during game]
   ├── Resume ────────► Return to game
@@ -71,7 +82,9 @@ FXGL Pause Menu (PauseInterface) [press ESC during game]
 - **SceneFactory**: `MainSceneFactory` overrides FXGL's default scenes to provide custom menu, pause, and loading screens.
 - **FXGLMenu**: `MenuInterface` and `PauseInterface` extend `FXGLMenu` to integrate with FXGL's built-in menu system.
 - **LoadingScene**: `LoadingInterface` extends `LoadingScene` for a custom loading screen.
-- **GameApplication**: `Application` extends `GameApplication` and uses `initGame()` to set up in-game scenes.
+- **EntityFactory**: `WaitingLineUIFactory` and `OrderSceneUI` implement `EntityFactory` to define game entities (buttons, textures, interactive objects) that are spawned into the game world.
+- **GameApplication**: `Application` extends `GameApplication` and uses `initGame()` to set up in-game scenes, and `initFactory()` to register entity factories.
+- **ClickHandler**: Static utility that handles entity click events and manages scene transitions.
 - **SceneType flag**: A static enum controls which scene `initGame()` displays, set before `startNewGame()`.
 
 ## How to Run
