@@ -8,5 +8,6 @@ public class ClickHandler {
     public static void onOrder() {
         SceneManager.show(new OrderScene());
         FXGL.getGameWorld().getSingleton(UIType.WAITING_LINE).removeFromWorld();
+        FXGL.getGameWorld().getSingleton(UIType.ORDER_LIST).removeFromWorld();
     }
 }

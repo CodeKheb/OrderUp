@@ -12,9 +12,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
-public class WaitingLineUIFactory implements EntityFactory{
+public class WaitingLineUIFactory implements EntityFactory {
     public enum UIType {
         ORDER_BUTTON,
+        ORDER_LIST,
         WAITING_LINE
     }
 
@@ -26,10 +27,10 @@ public class WaitingLineUIFactory implements EntityFactory{
         StackPane button = new StackPane(circle, text);
 
         Entity entity = FXGL.entityBuilder(data)
-            .type(UIType.ORDER_BUTTON)
-            .at(1000, 500)
-            .viewWithBBox(button)
-            .build();
+                .type(UIType.ORDER_BUTTON)
+                .at(1000, 500)
+                .viewWithBBox(button)
+                .build();
         entity.getViewComponent().addOnClickHandler(e -> {
             ClickHandler.onOrder();
             entity.removeFromWorld();
@@ -40,9 +41,19 @@ public class WaitingLineUIFactory implements EntityFactory{
     @Spawns("waiting_line")
     public Entity waitingLine(SpawnData data) {
         return FXGL.entityBuilder(data)
-            .type(UIType.WAITING_LINE)
-            .view(FXGL.texture("waiting_line.png", 0, 0))
-            .scale(2.0, 1.5)
-            .build();
+                .type(UIType.WAITING_LINE)
+                .view(FXGL.texture("waiting_line.png", 0, 0))
+                .scale(2.0, 1.5)
+                .build();
+    }
+
+    @Spawns("order_list")
+    public Entity orderList(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(UIType.ORDER_LIST)
+                .at(1100, 0)
+                .view(FXGL.texture("order_list.png", 0, 0))
+                .scale(2.2, 2.2)
+                .build();
     }
 }
