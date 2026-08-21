@@ -8,11 +8,12 @@ import com.almasb.fxgl.entity.Spawns;
 
 public class OrderSceneUI implements EntityFactory {
     public enum OrderUIType {
-        COUNTER
+        COUNTER,
+        STOVE
     }
 
     @Spawns("counter")
-    public Entity waitingLine(SpawnData data) {
+    public Entity counter(SpawnData data) {
         return FXGL.entityBuilder(data)
                 .type(OrderUIType.COUNTER)
                 .at(0, 350)
@@ -21,6 +22,13 @@ public class OrderSceneUI implements EntityFactory {
                 .build();
     }
 
-
+    @Spawns("stove")
+    public Entity stove(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(OrderUIType.STOVE)
+                .at(0, 320)
+                .view(FXGL.texture("stove.png", 0, 0))
+                .build();
+    }
 
 }

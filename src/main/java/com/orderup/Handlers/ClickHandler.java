@@ -17,5 +17,6 @@ public class ClickHandler {
     public static void onWaitingLine() {
         SceneManager.show(new WaitingLineScene());
         FXGL.getGameWorld().getSingleton(OrderUIType.COUNTER).removeFromWorld();
+        FXGL.getGameWorld().getSingleton(OrderUIType.STOVE).removeFromWorld();
     }
 }

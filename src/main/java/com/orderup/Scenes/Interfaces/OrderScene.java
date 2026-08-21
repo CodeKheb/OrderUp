@@ -32,5 +32,6 @@ public class OrderScene extends VBox {
             e.printStackTrace();
         }
         FXGL.spawn("counter");
+        FXGL.spawn("stove");
     }
 }
