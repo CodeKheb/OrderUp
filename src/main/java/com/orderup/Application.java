@@ -8,6 +8,7 @@ import com.orderup.Factory.WaitingLineUIFactory;
 import com.orderup.Handlers.MainSceneFactory;
 import com.orderup.Handlers.SceneManager;
 import com.orderup.Scenes.Interfaces.ManualScene;
+import com.orderup.Scenes.Interfaces.OrderScene;
 import com.orderup.Scenes.Interfaces.WaitingLineScene;
 
 import javafx.scene.Node;
@@ -110,7 +111,7 @@ public class Application extends GameApplication {
 
         switch (initialScene) {
             case ORDER:
-                SceneManager.show(new com.orderup.Scenes.Interfaces.OrderScene());
+                SceneManager.show(new OrderScene());
                 break;
             case MANUAL:
                 SceneManager.show(new ManualScene());
