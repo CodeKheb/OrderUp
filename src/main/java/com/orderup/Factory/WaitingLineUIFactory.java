@@ -16,7 +16,7 @@ import com.orderup.Handlers.ClickHandler;
  * spawn system via {@link Spawns} annotations.
  */
 public class WaitingLineUIFactory implements EntityFactory {
-    public enum UIType {
+    public enum WaitingUIType {
         ORDER_BUTTON,
         ORDER_LIST,
         WAITING_LINE
@@ -25,7 +25,7 @@ public class WaitingLineUIFactory implements EntityFactory {
     @Spawns("order_button")
     public Entity orderButton(SpawnData data) {
         Entity entity = FXGL.entityBuilder(data)
-                .type(UIType.ORDER_BUTTON)
+                .type(WaitingUIType.ORDER_BUTTON)
                 .at(1050, 650)
                 .view(FXGL.texture("order_button.png", 0, 0))
                 .scale(2.0, 2.0)
@@ -40,7 +40,7 @@ public class WaitingLineUIFactory implements EntityFactory {
     @Spawns("waiting_line")
     public Entity waitingLine(SpawnData data) {
         return FXGL.entityBuilder(data)
-                .type(UIType.WAITING_LINE)
+                .type(WaitingUIType.WAITING_LINE)
                 .view(FXGL.texture("waiting_line.png", 0, 0))
                 .scale(2.0, 1.5)
                 .build();
@@ -49,7 +49,7 @@ public class WaitingLineUIFactory implements EntityFactory {
     @Spawns("order_list")
     public Entity orderList(SpawnData data) {
         return FXGL.entityBuilder(data)
-                .type(UIType.ORDER_LIST)
+                .type(WaitingUIType.ORDER_LIST)
                 .at(1100, 0)
                 .view(FXGL.texture("order_list.png", 0, 0))
                 .scale(2.2, 2.2)
