@@ -8,7 +8,6 @@ import com.orderup.Factory.WaitingLineUIFactory;
 import com.orderup.Handlers.MainSceneFactory;
 import com.orderup.Handlers.SceneManager;
 import com.orderup.Scenes.Interfaces.ManualScene;
-import com.orderup.Scenes.Interfaces.OrderScene;
 import com.orderup.Scenes.Interfaces.WaitingLineScene;
 
 import javafx.scene.Node;
@@ -45,7 +44,6 @@ public class Application extends GameApplication {
      */
     public enum SceneType {
         WAITING_LINE,
-        ORDER,
         MANUAL
     }
 
@@ -110,13 +108,9 @@ public class Application extends GameApplication {
         initFactory();
 
         switch (initialScene) {
-            case ORDER:
-                SceneManager.show(new OrderScene());
-                break;
             case MANUAL:
                 SceneManager.show(new ManualScene());
                 break;
-            case WAITING_LINE:
             default:
                 SceneManager.show(new WaitingLineScene());
                 break;
