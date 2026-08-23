@@ -1,11 +1,7 @@
 package com.orderup.Scenes.Interfaces;
 
-import java.io.IOException;
-
 import com.almasb.fxgl.dsl.FXGL;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
 
 /**
@@ -23,16 +19,8 @@ public class OrderScene extends VBox {
      * entities via FXGL.
      */
     public OrderScene() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/order.fxml"));
-            Parent root = loader.load();
-            getChildren().add(root);
-            setAlignment(javafx.geometry.Pos.CENTER);
-            setSpacing(20);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         FXGL.spawn("counter");
         FXGL.spawn("stove");
+        FXGL.spawn("back_button");
     }
 }

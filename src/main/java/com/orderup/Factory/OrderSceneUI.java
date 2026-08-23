@@ -5,6 +5,13 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
+import com.orderup.Handlers.ClickHandler;
+
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 /**
  * Entity factory for the order scene.
@@ -16,7 +23,8 @@ import com.almasb.fxgl.entity.Spawns;
 public class OrderSceneUI implements EntityFactory {
     public enum OrderUIType {
         COUNTER,
-        STOVE
+        STOVE,
+        BACK_BUTTON
     }
 
     @Spawns("counter")
@@ -38,4 +46,23 @@ public class OrderSceneUI implements EntityFactory {
                 .build();
     }
 
+    @Spawns("back_button")
+    public Entity backButton(SpawnData data) {
+        Circle circle = new Circle(100, Color.WHITE);
+        Text text = new Text("Back");
+        text.setFont(Font.font(48));
+
+        StackPane button = new StackPane(circle, text);
+
+        Entity entity = FXGL.entityBuilder(data)
+                .type(OrderUIType.BACK_BUTTON)
+                .at(1000, 500)
+                .viewWithBBox(button)
+                .build();
+        entity.getViewComponent().addOnClickHandler(e -> {
+            ClickHandler.onWaitingLine();
+            entity.removeFromWorld();
+        });
+        return entity;
+    }
 }
