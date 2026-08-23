@@ -20,7 +20,7 @@ import javafx.scene.text.Text;
  * a counter texture and a stove texture. Each entity type is registered
  * with FXGL's spawn system via {@link Spawns} annotations.
  */
-public class OrderSceneUI implements EntityFactory {
+public class OrderStationUI implements EntityFactory {
     public enum OrderUIType {
         COUNTER,
         STOVE,

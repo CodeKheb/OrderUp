@@ -2,7 +2,7 @@ package com.orderup.Handlers;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.orderup.Factory.WaitingLineUIFactory.WaitingUIType;
-import com.orderup.Factory.OrderSceneUI.OrderUIType;
+import com.orderup.Factory.OrderStationUI.OrderUIType;
 import com.orderup.Scenes.Interfaces.OrderScene;
 import com.orderup.Scenes.Interfaces.WaitingLineScene;
 
