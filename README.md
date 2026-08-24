@@ -23,14 +23,14 @@ src/main/java/com/orderup/
 │   ├── SceneManager.java             # Utility to swap UI nodes on FXGL's GameScene. Call
 │   │                                 #   SceneManager.show() to switch in-game scenes.
 │   └── ClickHandler.java             # Handles click events on game entities. Routes to scene
-│                                     #   transitions (OrderScene, WaitingLineScene) and removes
+│                                     #   transitions (OrderStationScene, WaitingLineScene) and removes
 │                                     #   associated entities from the game world.
 │
 ├── Factory/
 │   ├── WaitingLineUIFactory.java     # EntityFactory for the waiting line scene. Spawns interactive
 │   │                                 #   order_button, waiting_line, and order_list entities with
 │   │                                 #   click handlers and textures.
-│   └── OrderSceneUI.java             # EntityFactory for the order scene. Spawns counter and stove
+│   └── OrderStationUI.java           # EntityFactory for the order scene. Spawns counter and stove
 │                                     #   entities with textures and positioning.
 │
 └── Scenes/
@@ -48,15 +48,13 @@ src/main/java/com/orderup/
         ├── LoadingInterface.java     # Extends LoadingScene. Shows "Loading..." text.
         ├── WaitingLineScene.java     # In-game Pane scene. Spawns FXGL entities (order_button,
         │                             #   waiting_line, order_list) instead of loading FXML.
-        ├── OrderScene.java           # In-game VBox scene. Loads order.fxml and spawns counter/stove
-        │                             #   entities.
+        ├── OrderStationScene.java    #
         └── ManualScene.java          # In-game VBox scene. Loads manual.fxml.
 
 src/main/resources/
 ├── scenes/
 │   ├── menu.fxml                     # Main menu: Play, Manual, Quit buttons.
 │   ├── pause.fxml                    # Pause menu: Resume, Main Menu buttons.
-│   ├── order.fxml                    # Order scene: Back to Waiting Line button.
 │   └── manual.fxml                   # Manual scene: Back to Menu button.
 ├── stylesheets/
 │   └── stylesheet.css                # Global styles for text, buttons, and layout.
@@ -68,7 +66,7 @@ src/main/resources/
 
 ```
 FXGL Main Menu (MenuInterface)
-  ├── Play ──────────► Game starts → WaitingLineScene (FXGL entities) ──► OrderScene (FXML + entities)
+  ├── Play ──────────► Game starts → WaitingLineScene (FXGL entities) ──► OrderStationScene (FXGL entities)
   ├── Manual ────────► Game starts → ManualScene                         │
   └── Quit ──────────► Exit game                   (back to WaitingLineScene)
 
@@ -82,7 +80,7 @@ FXGL Pause Menu (PauseInterface) [press ESC during game]
 - **SceneFactory**: `MainSceneFactory` overrides FXGL's default scenes to provide custom menu, pause, and loading screens.
 - **FXGLMenu**: `MenuInterface` and `PauseInterface` extend `FXGLMenu` to integrate with FXGL's built-in menu system.
 - **LoadingScene**: `LoadingInterface` extends `LoadingScene` for a custom loading screen.
-- **EntityFactory**: `WaitingLineUIFactory` and `OrderSceneUI` implement `EntityFactory` to define game entities (buttons, textures, interactive objects) that are spawned into the game world.
+- **EntityFactory**: `WaitingLineUIFactory` and `OrderStationUI` implement `EntityFactory` to define game entities (buttons, textures, interactive objects) that are spawned into the game world.
 - **GameApplication**: `Application` extends `GameApplication` and uses `initGame()` to set up in-game scenes, and `initFactory()` to register entity factories.
 - **ClickHandler**: Static utility that handles entity click events and manages scene transitions.
 - **SceneType flag**: A static enum controls which scene `initGame()` displays, set before `startNewGame()`.
