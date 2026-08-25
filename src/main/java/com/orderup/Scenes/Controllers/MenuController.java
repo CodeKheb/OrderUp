@@ -1,12 +1,16 @@
 package com.orderup.Scenes.Controllers;
 
+import java.util.List;
+
 import com.almasb.fxgl.dsl.FXGL;
-
-import javafx.fxml.FXML;
-
 import com.orderup.Application;
 import com.orderup.Application.SceneType;
+import com.orderup.Factory.ProcessGenerator;
+import com.orderup.Models.CustomerProcess;
+import com.orderup.Models.ProcessQueue;
 import com.orderup.Scenes.Interfaces.MenuInterface;
+
+import javafx.fxml.FXML;
 
 /**
  * Controller for the main menu scene.
@@ -37,6 +41,11 @@ public class MenuController {
      */
     @FXML
     private void onPlay() {
+        ProcessGenerator gen = new ProcessGenerator();
+        List<CustomerProcess> processes = gen.createRandom();
+
+        Application.setProcessQueue(new ProcessQueue(processes));
+
         Application.setInitialScene(SceneType.WAITING_LINE);
         FXGL.getGameController().startNewGame();
     }

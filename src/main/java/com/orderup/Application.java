@@ -7,6 +7,7 @@ import com.orderup.Factory.OrderStationUI;
 import com.orderup.Factory.WaitingLineUIFactory;
 import com.orderup.Handlers.MainSceneFactory;
 import com.orderup.Handlers.SceneManager;
+import com.orderup.Models.ProcessQueue;
 import com.orderup.Scenes.Interfaces.ManualScene;
 import com.orderup.Scenes.Interfaces.WaitingLineScene;
 
@@ -38,6 +39,9 @@ public class Application extends GameApplication {
     /** The scene to show when the game starts */
     private static SceneType initialScene = SceneType.WAITING_LINE;
 
+    /** The process queue for the current game session, set by controllers before starting. */
+    private static ProcessQueue processQueue;
+
     /**
      * Enum representing the different in-game scenes that can be
      * shown when the game starts.
@@ -64,13 +68,19 @@ public class Application extends GameApplication {
         settings.setSceneFactory(new MainSceneFactory());
     }
 
-    /**
-     * Sets the initial scene to show when the game starts.
-     *
-     * @param scene the {@link SceneType} to display
-     */
+    /** Sets the initial scene to show when the game starts. */
     public static void setInitialScene(SceneType scene) {
         initialScene = scene;
+    }
+
+    /** Sets the process queue for the current game session. */
+    public static void setProcessQueue(ProcessQueue queue) {
+        processQueue = queue;
+    }
+
+    /** Returns the process queue for the current game session. */
+    public static ProcessQueue getProcessQueue() {
+        return processQueue;
     }
 
     /**

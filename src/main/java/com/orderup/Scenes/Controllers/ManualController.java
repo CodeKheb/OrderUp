@@ -1,8 +1,14 @@
 package com.orderup.Scenes.Controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.almasb.fxgl.dsl.FXGL;
 import com.orderup.Application;
 import com.orderup.Application.SceneType;
+import com.orderup.Factory.ProcessGenerator;
+import com.orderup.Models.CustomerProcess;
+import com.orderup.Models.ProcessQueue;
 import com.orderup.Scenes.Components.CustomerCard;
 
 import javafx.fxml.FXML;
@@ -16,6 +22,7 @@ import javafx.scene.layout.VBox;
  */
 public class ManualController {
 
+    
     /**
      * The VBox in manual.fxml where the customer card gets placed.
      * <br><br>
@@ -25,6 +32,9 @@ public class ManualController {
      */
     @FXML
     private VBox cardContainer;
+
+    /** The customer card — stored so onPlay can read the entered values. */
+    private CustomerCard card;
 
     /**
      * Called automatically by JavaFX after the FXML is loaded.
@@ -36,7 +46,7 @@ public class ManualController {
     @FXML
     public void initialize() {
         // Create the card (header + stickman + inputs + navigation)
-        CustomerCard card = new CustomerCard();
+        card = new CustomerCard();
 
         // Add it to the VBox placeholder defined in manual.fxml
         cardContainer.getChildren().add(card);
@@ -56,6 +66,20 @@ public class ManualController {
      */
     @FXML
     private void onPlay() {
+        if (card.getAddedCount() == 0) {
+            return;
+        }
+ 
+        ProcessGenerator gen = new ProcessGenerator();
+        List<CustomerProcess> processes = new ArrayList<>();
+ 
+        for (int i = 0; i < card.getAddedCount(); i++) {
+            int at = Integer.parseInt(card.getArrivalTime(i));
+            int bt = Integer.parseInt(card.getPatience(i));
+            processes.add(gen.createManual(i + 1, at, bt));
+        }
+ 
+        Application.setProcessQueue(new ProcessQueue(processes));
         Application.setInitialScene(SceneType.WAITING_LINE);
         FXGL.getGameController().startNewGame();
     }

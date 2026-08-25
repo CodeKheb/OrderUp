@@ -8,17 +8,21 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 /**
- * A self-contained card that displays one customer's details, used in manual menu scene.
- * <br><br>
- * The card looks roughly like this:
+ * A card for inputting one customer's arrival and burst time (Manual mode).
+ *
+ * <p>Shows a stickman with arrow buttons on either side (for changing
+ * the character's sprite), two input fields (AT and BT), and an Add
+ * button that confirms the entry and advances to the next customer.</p>
+ *
  * <pre>
  * ┌─────────────────┐
- * │ &lt;  Customer 1  &gt; │   ← header with arrows
- * │       O          │   ← stickman figure
+ * │   Customer 1     │
+ * │ [<]  O  [>]      │   ← arrows change sprite
  * │      /|\         │
  * │     / | \        │
- * │ Arrival (AT): []  │   ← input field
- * │ Patience (BT): [] │   ← input field
+ * │ Arrival (AT): [] │
+ * │ Patience (BT):[] │
+ * │      [Add]       │   ← confirms & advances
  * └─────────────────┘
  * </pre>
  */
@@ -26,77 +30,104 @@ public class CustomerCard extends VBox {
 
     private static final int CUSTOMER_COUNT = 6;
 
+    /** Index of the customer currently being edited (0–5). */
     private int currentIndex = 0;
 
-    /** The "Customer N" text in the header — changes when you navigate */
+    /** Number of customers the user has confirmed via the Add button. */
+    private int addedCount = 0;
+
+    /** Displays "Customer N" in the header — updates as the user advances. */
     private final Text titleText = new Text();
 
-    /** One text field per customer for Arrival Time */
+    /** One text field per customer for Arrival Time. */
     private final TextField[] atFields = new TextField[CUSTOMER_COUNT];
 
-    /** One text field per customer for Patience (Burst Time) */
+    /** One text field per customer for Patience (Burst Time). */
     private final TextField[] btFields = new TextField[CUSTOMER_COUNT];
 
-    // rows that hold the input fields
+    /** Horizontal rows holding the label + text field for AT and BT. */
     private final HBox atRow;
     private final HBox btRow;
 
-    /**
-     * Builds the entire card: header, stickman, and input fields.
-     */
+    /** Button to confirm the current customer and advance to the next. */
+    private final Button addBtn;
+
     public CustomerCard() {
-        // ── 1. Build the header: < Customer N > ───────────────
-        // The header is a horizontal row with three items:
-        //   [<]   [Customer 1]   [>]
-        // Clicking < or > navigates to the previous/next customer.
-
-        Button prevBtn = createArrowButton("\u276E");  // ❮  left arrow
-        prevBtn.setOnAction(e -> navigateCustomer(-1));
-
+        // ── 1. Header: just the title ────────────────────────
         titleText.getStyleClass().add("customer-header-text");
 
-        Button nextBtn = createArrowButton("\u276F");  // ❯  right arrow
-        nextBtn.setOnAction(e -> navigateCustomer(1));
-
-        HBox header = new HBox(10, prevBtn, titleText, nextBtn);
+        HBox header = new HBox(titleText);
         header.setAlignment(Pos.CENTER);
         header.getStyleClass().add("customer-header");
 
-        // ── 2. Build the stickman figure ──────────────────────
+        // ── 2. Stickman with arrows on either side ───────────
+        // Arrows change the character's sprite, not the customer index.
+        Button prevSpriteBtn = createArrowButton("\u276E");
+        prevSpriteBtn.setOnAction(e -> changeSprite(-1));
+
         VBox stickmanBox = new VBox(StickmanFigure.create());
         stickmanBox.setAlignment(Pos.CENTER);
 
-        // ── 3. Build the input fields ─────────────────────────
+        Button nextSpriteBtn = createArrowButton("\u276F");
+        nextSpriteBtn.setOnAction(e -> changeSprite(1));
+
+        HBox characterRow = new HBox(10, prevSpriteBtn, stickmanBox, nextSpriteBtn);
+        characterRow.setAlignment(Pos.CENTER);
+
+        // ── 3. Input fields ──────────────────────────────────
         for (int i = 0; i < CUSTOMER_COUNT; i++) {
             atFields[i] = createInputField();
             btFields[i] = createInputField();
         }
 
-        // Build the two visible rows with the first customer's fields
         atRow = buildInputRow("Arrival (AT):", atFields[0]);
         btRow = buildInputRow("Patience (BT):", btFields[0]);
 
-        // ── 4. Put it all together ────────────────────────────
-        this.getChildren().addAll(header, stickmanBox, atRow, btRow);
+        // ── 4. Add button ────────────────────────────────────
+        addBtn = new Button("Add");
+        addBtn.getStyleClass().add("add-btn");
+        addBtn.setOnAction(e -> addCustomer());
+
+        // ── 5. Assemble ──────────────────────────────────────
+        this.getChildren().addAll(header, characterRow, atRow, btRow, addBtn);
         this.setAlignment(Pos.CENTER);
         this.getStyleClass().add("customer-card");
 
-        // Show the first customer's name
         updateTitle();
     }
 
     // ── Navigation ────────────────────────────────────────────
 
     /**
-     * Moves to the next or previous customer and updates the display.
+     * Advances to the next customer after the user clicks Add.
+     * If all 6 customers have been added, the button is disabled.
      */
-    public void navigateCustomer(int direction) {
-        // The modulo arithmetic here handles the wrap-around:
-        //   (0 - 1 + 6) % 6 = 5  (wraps to last customer)
-        //   (5 + 1 + 6) % 6 = 0  (wraps to first customer)
-        currentIndex = (currentIndex + direction + CUSTOMER_COUNT) % CUSTOMER_COUNT;
-        swapInputFields();
-        updateTitle();
+    private void addCustomer() {
+        addedCount++;
+
+        if (currentIndex < CUSTOMER_COUNT - 1) {
+            currentIndex++;
+            swapInputFields();
+            updateTitle();
+        } else {
+            addBtn.setDisable(true);
+            addBtn.setText("Done");
+        }
+    }
+
+    /** Returns how many customers have been confirmed via the Add button. */
+    public int getAddedCount() {
+        return addedCount;
+    }
+
+    /**
+     * Changes the character's sprite aesthetic (placeholder for future sprites).
+     * Called by the left/right arrows flanking the stickman.
+     *
+     * @param direction -1 for previous sprite, +1 for next sprite
+     */
+    private void changeSprite(int direction) {
+        // TODO: implement sprite cycling when sprites are added
     }
 
     // ── Reading values ────────────────────────────────────────
@@ -124,46 +155,27 @@ public class CustomerCard extends VBox {
     // ── Internal helpers ──────────────────────────────────────
 
     /**
-     * Swaps the TextFields inside the visible rows to show the
-     * current customer's fields.
-     * <br><br>
-     * JavaFX lets you replace a child in a layout by setting the
-     * list index directly. The old field stays alive (holding its
-     * typed value) but is no longer displayed.
-     *
-     * <p>Children layout: 0=header, 1=stickmanBox, 2=atRow, 3=btRow</p>
+     * Swaps the TextFields in each row to show the current customer's fields.
+     * Previous fields keep their values but are no longer displayed.
      */
     private void swapInputFields() {
-        // Replace index 1 (the TextField) in each row
         atRow.getChildren().set(1, atFields[currentIndex]);
         btRow.getChildren().set(1, btFields[currentIndex]);
     }
 
-    /** Updates the "Customer N" header text to match the current index. */
+    /** Updates the header to show "Customer N". */
     private void updateTitle() {
         titleText.setText("Customer " + (currentIndex + 1));
     }
 
-    /**
-     * Creates a styled navigation arrow button.
-     *
-     * @param symbol the arrow character (e.g. "❮" or "❯")
-     * @return a ready-to-use Button
-     */
+    /** Creates a styled arrow button for sprite navigation. */
     private Button createArrowButton(String symbol) {
         Button btn = new Button(symbol);
         btn.getStyleClass().add("arrow-btn");
         return btn;
     }
 
-    /**
-     * Creates a styled, empty text input field.
-     * <br><br>
-     * The prompt text ("0") shows as grey placeholder text when
-     * the field is empty, hinting at what the user should type.
-     *
-     * @return a new TextField with the "input-field" CSS style
-     */
+    /** Creates an empty text input field with a placeholder. */
     private TextField createInputField() {
         TextField field = new TextField();
         field.getStyleClass().add("input-field");
@@ -171,37 +183,18 @@ public class CustomerCard extends VBox {
         return field;
     }
 
-    /**
-     * Builds a horizontal row with a label and a text field.
-     * <br><br>
-     * Example output:
-     * <pre>
-     * [Arrival (AT):] [_____]
-     * </pre>
-     *
-     * @param label the label text (e.g. "Arrival (AT):")
-     * @param field the TextField to display next to it
-     * @return an HBox (horizontal layout) containing both
-     */
+    /** Builds a horizontal row with a label and a text field. */
     private HBox buildInputRow(String label, TextField field) {
         Text labelText = new Text(label);
         labelText.getStyleClass().add("input-label");
 
-        HBox row = new HBox(8, labelText, field);  // 8px gap between them
+        HBox row = new HBox(8, labelText, field);
         row.setAlignment(Pos.CENTER_LEFT);
         row.getStyleClass().add("input-row");
         return row;
     }
 
-    /**
-     * Safely reads the text from a field, returning "0" if empty.
-     * <br><br>
-     * We default to "0" because the scheduling algorithm needs a
-     * number even if the user didn't type anything.
-     *
-     * @param field the TextField to read
-     * @return trimmed text, or "0" if blank/null
-     */
+    /** Reads text from a field, returning "0" if empty. */
     private String readField(TextField field) {
         String value = field.getText();
         return (value == null || value.isBlank()) ? "0" : value.trim();
