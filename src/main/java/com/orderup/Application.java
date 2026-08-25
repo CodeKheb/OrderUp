@@ -5,7 +5,7 @@ import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.orderup.Factory.OrderStationUI;
 import com.orderup.Factory.WaitingLineUIFactory;
-import com.orderup.Handlers.MainSceneFactory;
+import com.orderup.Factory.MainSceneFactory;
 import com.orderup.Handlers.SceneManager;
 import com.orderup.Models.ProcessQueue;
 import com.orderup.Scenes.Interfaces.ManualScene;

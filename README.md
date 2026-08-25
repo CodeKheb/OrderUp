@@ -18,8 +18,6 @@ src/main/java/com/orderup/
 │                                     #   initFactory() registers entity factories for the game world.
 │
 ├── Handlers/
-│   ├── MainSceneFactory.java         # Extends SceneFactory. Overrides newMainMenu(), newGameMenu(),
-│   │                                 #   and newLoadingScene() to return custom FXGLMenu/LoadingScene.
 │   ├── SceneManager.java             # Utility to swap UI nodes on FXGL's GameScene. Call
 │   │                                 #   SceneManager.show() to switch in-game scenes.
 │   └── ClickHandler.java             # Handles click events on game entities. Routes to scene
@@ -27,6 +25,8 @@ src/main/java/com/orderup/
 │                                     #   associated entities from the game world.
 │
 ├── Factory/
+│   ├── MainSceneFactory.java         # Extends SceneFactory. Overrides newMainMenu(), newGameMenu(),
+│   │                                 #   and newLoadingScene() to return custom FXGLMenu/LoadingScene.
 │   ├── WaitingLineUIFactory.java     # EntityFactory for the waiting line scene. Spawns interactive
 │   │                                 #   order_button, waiting_line, and order_list entities with
 │   │                                 #   click handlers and textures.
