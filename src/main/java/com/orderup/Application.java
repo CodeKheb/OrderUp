@@ -134,7 +134,7 @@ public class Application extends GameApplication {
                 break;
             default:
                 SceneManager.show(new WaitingLineScene());
-                startGameclock();
+                startGameClock();
                 break;
         }
     }
@@ -146,7 +146,7 @@ public class Application extends GameApplication {
      * for processes that have arrived, and spawns an FXGL entity for each new
      * customer. The {@link #spawnedIds} set ensures each customer is spawned only once.</p>
      */
-    private void startGameclock() {
+    private void startGameClock() {
         FXGL.getGameTimer().runAtInterval(() -> {
             gameClock++;
             var arrived = processQueue.getArrivedProcesses(gameClock);
