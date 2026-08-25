@@ -37,7 +37,7 @@ public class ProcessGenerator {
         int listSize = (int) (Math.random() * rangeSize) + MINIMUM_SIZE;
         List<CustomerProcess> processes = new ArrayList<>();
 
-        processes.add(new CustomerProcess(1, 0 , (int) Math.random()));
+        processes.add(new CustomerProcess(1, 0, (int) (Math.random() * 8) + 1));
 
         for (int i = 1; i < listSize; i++) {
             processes.add(new CustomerProcess((i + 1), (int) (Math.random() * 8) + 1, (int) (Math.random() * 8) + 1));
