@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 /**
- * A self-contained card that displays one customer's details.
+ * A self-contained card that displays one customer's details, used in manual menu scene.
  * <br><br>
  * The card looks roughly like this:
  * <pre>
