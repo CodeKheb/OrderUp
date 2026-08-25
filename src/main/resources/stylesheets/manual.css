@@ -1,0 +1,84 @@
+/*
+ * Manual Scene Styles
+ * ───────────────────
+ * These styles apply only to the manual input screen.
+ * They are loaded by manual.fxml alongside the global stylesheet.
+ */
+
+/* ── Customer Card ───────────────────────────────────────────
+ * The outer box that holds everything: header, stickman, inputs.
+ * Gives it a bordered, card-like appearance so it stands out
+ * from the page background.
+ */
+.customer-card {
+    -fx-border-color: #333;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-color: #f9f9f9;
+    -fx-background-radius: 8;
+    -fx-padding: 20 30;
+    -fx-alignment: CENTER;
+    -fx-spacing: 10;
+    -fx-min-width: 220;
+    -fx-max-width: 220;
+}
+
+/* ── Card Header ─────────────────────────────────────────────
+ * The horizontal row at the top:  <  Customer 1  >
+ * Items are centered and spaced 10px apart.
+ */
+.customer-header {
+    -fx-alignment: CENTER;
+    -fx-spacing: 10;
+}
+
+/* ── "Customer N" title text ───────────────────────────────── */
+.customer-header-text {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-fill: #333;
+}
+
+/* ── Navigation arrows (<  >) ────────────────────────────────
+ * Small bordered buttons that look like clickable arrows.
+ * Background is transparent by default, fills grey on hover.
+ */
+.arrow-btn {
+    -fx-font-size: 20px;
+    -fx-background-color: transparent;
+    -fx-border-color: #333;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+    -fx-padding: 2 8;
+    -fx-cursor: hand;
+}
+
+.arrow-btn:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+/* ── Input rows (label + text field) ─────────────────────────
+ * Each row contains a label like "Arrival (AT):" and a text
+ * field side by side, aligned to the left.
+ */
+.input-row {
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 5;
+}
+
+/* ── Input label text ──────────────────────────────────────── */
+.input-label {
+    -fx-font-size: 14px;
+    -fx-fill: #333;
+    -fx-font-weight: bold;
+}
+
+/* ── Text input fields ───────────────────────────────────────
+ * Small fixed-width boxes for typing numbers.
+ */
+.input-field {
+    -fx-min-width: 80;
+    -fx-max-width: 80;
+    -fx-min-height: 25;
+    -fx-font-size: 13px;
+}

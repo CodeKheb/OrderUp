@@ -7,17 +7,22 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       prefWidth="1280.0" prefHeight="720.0"
-      stylesheets="@../stylesheets/stylesheet.css"
+      stylesheets="@../stylesheets/stylesheet.css,@../stylesheets/manual.css"
       xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.orderup.Scenes.Controllers.ManualController">
+
 
     <VBox alignment="CENTER" spacing="20.0"
           prefWidth="1280.0" prefHeight="720.0">
 
         <Text text="Manual Setup" styleClass="subtitle" />
-        <Text text="Input Name, Arrival Time, Burst Time" styleClass="placeholder-text" />
+        <Text text="Input Name, Arrival Time, Patience for each Customer" styleClass="placeholder-text" />
+
+        <VBox fx:id="cardContainer" alignment="CENTER" spacing="15.0" />
+
         <Button text="Back to Menu" styleClass="btn" onAction="#onBack" />
+        <Button text="Start Game" styleClass="btn" onAction="#onPlay" />
 
     </VBox>
 </Pane>
