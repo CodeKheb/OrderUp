@@ -57,6 +57,11 @@ public class CustomerProcess {
 		return startTime - arrivalTime;
 	}
 
+    /** Returns whether this process has the same arrival time and burst time as another. */
+ 	public boolean hasSameTimings(CustomerProcess otherProcess) {
+ 		return this.arrivalTime == otherProcess.arrivalTime && this.burstTime == otherProcess.burstTime;
+ 	}
+
 	@Override
 	public String toString() {
 		return "CustomerProcess{" +
