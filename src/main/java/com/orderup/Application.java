@@ -1,17 +1,22 @@
 package com.orderup;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
+import com.orderup.Factory.MainSceneFactory;
 import com.orderup.Factory.OrderStationUI;
 import com.orderup.Factory.WaitingLineUIFactory;
-import com.orderup.Factory.MainSceneFactory;
 import com.orderup.Handlers.SceneManager;
+import com.orderup.Models.CustomerProcess;
 import com.orderup.Models.ProcessQueue;
 import com.orderup.Scenes.Interfaces.ManualScene;
 import com.orderup.Scenes.Interfaces.WaitingLineScene;
 
 import javafx.scene.Node;
+import javafx.util.Duration;
 
 /**
  * Main application class for OrderUp.
@@ -41,6 +46,12 @@ public class Application extends GameApplication {
 
     /** The process queue for the current game session, set by controllers before starting. */
     private static ProcessQueue processQueue;
+
+    /** Current game-clock time in seconds, incremented each tick. */
+    private static int gameClock = 0;
+
+    /** Customer IDs that have already been spawned, prevents re-spawning on later ticks. */
+    private Set<Integer> spawnedIds = new HashSet<>();
 
     /**
      * Enum representing the different in-game scenes that can be
@@ -123,8 +134,30 @@ public class Application extends GameApplication {
                 break;
             default:
                 SceneManager.show(new WaitingLineScene());
+                startGameclock();
                 break;
         }
+    }
+
+    /**
+     * Starts the game clock, ticking once per second.
+     *
+     * <p>Each tick increments {@link #gameClock}, queries the {@link ProcessQueue}
+     * for processes that have arrived, and spawns an FXGL entity for each new
+     * customer. The {@link #spawnedIds} set ensures each customer is spawned only once.</p>
+     */
+    private void startGameclock() {
+        FXGL.getGameTimer().runAtInterval(() -> {
+            gameClock++;
+            var arrived = processQueue.getArrivedProcesses(gameClock);
+
+            for (CustomerProcess process : arrived) {
+                if (!spawnedIds.contains(process.getCustomerId())) {
+                    // TODO: spawn FXGL entity for this customer
+                    spawnedIds.add(process.getCustomerId());
+                }
+            }
+        }, Duration.seconds(1));
     }
 
     /**

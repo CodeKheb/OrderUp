@@ -1,11 +1,10 @@
-package com.orderup.Handlers;
+package com.orderup.Factory;
 
 import java.io.IOException;
 
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.LoadingScene;
 import com.almasb.fxgl.app.scene.SceneFactory;
-
 import com.orderup.Scenes.Interfaces.LoadingInterface;
 import com.orderup.Scenes.Interfaces.MenuInterface;
 import com.orderup.Scenes.Interfaces.PauseInterface;
