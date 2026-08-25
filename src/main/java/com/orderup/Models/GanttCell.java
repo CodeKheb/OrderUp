@@ -1,4 +1,4 @@
-package com.orderup.model;
+package com.orderup.Models;
 
 /**
  * A single block on the Gantt chart representing one scheduled process.

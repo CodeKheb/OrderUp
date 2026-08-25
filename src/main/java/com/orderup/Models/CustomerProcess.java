@@ -1,4 +1,4 @@
-package com.orderup.model;
+package com.orderup.Models;
 
 
 public class CustomerProcess {
