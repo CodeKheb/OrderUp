@@ -29,6 +29,7 @@ public class WaitingLineUIFactory implements EntityFactory {
                 .at(1050, 650)
                 .view(FXGL.texture("order_button.png", 0, 0))
                 .scale(2.0, 2.0)
+                .zIndex(-10)
                 .build();
         entity.getViewComponent().addOnClickHandler(e -> {
             ClickHandler.onOrder();
@@ -43,6 +44,7 @@ public class WaitingLineUIFactory implements EntityFactory {
                 .type(WaitingUIType.WAITING_LINE)
                 .view(FXGL.texture("waiting_line.png", 0, 0))
                 .scale(2.0, 1.5)
+                .zIndex(-10)
                 .build();
     }
 
@@ -53,6 +55,7 @@ public class WaitingLineUIFactory implements EntityFactory {
                 .at(1100, 0)
                 .view(FXGL.texture("order_list.png", 0, 0))
                 .scale(2.2, 2.2)
+                .zIndex(-10)
                 .build();
     }
 }
