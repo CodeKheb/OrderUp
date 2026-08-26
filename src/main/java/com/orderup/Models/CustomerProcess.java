@@ -9,15 +9,10 @@ public class CustomerProcess implements Comparable<CustomerProcess> {
 
 	/** Creates a customer process with its scheduling values. */
 	public CustomerProcess(int customerId, int arrivalTime, int burstTime) {
-		if (customerId < 0) {
-			throw new IllegalArgumentException("Customer ID cannot be negative");
-		}
-		if (arrivalTime < 0) {
-			throw new IllegalArgumentException("Arrival time cannot be negative");
-		}
-		if (burstTime <= 0) {
-			throw new IllegalArgumentException("Burst time must be greater than zero");
-		}
+
+		if (customerId < 0) throw new IllegalArgumentException("Customer ID cannot be negative");
+		if (arrivalTime < 0) throw new IllegalArgumentException("Arrival time cannot be negative");
+		if (burstTime <= 0) throw new IllegalArgumentException("Burst time must be greater than zero");
 
 		this.customerId = customerId;
 		this.arrivalTime = arrivalTime;
@@ -57,9 +52,9 @@ public class CustomerProcess implements Comparable<CustomerProcess> {
 		return startTime - arrivalTime;
 	}
 
-    /** Returns whether this process has the same arrival time and burst time as another. */
- 	public boolean hasSameTimings(CustomerProcess otherProcess) {
- 		return this.arrivalTime == otherProcess.arrivalTime && this.burstTime == otherProcess.burstTime;
+    /** Returns whether this process has the same arrival time */
+ 	public boolean hasSameArrivalTime(CustomerProcess otherProcess) {
+ 		return this.arrivalTime == otherProcess.arrivalTime;
  	}
 
 	/** Sorts by arrival time, then by customer ID for stable ordering. */
