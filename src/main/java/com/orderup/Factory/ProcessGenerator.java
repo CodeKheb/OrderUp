@@ -27,7 +27,7 @@ public class ProcessGenerator {
      * Generates a random list of customer processes for Play mode.
      *
      * <p>The list size is random between {@link #MINIMUM_SIZE} and {@link #MAXIMUM_SIZE}.
-     * The first process always arrives at time 0. Subsequent processes get random
+     * The first process always arrives at time 0. Subsequent processes get unique random
      * arrival times (1-8) and burst times (1-8).</p>
      *
      * @return a list of randomly generated customer processes
@@ -40,7 +40,14 @@ public class ProcessGenerator {
         processes.add(new CustomerProcess(1, 0, (int) (Math.random() * 8) + 1));
 
         for (int i = 1; i < listSize; i++) {
-            processes.add(new CustomerProcess((i + 1), (int) (Math.random() * 8) + 1, (int) (Math.random() * 8) + 1));
+            CustomerProcess newProcess;
+            do { // Creates the process' unique arrival time and burst time
+                int arrival = (int) (Math.random() * 8) + 1;
+                int burst = (int) (Math.random() * 8) + 1;
+                newProcess = new CustomerProcess((i + 1), arrival, burst);
+            } // checks if a process' arrival time matches with any other process' arrival time
+            while (processes.stream().anyMatch(newProcess::hasSameArrivalTime));
+            processes.add(newProcess);
         }
 
         return processes;

@@ -6,6 +6,9 @@ import java.util.Set;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
+import com.almasb.fxgl.entity.Entity;
+import com.orderup.Factory.CustomerFactory;
+import com.orderup.Factory.CustomerFactory.CustomerType;
 import com.orderup.Factory.MainSceneFactory;
 import com.orderup.Factory.OrderStationUI;
 import com.orderup.Factory.WaitingLineUIFactory;
@@ -14,6 +17,8 @@ import com.orderup.Models.CustomerProcess;
 import com.orderup.Models.ProcessQueue;
 import com.orderup.Scenes.Interfaces.ManualScene;
 import com.orderup.Scenes.Interfaces.WaitingLineScene;
+
+import com.almasb.fxgl.entity.SpawnData;
 
 import javafx.scene.Node;
 import javafx.util.Duration;
@@ -48,7 +53,7 @@ public class Application extends GameApplication {
     private static ProcessQueue processQueue;
 
     /** Current game-clock time in seconds, incremented each tick. */
-    private static int gameClock = 0;
+    private int gameClock = 0;
 
     /** Customer IDs that have already been spawned, prevents re-spawning on later ticks. */
     private Set<Integer> spawnedIds = new HashSet<>();
@@ -103,6 +108,7 @@ public class Application extends GameApplication {
     protected void initFactory() {
         FXGL.getGameWorld().addEntityFactory(new WaitingLineUIFactory());
         FXGL.getGameWorld().addEntityFactory(new OrderStationUI());
+        FXGL.getGameWorld().addEntityFactory(new CustomerFactory());
     }
 
     /**
@@ -126,6 +132,9 @@ public class Application extends GameApplication {
             // Ignore if no nodes exist yet
         }
 
+        gameClock = 0;
+        spawnedIds.clear();
+
         initFactory();
 
         switch (initialScene) {
@@ -140,11 +149,29 @@ public class Application extends GameApplication {
     }
 
     /**
+     * Horizontal position where the waiting line / counter sits.
+     * Customers move from off-screen right to this X.
+     */
+    private static final double TARGET_X = 150;
+
+    /** Horizontal gap between consecutive customers in the line. */
+    private static final double LINE_GAP = 90;
+
+    /** Pixels per second that customers move toward their target. */
+    private static final double MOVE_SPEED = 200;
+
+    /** x axis where customers spawn from (right edge). */
+    private static final double SPAWN_X = 1050;
+
+    /**
      * Starts the game clock, ticking once per second.
      *
      * <p>Each tick increments {@link #gameClock}, queries the {@link ProcessQueue}
      * for processes that have arrived, and spawns an FXGL entity for each new
      * customer. The {@link #spawnedIds} set ensures each customer is spawned only once.</p>
+     *
+     * <p>Customers spawn off-screen on the right and walk left into
+     * the waiting line, mimicking how CPU processes arrive over time.</p>
      */
     private void startGameClock() {
         FXGL.getGameTimer().runAtInterval(() -> {
@@ -153,11 +180,68 @@ public class Application extends GameApplication {
 
             for (CustomerProcess process : arrived) {
                 if (!spawnedIds.contains(process.getCustomerId())) {
-                    // TODO: spawn FXGL entity for this customer
+                    spawnCustomer(process);
                     spawnedIds.add(process.getCustomerId());
                 }
             }
         }, Duration.seconds(1));
+    }
+
+    /**
+     * Spawns a single customer entity off-screen and records its target position.
+     * <br><br>
+     * The customer is placed at {@link #SPAWN_X} (right edge) and assigned a
+     * target X in the waiting line. Each subsequent customer shifts right by
+     * {@link #LINE_GAP} so they form a visible queue.
+     *
+     * @param process the customer process whose data drives this entity
+     */
+    private void spawnCustomer(CustomerProcess process) {
+        int id = process.getCustomerId();
+        int index = spawnedIds.size();
+        double targetX = TARGET_X + (index * LINE_GAP);
+        double targetY = (WINDOW_HEIGHT - 70) / 2.0;  // vertically center the 70px-tall rectangle
+
+        SpawnData data = new SpawnData(SPAWN_X, targetY);
+        data.put("customerId", id);
+        data.put("targetX", targetX);
+        data.put("targetY", targetY);
+        data.put("arrivalTime", process.getArrivalTime());
+        data.put("burstTime", process.getBurstTime());
+
+        FXGL.spawn("customer", data);
+    }
+
+    /**
+     * Called every frame by FXGL. Moves all customer entities toward
+     * their target X position and stops them when they arrive.
+     */
+    @Override
+    protected void onUpdate(double tpf) {
+        double step = MOVE_SPEED * tpf;
+
+        for (Entity customer : FXGL.getGameWorld().getEntitiesByType(CustomerType.CUSTOMER)) {
+            java.util.Optional<Double> targetOptX = customer.getPropertyOptional("targetX");
+            java.util.Optional<Double> targetOptY = customer.getPropertyOptional("targetY");
+            if (targetOptX.isPresent() && targetOptY.isPresent()) {
+                double targetX = targetOptX.get();
+                double targetY = targetOptY.get();
+                double currentX = customer.getX();
+                double currentY = customer.getY();
+
+                if (currentX > targetX) {
+                    customer.setX(Math.max(currentX - step, targetX));
+                } else if (currentX < targetX) {
+                    customer.setX(Math.min(currentX + step, targetX));
+                }
+
+                if (currentY > targetY) {
+                    customer.setY(Math.max(currentY - step, targetY));
+                } else if (currentY < targetY) {
+                    customer.setY(Math.min(currentY + step, targetY));
+                }
+            }
+        }
     }
 
     /**
