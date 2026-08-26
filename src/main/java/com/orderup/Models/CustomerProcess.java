@@ -1,7 +1,7 @@
 package com.orderup.Models;
 
 
-public class CustomerProcess {
+public class CustomerProcess implements Comparable<CustomerProcess> {
 
 	private final int customerId;
 	private final int arrivalTime;
@@ -61,6 +61,14 @@ public class CustomerProcess {
  	public boolean hasSameTimings(CustomerProcess otherProcess) {
  		return this.arrivalTime == otherProcess.arrivalTime && this.burstTime == otherProcess.burstTime;
  	}
+
+	/** Sorts by arrival time, then by customer ID for stable ordering. */
+	@Override
+	public int compareTo(CustomerProcess other) {
+		int cmp = Integer.compare(this.arrivalTime, other.arrivalTime);
+		if (cmp != 0) return cmp;
+		return Integer.compare(this.customerId, other.customerId);
+	}
 
 	@Override
 	public String toString() {
