@@ -7,6 +7,9 @@ import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
 import com.orderup.Handlers.ClickHandler;
 
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+
 /**
  * Entity factory for the waiting line scene.
  * <br><br>
@@ -19,7 +22,18 @@ public class WaitingLineUIFactory implements EntityFactory {
     public enum WaitingUIType {
         ORDER_BUTTON,
         ORDER_LIST,
-        WAITING_LINE
+        WAITING_LINE,
+        BACKGROUND
+    }
+
+    @Spawns("background")
+    public Entity background(SpawnData data) {
+        Rectangle rect = new Rectangle(1280, 1000, Color.BLACK);
+        return FXGL.entityBuilder(data)
+                .type(WaitingUIType.BACKGROUND)
+                .viewWithBBox(rect)
+                .zIndex(-100)
+                .build();
     }
 
     @Spawns("order_button")
