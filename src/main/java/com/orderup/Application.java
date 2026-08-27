@@ -16,6 +16,7 @@ import com.orderup.Handlers.SceneManager;
 import com.orderup.Models.CustomerProcess;
 import com.orderup.Models.GameClock;
 import com.orderup.Models.ProcessQueue;
+import com.orderup.Scenes.Components.CustomerAnimationComponent;
 import com.orderup.Scenes.Interfaces.ManualScene;
 import com.orderup.Scenes.Interfaces.WaitingLineScene;
 
@@ -150,7 +151,7 @@ public class Application extends GameApplication {
      * Horizontal position where the waiting line / counter sits.
      * Customers move from off-screen right to this X.
      */
-    private static final double TARGET_X = 150;
+    private static final double TARGET_X = 200;
 
     /** Horizontal gap between consecutive customers in the line. */
     private static final double LINE_GAP = 90;
@@ -159,7 +160,7 @@ public class Application extends GameApplication {
     private static final double MOVE_SPEED = 200;
 
     /** x axis where customers spawn from (right edge). */
-    private static final double SPAWN_X = 1050;
+    private static final double SPAWN_X = 1100;
 
 
     /**
@@ -175,7 +176,7 @@ public class Application extends GameApplication {
         int id = process.getCustomerId();
         int index = spawnedIds.size();
         double targetX = TARGET_X + (index * LINE_GAP);
-        double targetY = (WINDOW_HEIGHT - 70) / 2.0;
+        double targetY = (WINDOW_HEIGHT - 100) / 2.0;
 
         SpawnData data = new SpawnData(SPAWN_X, targetY);
         data.put("customerId", id);
@@ -210,7 +211,9 @@ public class Application extends GameApplication {
             }
         }
 
-        double step = MOVE_SPEED * tpf;
+        // Cap tpf to prevent large jumps during initialization lag
+        double cappedTpf = Math.min(tpf, 1.0 / 60.0);
+        double step = MOVE_SPEED * cappedTpf;
 
         for (Entity customer : FXGL.getGameWorld().getEntitiesByType(CustomerType.CUSTOMER)) {
             java.util.Optional<Double> targetOptX = customer.getPropertyOptional("targetX");
@@ -221,16 +224,31 @@ public class Application extends GameApplication {
                 double currentX = customer.getX();
                 double currentY = customer.getY();
 
+                boolean moving = false;
+
                 if (currentX > targetX) {
                     customer.setX(Math.max(currentX - step, targetX));
+                    moving = true;
                 } else if (currentX < targetX) {
                     customer.setX(Math.min(currentX + step, targetX));
+                    moving = true;
                 }
 
                 if (currentY > targetY) {
                     customer.setY(Math.max(currentY - step, targetY));
+                    moving = true;
                 } else if (currentY < targetY) {
                     customer.setY(Math.min(currentY + step, targetY));
+                    moving = true;
+                }
+
+                var anim = customer.getComponentOptional(CustomerAnimationComponent.class);
+                if (anim.isPresent()) {
+                    if (moving) {
+                        anim.get().playWalk();
+                    } else {
+                        anim.get().playIdle();
+                    }
                 }
             }
         }

@@ -23,7 +23,7 @@ public class CustomerAnimationComponent extends Component {
     private static final int FRAME_HEIGHT = 128;
 
     /** Scale multiplier for the sprite on screen. */
-    private static final double SPRITE_SCALE = 2.0;
+    private static final double SPRITE_SCALE = 2.5;
 
     private final AnimationChannel idleAnim;
     private final AnimationChannel walkAnim;
@@ -39,14 +39,14 @@ public class CustomerAnimationComponent extends Component {
         boolean isGirl = (customerId % 2 != 0);
 
         idleAnim = isGirl
-                ? new AnimationChannel(FXGL.image("girl1_idle.png"), 10, FRAME_WIDTH, FRAME_HEIGHT, Duration.seconds(1), 0, 9)
-                : new AnimationChannel(FXGL.image("man1_idle.png"), 6, FRAME_WIDTH, FRAME_HEIGHT, Duration.seconds(1), 0, 5);
+                ? new AnimationChannel(FXGL.image("girl1_idle.png"), 9, FRAME_WIDTH, FRAME_HEIGHT, Duration.seconds(3), 0, 8)
+                : new AnimationChannel(FXGL.image("man1_idle.png"), 6, FRAME_WIDTH, FRAME_HEIGHT, Duration.seconds(3), 0, 5);
 
         walkAnim = isGirl
                 ? new AnimationChannel(FXGL.image("girl1_walk.png"), 12, FRAME_WIDTH, FRAME_HEIGHT, Duration.seconds(1), 0, 11)
                 : new AnimationChannel(FXGL.image("man1_walk.png"), 10, FRAME_WIDTH, FRAME_HEIGHT, Duration.seconds(1), 0, 9);
 
-        texture = new AnimatedTexture(idleAnim);
+        texture = new AnimatedTexture(walkAnim);
         texture.loop();
     }
 
@@ -56,12 +56,10 @@ public class CustomerAnimationComponent extends Component {
      */
     @Override
     public void onAdded() {
-        // Shift the sprite up so the full body is visible within the hitbox.
-        // FXGL scales the view from its center, pushing the sprite down;
-        // translating up by the full frame height brings the full sprite
-        // into the hitbox area.
+        // Center the sprite on the entity's position by translating
+        // by half the frame dimensions in both axes.
         texture.setTranslateX(-FRAME_WIDTH / 2.0);
-        texture.setTranslateY(-FRAME_HEIGHT);
+        texture.setTranslateY(-FRAME_HEIGHT / 2.0);
         entity.getViewComponent().addChild(texture);
         entity.setScaleX(SPRITE_SCALE);
         entity.setScaleY(SPRITE_SCALE);
