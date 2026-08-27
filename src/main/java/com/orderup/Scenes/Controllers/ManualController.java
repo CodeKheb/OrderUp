@@ -17,8 +17,9 @@ import javafx.scene.layout.VBox;
 /**
  * Controller for the manual scene.
  * <br><br>
- * Handles user interactions on the manual screen, including
- * navigating back to the main menu via FXGL's game controller.
+ * Handles user interactions on the manual screen, including navigating
+ * back to the main menu, adding customers via the {@link CustomerCard},
+ * and starting a game with user-provided process values.
  */
 public class ManualController {
 

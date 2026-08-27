@@ -101,7 +101,7 @@ public class Application extends GameApplication {
     /**
      * Registers the entity factories for the game world.
      * <br><br>
-     * Adds {@link WaitingLineUIFactory} and {@link OrderStationUI} so
+     * Adds {@link WaitingLineUIFactory} and {@link CustomerFactory} so
      * that entities can be spawned during gameplay.
      */
     protected void initFactory() {

@@ -4,18 +4,15 @@ package com.orderup.Handlers;
 // import com.orderup.Factory.WaitingLineUIFactory.WaitingUIType;
 
 /**
- * Handles click events on game entities and manages scene transitions.
+ * Handles click events on game entities.
  * <br><br>
  * Provides static methods that are wired to FXGL entity click handlers
- * via {@link com.orderup.Factory.WaitingLineUIFactory}. Transitions
- * between scenes by using {@link SceneManager} and removing associated
- * entities from the game world.
+ * via {@link com.orderup.Factory.WaitingLineUIFactory}.
  */
 public class ClickHandler {
 
     /**
-     * Handles the order button click by transitioning to the order scene
-     * and removing waiting line entities from the game world.
+     * Handles the order button click.
      */
     public static void onOrder() {
         System.out.println("larp larp larp sahur");
