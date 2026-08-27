@@ -21,6 +21,10 @@ import com.orderup.Scenes.Interfaces.WaitingLineScene;
 import com.almasb.fxgl.entity.SpawnData;
 
 import javafx.scene.Node;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 
 /**
@@ -141,10 +145,22 @@ public class Application extends GameApplication {
                 break;
             default:
                 SceneManager.show(new WaitingLineScene());
+
                 Text clockText = gameClock.getClockText();
-                clockText.setTranslateX(WINDOW_WIDTH / 2.2);
-                clockText.setTranslateY(WINDOW_HEIGHT / 8);
-                FXGL.getGameScene().addUINode(clockText);
+                clockText.setFill(Color.WHITE);
+
+                Rectangle clockBg = new Rectangle(160, 70);
+                clockBg.setArcWidth(10);
+                clockBg.setArcHeight(10);
+                clockBg.setFill(Color.web("#1a1a1a"));
+                clockBg.setStroke(Color.web("#cc5114"));
+                clockBg.setStrokeWidth(2);
+                clockBg.setStrokeType(StrokeType.INSIDE);
+
+                StackPane clockPane = new StackPane(clockBg, clockText);
+                clockPane.setTranslateX(WINDOW_WIDTH / 2.2);
+                clockPane.setTranslateY(WINDOW_HEIGHT / 20);
+                FXGL.getGameScene().addUINode(clockPane);
                 break;
         }
     }
