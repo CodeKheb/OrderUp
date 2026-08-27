@@ -56,7 +56,7 @@ public class ProcessDisplay {
     public ProcessDisplay(GameClock gameClock, int maxBurstTime) {
         this.gameClock = gameClock;
 
-        this.headerText = new Text("ORDER UP   Arrival Time");
+        this.headerText = new Text("ORDER UP    Arrival Time   Patience");
         this.headerText.setFont(HEADER_FONT);
         this.headerText.setFill(Color.web("#cc5114"));
         displayGroup.getChildren().add(headerText);
@@ -95,7 +95,7 @@ public class ProcessDisplay {
             CustomerProcess p = processes.get(i);
             String atTime = formatArrivalTime(p.getArrivalTime());
 
-            Text line = new Text("Customer " + p.getCustomerId() + " | " + atTime + " ("+p.getArrivalTime()+")");
+            Text line = new Text("Customer " + p.getCustomerId() + "     " + atTime + " ("+p.getArrivalTime()+")" + "        " + p.getBurstTime());
             line.setFont(PROCESS_FONT);
 
             if (i == 0) {
