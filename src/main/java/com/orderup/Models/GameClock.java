@@ -85,16 +85,11 @@ public class GameClock {
         clockText.setText(formatTime(0));
     }
 
-    /** Formats seconds as "MM:SS" or "HH:MM:SS". */
+    /** Formats clock */
     private String formatTime(int totalSeconds) {
-        int hours = totalSeconds / 3600;
-        int minutes = (totalSeconds % 3600) / 60;
-        int seconds = totalSeconds % 60;
+        int hours = totalSeconds % 60;
 
-        if (hours > 0) {
-            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-        }
-        return String.format("%02d:%02d", minutes, seconds);
+        return String.format("%02d:00", hours);
     }
 
     @Override
