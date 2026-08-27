@@ -12,8 +12,11 @@ import javafx.scene.text.Text;
 /**
  * Manages a text-based FCFS scheduling queue display.
  *
- * <p>Processes are displayed with their arrival time as a readable AM clock
- * (e.g. "7:00 AM (0)"). No burst time logic for now — just a list of arrived processes.</p>
+ * <p>
+ * Processes are displayed with their arrival time as a readable AM clock
+ * (e.g. "7:00 AM (0)"). No burst time logic for now — just a list of arrived
+ * processes.
+ * </p>
  */
 public class ProcessDisplay {
 
@@ -50,7 +53,7 @@ public class ProcessDisplay {
     /**
      * Creates a ProcessDisplay.
      *
-     * @param gameClock the game clock (used to convert ticks to AM time)
+     * @param gameClock    the game clock (used to convert ticks to AM time)
      * @param maxBurstTime unused, kept for future progress bar
      */
     public ProcessDisplay(GameClock gameClock, int maxBurstTime) {
@@ -95,7 +98,8 @@ public class ProcessDisplay {
             CustomerProcess p = processes.get(i);
             String atTime = formatArrivalTime(p.getArrivalTime());
 
-            Text line = new Text("Customer " + p.getCustomerId() + "     " + atTime + " ("+p.getArrivalTime()+")" + "        " + p.getBurstTime());
+            Text line = new Text("Customer " + p.getCustomerId() + "    " + atTime + " (" + p.getArrivalTime() + ")"
+                    + "        " + p.getBurstTime());
             line.setFont(PROCESS_FONT);
 
             if (i == 0) {
@@ -149,7 +153,7 @@ public class ProcessDisplay {
             amPm = "PM";
         }
 
-        return String.format("%d:%02d %s", hours12, minutes, amPm);
+        return String.format("%02d:%02d %s", hours12, minutes, amPm);
     }
 
     /** Checks if a process with this customer ID is already displayed. */
