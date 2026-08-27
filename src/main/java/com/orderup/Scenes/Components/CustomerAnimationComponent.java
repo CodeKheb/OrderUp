@@ -17,10 +17,10 @@ import javafx.util.Duration;
 public class CustomerAnimationComponent extends Component {
 
     /** Single frame width of the spritesheet (pixels). */
-    private static final int FRAME_WIDTH = 32;
+    private static final int FRAME_WIDTH = 128;
 
     /** Single frame height of the spritesheet (pixels). */
-    private static final int FRAME_HEIGHT = 64;
+    private static final int FRAME_HEIGHT = 128;
 
     /** Scale multiplier for the sprite on screen. */
     private static final double SPRITE_SCALE = 2.0;
