@@ -142,8 +142,8 @@ public class Application extends GameApplication {
             default:
                 SceneManager.show(new WaitingLineScene());
                 Text clockText = gameClock.getClockText();
-                clockText.setTranslateX(WINDOW_WIDTH / 2);
-                clockText.setTranslateY(WINDOW_HEIGHT / 1.2);
+                clockText.setTranslateX(WINDOW_WIDTH / 2.2);
+                clockText.setTranslateY(WINDOW_HEIGHT / 8);
                 FXGL.getGameScene().addUINode(clockText);
                 break;
         }
