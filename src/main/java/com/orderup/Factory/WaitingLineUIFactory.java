@@ -33,7 +33,6 @@ public class WaitingLineUIFactory implements EntityFactory {
                 .build();
         entity.getViewComponent().addOnClickHandler(e -> {
             ClickHandler.onOrder();
-            entity.removeFromWorld();
         });
         return entity;
     }

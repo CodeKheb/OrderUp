@@ -1,10 +1,7 @@
 package com.orderup.Handlers;
 
-import com.almasb.fxgl.dsl.FXGL;
-import com.orderup.Factory.WaitingLineUIFactory.WaitingUIType;
-import com.orderup.Factory.OrderStationUI.OrderUIType;
-import com.orderup.Scenes.Interfaces.OrderScene;
-import com.orderup.Scenes.Interfaces.WaitingLineScene;
+// import com.almasb.fxgl.dsl.FXGL;
+// import com.orderup.Factory.WaitingLineUIFactory.WaitingUIType;
 
 /**
  * Handles click events on game entities and manages scene transitions.
@@ -21,18 +18,6 @@ public class ClickHandler {
      * and removing waiting line entities from the game world.
      */
     public static void onOrder() {
-        SceneManager.show(new OrderScene());
-        FXGL.getGameWorld().getSingleton(WaitingUIType.WAITING_LINE).removeFromWorld();
-        FXGL.getGameWorld().getSingleton(WaitingUIType.ORDER_LIST).removeFromWorld();
-    }
-
-    /**
-     * Handles the back-to-waiting-line transition by showing the waiting line
-     * scene and removing order scene entities (counter, stove) from the game world.
-     */
-    public static void onWaitingLine() {
-        SceneManager.show(new WaitingLineScene());
-        FXGL.getGameWorld().getSingleton(OrderUIType.COUNTER).removeFromWorld();
-        FXGL.getGameWorld().getSingleton(OrderUIType.STOVE).removeFromWorld();
+        System.out.println("larp larp larp sahur");
     }
 }

@@ -10,7 +10,6 @@ import com.almasb.fxgl.entity.Entity;
 import com.orderup.Factory.CustomerFactory;
 import com.orderup.Factory.CustomerFactory.CustomerType;
 import com.orderup.Factory.MainSceneFactory;
-import com.orderup.Factory.OrderStationUI;
 import com.orderup.Factory.WaitingLineUIFactory;
 import com.orderup.Handlers.SceneManager;
 import com.orderup.Models.CustomerProcess;
@@ -107,7 +106,6 @@ public class Application extends GameApplication {
      */
     protected void initFactory() {
         FXGL.getGameWorld().addEntityFactory(new WaitingLineUIFactory());
-        FXGL.getGameWorld().addEntityFactory(new OrderStationUI());
         FXGL.getGameWorld().addEntityFactory(new CustomerFactory());
     }
 
