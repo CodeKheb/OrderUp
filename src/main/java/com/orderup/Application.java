@@ -7,6 +7,7 @@ import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.SpawnData;
 import com.orderup.Factory.CustomerFactory;
 import com.orderup.Factory.CustomerFactory.CustomerType;
 import com.orderup.Factory.MainSceneFactory;
@@ -17,8 +18,6 @@ import com.orderup.Models.GameClock;
 import com.orderup.Models.ProcessQueue;
 import com.orderup.Scenes.Interfaces.ManualScene;
 import com.orderup.Scenes.Interfaces.WaitingLineScene;
-
-import com.almasb.fxgl.entity.SpawnData;
 
 import javafx.scene.Node;
 
@@ -199,7 +198,11 @@ public class Application extends GameApplication {
         // game clock 
         gameClock.update();
         // spawn customers
-        var arrived = processQueue.getArrivedProcesses(gameClock.getTime());
+
+        //Syncs/converts raw gameclock value to seconds-based ticks for AT
+        var currentTick = (gameClock.getTime() - 25200) / 1200;
+
+        var arrived = processQueue.getArrivedProcesses(currentTick);
         for (CustomerProcess process : arrived) {
             if (!spawnedIds.contains(process.getCustomerId())) {
                 spawnCustomer(process);

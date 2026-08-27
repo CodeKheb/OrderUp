@@ -51,7 +51,7 @@ public class SceneManager {
         Text clockText = gameClock.getClockText();
         clockText.setFill(Color.WHITE);
 
-        Rectangle clockBg = new Rectangle(160, 70);
+        Rectangle clockBg = new Rectangle(260, 70);
         clockBg.setArcWidth(10);
         clockBg.setArcHeight(10);
         clockBg.setFill(Color.web("#1a1a1a"));

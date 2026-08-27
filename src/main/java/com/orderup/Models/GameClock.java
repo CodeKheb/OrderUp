@@ -19,8 +19,14 @@ import javafx.scene.text.Text;
  */
 public class GameClock {
 
+    /** Starts at hour 7 (7*60*60 = 25200) */
+    private final int startingSeconds = 25200;
+
+    /** 20 minutes interval (20 * 60 = 1200) */
+    private final int minuteInterval = 1200;
+
     /** The current game time in seconds, exposed as a property for binding. */
-    private final IntegerProperty time = new SimpleIntegerProperty(0);
+    private final IntegerProperty time = new SimpleIntegerProperty(startingSeconds);
 
     /** Nano-time of the last update call. */
     private long lastNano;
@@ -37,7 +43,7 @@ public class GameClock {
     public GameClock() {
         this.lastNano = 0;
         this.accumulator = 0.0;
-        this.clockText = new Text(formatTime(0));
+        this.clockText = new Text(formatTime(time.get()));
         this.clockText.setFont(Font.font("Monospace", FontWeight.BOLD, 48));
         this.clockText.setFill(Color.BLACK);
     }
@@ -47,6 +53,11 @@ public class GameClock {
      * Uses wall-clock time so the clock is unaffected by game loop lag.
      */
     public void update() {
+        if (formatTime(time.get()).equals("05:00 PM")) {
+            clockText.setText("05:00 PM");
+            return;
+        }
+
         long now = System.nanoTime();
         if (lastNano == 0) {
             lastNano = now;
@@ -57,7 +68,7 @@ public class GameClock {
         accumulator += elapsed;
         if (accumulator >= 1.0) {
             accumulator -= 1.0;
-            time.set(time.get() + 1);
+            time.set(time.get() + minuteInterval);
             clockText.setText(formatTime(time.get()));
         }
     }
@@ -77,24 +88,39 @@ public class GameClock {
         return clockText;
     }
 
-    /** Resets the clock to 00:00. */
+    /** Resets the clock to 07:00. */
     public void reset() {
-        time.set(0);
+        time.set(startingSeconds);
         accumulator = 0.0;
         lastNano = 0;
-        clockText.setText(formatTime(0));
+        clockText.setText(formatTime(time.get()));
     }
 
     /** Formats clock */
     private String formatTime(int totalSeconds) {
-        int hours = totalSeconds % 60;
-
-        if (hours >= 24) {
-            return String.format("24:00");
+        int hours24   = totalSeconds / 3600;
+        int minutes   = (totalSeconds % 3600) / 60;
+ 
+        // Convert to 12-hour format
+        String amPm;
+        int hours12;
+        if (hours24 == 0) {
+            hours12 = 12;       // midnight → 12:00 AM
+            amPm = "AM";
+        } else if (hours24 < 12) {
+            hours12 = hours24;  // 1–11 → AM
+            amPm = "AM";
+        } else if (hours24 == 12) {
+            hours12 = 12;       // noon → 12:00 PM
+            amPm = "PM";
+        } else {
+            hours12 = hours24 - 12;  // 13–23 → 1–11 PM
+            amPm = "PM";
         }
-
-        return String.format("%02d:00", hours);
+ 
+        return String.format("%02d:%02d %s", hours12, minutes, amPm);
     }
+
 
     @Override
     public String toString() {
