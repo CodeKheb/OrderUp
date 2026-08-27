@@ -6,19 +6,17 @@ import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
 import com.almasb.fxgl.entity.components.CollidableComponent;
-
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import com.almasb.fxgl.physics.BoundingShape;
+import com.almasb.fxgl.physics.HitBox;
+import com.orderup.Scenes.Components.CustomerAnimationComponent;
 
 /**
  * Entity factory for customer entities.
  * <br><br>
- * Each customer is rendered as a colored placeholder rectangle.
- * The color is determined by the customer's ID so that every
- * customer in the waiting line is visually distinct.
- * <br><br>
- * When real character textures are available, replace the
- * {@link Rectangle} with {@code FXGL.texture(...)}.
+ * Spawns customer entities with basic properties (type, position, bounding box)
+ * and attaches a {@link CustomerAnimationComponent} for sprite animation.
+ * Animation details (idle/walk channels, texture scaling) are fully managed
+ * by the component, keeping this factory focused on entity creation only.
  */
 public class CustomerFactory implements EntityFactory {
 
@@ -27,21 +25,9 @@ public class CustomerFactory implements EntityFactory {
         CUSTOMER
     }
 
-    /** Distinct colors for 6 customers. Cycles if more. */
-    public static final Color[] COLORS = {
-        Color.RED,
-        Color.DODGERBLUE,
-        Color.LIMEGREEN,
-        Color.ORANGE,
-        Color.MEDIUMPURPLE,
-        Color.HOTPINK
-    };
-
-    /** Width of the placeholder rectangle. */
-    private static final double WIDTH = 50;
-
-    /** Height of the placeholder rectangle. */
-    private static final double HEIGHT = 70;
+    // Frame configuration based on spritesheets
+    private static final int FRAME_WIDTH = 32;
+    private static final int FRAME_HEIGHT = 64;
 
     /**
      * Spawns a customer entity at the given position.
@@ -58,24 +44,22 @@ public class CustomerFactory implements EntityFactory {
     @Spawns("customer")
     public Entity customer(SpawnData data) {
         int customerId = data.hasKey("customerId") ? data.get("customerId") : 1;
-        Color color = COLORS[(customerId - 1) % COLORS.length];
 
-        Rectangle rect = new Rectangle(WIDTH, HEIGHT, color);
-        rect.setStroke(Color.BLACK);
-        rect.setStrokeWidth(1);
+        // Floor baseline alignment
+        double floorY = 320.0;
+        double spawnY = data.hasKey("y") ? data.get("y") : floorY;
 
         var entity = FXGL.entityBuilder(data)
                 .type(CustomerType.CUSTOMER)
-                .viewWithBBox(rect)
+                .at(data.getX(), spawnY)
+                .bbox(new HitBox(BoundingShape.box(FRAME_WIDTH, FRAME_HEIGHT)))
                 .with(new CollidableComponent(true))
+                .with(new CustomerAnimationComponent(customerId))
                 .build();
 
         if (data.hasKey("targetX")) entity.setProperty("targetX", data.<Double>get("targetX"));
         if (data.hasKey("targetY")) entity.setProperty("targetY", data.<Double>get("targetY"));
-        if (data.hasKey("arrivalTime")) {
-            entity.setProperty("arrivalTime", data.<Integer>get("arrivalTime"));
-            System.out.println(data.<Integer>get("arrivalTime"));
-        }
+        if (data.hasKey("arrivalTime")) entity.setProperty("arrivalTime", data.<Integer>get("arrivalTime"));
         if (data.hasKey("burstTime")) entity.setProperty("burstTime", data.<Integer>get("burstTime"));
 
         return entity;

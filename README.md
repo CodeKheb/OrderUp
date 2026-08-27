@@ -4,7 +4,7 @@ A 2D scheduling algorithm restaurant game built with FXGL (JavaFX). Customers ar
 
 ## Tech Stack
 
-- Java 21
+- Java 25
 - FXGL 21.1
 - Maven
 
