@@ -38,7 +38,7 @@ public class GameClock {
         this.lastNano = 0;
         this.accumulator = 0.0;
         this.clockText = new Text(formatTime(0));
-        this.clockText.setFont(Font.font("Monospace", FontWeight.BOLD, 24));
+        this.clockText.setFont(Font.font("Monospace", FontWeight.BOLD, 48));
         this.clockText.setFill(Color.BLACK);
     }
 
@@ -88,6 +88,10 @@ public class GameClock {
     /** Formats clock */
     private String formatTime(int totalSeconds) {
         int hours = totalSeconds % 60;
+
+        if (hours >= 24) {
+            return String.format("24:00");
+        }
 
         return String.format("%02d:00", hours);
     }
