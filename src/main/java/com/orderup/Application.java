@@ -142,6 +142,7 @@ public class Application extends GameApplication {
                 break;
             default:
                 SceneManager.show(new WaitingLineScene());
+                SceneManager.showClockUI();
                 break;
         }
     }
@@ -193,6 +194,8 @@ public class Application extends GameApplication {
      */
     @Override
     protected void onUpdate(double tpf) {
+        // guard this lmao, it bugged
+    if (initialScene != SceneType.WAITING_LINE) return;
         // game clock 
         gameClock.update();
         // spawn customers
