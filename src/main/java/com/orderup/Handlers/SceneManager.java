@@ -2,7 +2,6 @@ package com.orderup.Handlers;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.orderup.Models.GameClock;
-import com.orderup.Application;
 
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
@@ -18,8 +17,6 @@ import javafx.scene.text.Text;
  * using FXGL's game scene management system.
  */
 public class SceneManager {
-
-    private static Application app;
 
     /** The game clock to display as a UI overlay. */
     private static GameClock gameClock;
