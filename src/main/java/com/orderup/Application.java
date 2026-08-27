@@ -15,11 +15,13 @@ import com.orderup.Factory.WaitingLineUIFactory;
 import com.orderup.Handlers.SceneManager;
 import com.orderup.Models.CustomerProcess;
 import com.orderup.Models.GameClock;
+import com.orderup.Models.ProcessDisplay;
 import com.orderup.Models.ProcessQueue;
 import com.orderup.Scenes.Components.CustomerAnimationComponent;
 import com.orderup.Scenes.Interfaces.ManualScene;
 import com.orderup.Scenes.Interfaces.WaitingLineScene;
 
+import javafx.scene.Group;
 import javafx.scene.Node;
 
 /**
@@ -51,11 +53,16 @@ public class Application extends GameApplication {
     /** The process queue for the current game session, set by controllers before starting. */
     private static ProcessQueue processQueue;
 
+    /** The process display for the current game session, set in {@link #initGame()} before starting. */
+    private ProcessDisplay processDisplay;
+
     /** Current game-clock time in seconds, incremented each tick. */
     private GameClock gameClock = new GameClock();
 
     /** Customer IDs that have already been spawned, prevents re-spawning on later ticks. */
     private Set<Integer> spawnedIds = new HashSet<>();
+
+    private int lastTick = -1;
 
     /**
      * Enum representing the different in-game scenes that can be
@@ -133,6 +140,11 @@ public class Application extends GameApplication {
         spawnedIds.clear();
         gameClock.reset();
         initFactory();
+        lastTick = -1;
+
+        // TODO: we don have burst time implemented yet
+        // change the @param here if ever
+        processDisplay = new ProcessDisplay(gameClock, 30);
 
         SceneManager.setGameClock(gameClock);
 
@@ -143,6 +155,10 @@ public class Application extends GameApplication {
             default:
                 SceneManager.show(new WaitingLineScene());
                 SceneManager.showClockUI();
+                Group queueDisplay = processDisplay.getDisplayGroup();
+                queueDisplay.setTranslateX(50);
+                queueDisplay.setTranslateY(510);
+                FXGL.getGameScene().addUINode(queueDisplay);
                 break;
         }
     }
@@ -209,6 +225,14 @@ public class Application extends GameApplication {
                 spawnCustomer(process);
                 spawnedIds.add(process.getCustomerId());
             }
+            if (!processDisplay.containsProcess(process.getCustomerId())) {
+                processDisplay.addProcess(process);
+            }
+        }
+
+        if (currentTick != lastTick) {
+            lastTick = currentTick;
+            processDisplay.update(currentTick);
         }
 
         // Cap tpf to prevent large jumps during initialization lag
