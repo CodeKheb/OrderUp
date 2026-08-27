@@ -13,6 +13,7 @@ import com.orderup.Factory.MainSceneFactory;
 import com.orderup.Factory.WaitingLineUIFactory;
 import com.orderup.Handlers.SceneManager;
 import com.orderup.Models.CustomerProcess;
+import com.orderup.Models.GameClock;
 import com.orderup.Models.ProcessQueue;
 import com.orderup.Scenes.Interfaces.ManualScene;
 import com.orderup.Scenes.Interfaces.WaitingLineScene;
@@ -20,7 +21,7 @@ import com.orderup.Scenes.Interfaces.WaitingLineScene;
 import com.almasb.fxgl.entity.SpawnData;
 
 import javafx.scene.Node;
-import javafx.util.Duration;
+import javafx.scene.text.Text;
 
 /**
  * Main application class for OrderUp.
@@ -52,7 +53,7 @@ public class Application extends GameApplication {
     private static ProcessQueue processQueue;
 
     /** Current game-clock time in seconds, incremented each tick. */
-    private int gameClock = 0;
+    private GameClock gameClock = new GameClock();
 
     /** Customer IDs that have already been spawned, prevents re-spawning on later ticks. */
     private Set<Integer> spawnedIds = new HashSet<>();
@@ -130,9 +131,8 @@ public class Application extends GameApplication {
             // Ignore if no nodes exist yet
         }
 
-        gameClock = 0;
         spawnedIds.clear();
-
+        gameClock.reset();
         initFactory();
 
         switch (initialScene) {
@@ -141,7 +141,10 @@ public class Application extends GameApplication {
                 break;
             default:
                 SceneManager.show(new WaitingLineScene());
-                startGameClock();
+                Text clockText = gameClock.getClockText();
+                clockText.setTranslateX(WINDOW_WIDTH / 2);
+                clockText.setTranslateY(WINDOW_HEIGHT / 1.2);
+                FXGL.getGameScene().addUINode(clockText);
                 break;
         }
     }
@@ -161,29 +164,6 @@ public class Application extends GameApplication {
     /** x axis where customers spawn from (right edge). */
     private static final double SPAWN_X = 1050;
 
-    /**
-     * Starts the game clock, ticking once per second.
-     *
-     * <p>Each tick increments {@link #gameClock}, queries the {@link ProcessQueue}
-     * for processes that have arrived, and spawns an FXGL entity for each new
-     * customer. The {@link #spawnedIds} set ensures each customer is spawned only once.</p>
-     *
-     * <p>Customers spawn off-screen on the right and walk left into
-     * the waiting line, mimicking how CPU processes arrive over time.</p>
-     */
-    private void startGameClock() {
-        FXGL.getGameTimer().runAtInterval(() -> {
-            gameClock++;
-            var arrived = processQueue.getArrivedProcesses(gameClock);
-
-            for (CustomerProcess process : arrived) {
-                if (!spawnedIds.contains(process.getCustomerId())) {
-                    spawnCustomer(process);
-                    spawnedIds.add(process.getCustomerId());
-                }
-            }
-        }, Duration.seconds(1));
-    }
 
     /**
      * Spawns a single customer entity off-screen and records its target position.
@@ -198,7 +178,7 @@ public class Application extends GameApplication {
         int id = process.getCustomerId();
         int index = spawnedIds.size();
         double targetX = TARGET_X + (index * LINE_GAP);
-        double targetY = (WINDOW_HEIGHT - 70) / 2.0;  // vertically center the 70px-tall rectangle
+        double targetY = (WINDOW_HEIGHT - 70) / 2.0;
 
         SpawnData data = new SpawnData(SPAWN_X, targetY);
         data.put("customerId", id);
@@ -216,6 +196,17 @@ public class Application extends GameApplication {
      */
     @Override
     protected void onUpdate(double tpf) {
+        // game clock 
+        gameClock.update();
+        // spawn customers
+        var arrived = processQueue.getArrivedProcesses(gameClock.getTime());
+        for (CustomerProcess process : arrived) {
+            if (!spawnedIds.contains(process.getCustomerId())) {
+                spawnCustomer(process);
+                spawnedIds.add(process.getCustomerId());
+            }
+        }
+
         double step = MOVE_SPEED * tpf;
 
         for (Entity customer : FXGL.getGameWorld().getEntitiesByType(CustomerType.CUSTOMER)) {
