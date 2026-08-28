@@ -116,7 +116,7 @@ public class GanttOverlay extends Pane {
         closeBtn.setLayoutY(VERTICAL_OFFSET - 20);
 
         // Bar chart
-        drawChart(cells, processes);
+        drawChart(cells);
 
         // Metrics table
         Group table = buildMetricsTable(cells, processes);
@@ -126,7 +126,7 @@ public class GanttOverlay extends Pane {
 
     // ── Chart rendering ─────────────────────────────────────
 
-    private void drawChart(List<GanttCell> cells, List<CustomerProcess> processes) {
+    private void drawChart(List<GanttCell> cells) {
         if (cells.isEmpty()) return;
 
         int totalTime = cells.get(cells.size() - 1).getEndTime();
