@@ -119,5 +119,6 @@
     -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-fill: #333;
-    -fx-min-width: 120;
+    -fx-min-width: 160;
+    -fx-max-width: 160;
 }
