@@ -77,7 +77,7 @@ public class ManualController {
         for (int i = 0; i < card.getAddedCount(); i++) {
             int at = Integer.parseInt(card.getArrivalTime(i));
             int bt = Integer.parseInt(card.getPatience(i));
-            processes.add(gen.createManual(i + 1, at, bt));
+            processes.add(gen.createManual(i + 1, at, bt, card.getCharacterType(i)));
         }
  
         Application.setProcessQueue(new ProcessQueue(processes));

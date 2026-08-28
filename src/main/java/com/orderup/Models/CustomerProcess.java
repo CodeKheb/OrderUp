@@ -3,18 +3,29 @@ package com.orderup.Models;
 
 public class CustomerProcess implements Comparable<CustomerProcess> {
 
+	public enum CharacterType {
+		GIRL, MAN
+	}
+
 	private final int customerId;
 	private final int arrivalTime;
 	private int burstTime;
+	private final CharacterType characterType;
 
 	/** Creates a customer process with its scheduling values. */
 	public CustomerProcess(int customerId, int arrivalTime, int burstTime) {
+		this(customerId, arrivalTime, burstTime, (customerId % 2 != 0) ? CharacterType.GIRL : CharacterType.MAN);
+	}
+
+	/** Creates a customer process with its scheduling values and a chosen character type. */
+	public CustomerProcess(int customerId, int arrivalTime, int burstTime, CharacterType characterType) {
 
 		if (customerId < 0) throw new IllegalArgumentException("Customer ID cannot be negative");
 		if (arrivalTime < 0) throw new IllegalArgumentException("Arrival time cannot be negative");
 		this.customerId = customerId;
 		this.arrivalTime = arrivalTime;
 		this.burstTime = burstTime;
+		this.characterType = characterType;
 	}
 
 	public int getCustomerId() {
@@ -31,6 +42,10 @@ public class CustomerProcess implements Comparable<CustomerProcess> {
 
 	public void setBurstTime(int burstTime) {
 		this.burstTime = burstTime;
+	}
+
+	public CharacterType getCharacterType() {
+		return characterType;
 	}
 
 	/** Returns whether this process's burst time has been fully served. */
@@ -78,6 +93,7 @@ public class CustomerProcess implements Comparable<CustomerProcess> {
 				"customerId=" + customerId +
 				", arrivalTime=" + arrivalTime +
 				", burstTime=" + burstTime +
+				", characterType=" + characterType +
 				'}';
 	}
 }

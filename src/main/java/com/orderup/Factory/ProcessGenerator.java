@@ -64,4 +64,17 @@ public class ProcessGenerator {
     public CustomerProcess createManual(int customerId, int AT, int BT){
         return new CustomerProcess(customerId, AT, BT);
     }
+
+    /**
+     * Creates a single customer process from user-provided values with a chosen character type (Manual mode).
+     *
+     * @param customerId the unique identifier for this customer
+     * @param AT         the arrival time (when the customer shows up)
+     * @param BT         the burst time (how long the order takes)
+     * @param characterType the character type chosen by the user
+     * @return a new CustomerProcess with the given values
+     */
+    public CustomerProcess createManual(int customerId, int AT, int BT, CustomerProcess.CharacterType characterType){
+        return new CustomerProcess(customerId, AT, BT, characterType);
+    }
 }
