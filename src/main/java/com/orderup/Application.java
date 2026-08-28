@@ -161,13 +161,19 @@ public class Application extends GameApplication {
                 FXGL.getGameScene().addUINode(queueDisplay);
                 break;
         }
-    }
+    }	
+    
+    /** Accumulates real-time seconds for the BT countdown. */
+	private double btAccumulator = 0.0;
 
-    /**
-     * Horizontal position where the waiting line / counter sits.
-     * Customers move from off-screen right to this X.
-     */
-    private static final double TARGET_X = 200;
+	/** Real seconds between each BT decrement (0.20s = 5 ticks per second). */
+	private static final double BT_INTERVAL = 0.20;
+
+	/**
+	 * Horizontal position where the waiting line / counter sits.
+	 * Customers move from off-screen right to this X.
+	 */
+	private static final double TARGET_X = 200;
 
     /** Horizontal gap between consecutive customers in the line. */
     private static final double LINE_GAP = 90;
@@ -228,14 +234,31 @@ public class Application extends GameApplication {
             if (!processDisplay.containsProcess(process.getCustomerId())) {
                 processDisplay.addProcess(process);
             }
-        }
+        }		if (currentTick != lastTick) {
+			lastTick = currentTick;
+			processDisplay.update(currentTick);
+		}
 
-        if (currentTick != lastTick) {
-            lastTick = currentTick;
-            processDisplay.update(currentTick);
-        }
+		// --- BT Countdown for the top (first) arrived process ---
+		btAccumulator += tpf;
+		if (btAccumulator >= BT_INTERVAL) {
+			btAccumulator -= BT_INTERVAL;
 
-        // Cap tpf to prevent large jumps during initialization lag
+			var arrivedProcesses = processQueue.getArrivedProcesses(currentTick);
+			if (!arrivedProcesses.isEmpty()) {
+				CustomerProcess top = arrivedProcesses.get(0);
+				if (!top.isBurstComplete()) {
+					top.setBurstTime(top.getBurstTime() - 1);
+				}
+				if (top.isBurstComplete()) {
+					processQueue.getProcessList().remove(top);
+					processDisplay.removeProcess(top.getCustomerId());
+					btAccumulator = 0;
+				}
+			}
+		}
+
+		// Cap tpf to prevent large jumps during initialization lag
         double cappedTpf = Math.min(tpf, 1.0 / 60.0);
         double step = MOVE_SPEED * cappedTpf;
 
