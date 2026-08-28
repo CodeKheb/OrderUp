@@ -53,6 +53,9 @@ public class Application extends GameApplication {
     /** The process queue for the current game session, set by controllers before starting. */
     private static ProcessQueue processQueue;
 
+    /** Reference to the waiting line scene, so ClickHandler can access it. */
+    private static WaitingLineScene waitingLineScene;
+
     /** The process display for the current game session, set in {@link #initGame()} before starting. */
     private ProcessDisplay processDisplay;
 
@@ -105,6 +108,11 @@ public class Application extends GameApplication {
         return processQueue;
     }
 
+    /** Returns the waiting line scene instance. */
+    public static WaitingLineScene getWaitingLineScene() {
+        return waitingLineScene;
+    }
+
     /**
      * Registers the entity factories for the game world.
      * <br><br>
@@ -151,7 +159,8 @@ public class Application extends GameApplication {
                 SceneManager.show(new ManualScene());
                 break;
             default:
-                SceneManager.show(new WaitingLineScene());
+                waitingLineScene = new WaitingLineScene();
+                SceneManager.show(waitingLineScene);
                 SceneManager.showClockUI();
                 Group queueDisplay = processDisplay.getDisplayGroup();
                 queueDisplay.setTranslateX(50);
