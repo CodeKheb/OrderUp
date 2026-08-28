@@ -1,6 +1,7 @@
 package com.orderup.Models;
 
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +23,7 @@ public class GanttChart {
     private List<CustomerProcess> availableProcesses;
 
     /** The resulting Gantt chart: an ordered list of time slots, one per scheduled process. */
-    private List<GanttCell> ganttChart;
+    private List<GanttCell> ganttChart = new ArrayList<>();
 
     /**
      * Generates the full FCFS Gantt chart from a list of processes.
