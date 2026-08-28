@@ -45,8 +45,12 @@ public class GanttChart {
 
         for (CustomerProcess process : availableProcesses) {
             if (currentTime < process.getArrivalTime()) {
+                // Insert idle cell for the gap
+                GanttCell idleCell = new GanttCell(null, currentTime, process.getArrivalTime());
+                ganttChart.add(idleCell);
                 currentTime = process.getArrivalTime();
             }
+
 
             GanttCell ganttCell = new GanttCell(process, currentTime, currentTime + process.getBurstTime());
             ganttChart.add(ganttCell);
