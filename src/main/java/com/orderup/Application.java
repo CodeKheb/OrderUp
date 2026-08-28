@@ -142,8 +142,6 @@ public class Application extends GameApplication {
         initFactory();
         lastTick = -1;
 
-        // TODO: we don have burst time implemented yet
-        // change the @param here if ever
         processDisplay = new ProcessDisplay(gameClock, 30);
 
         SceneManager.setGameClock(gameClock);
@@ -166,8 +164,8 @@ public class Application extends GameApplication {
     /** Accumulates real-time seconds for the BT countdown. */
 	private double btAccumulator = 0.0;
 
-	/** Real seconds between each BT decrement (0.20s = 5 ticks per second). */
-	private static final double BT_INTERVAL = 0.20;
+	/** Real seconds between each BT decrement. */
+	private static final double BT_INTERVAL = 0.30;
 
 	/**
 	 * Horizontal position where the waiting line / counter sits.
@@ -211,6 +209,101 @@ public class Application extends GameApplication {
     }
 
     /**
+     * Drives the BT countdown for the top arrived process.
+     *
+     * <p>Accumulates real-time {@code tpf} and decrements the top process's
+     * burst time every {@link #BT_INTERVAL} seconds. Only ticks when the
+     * customer entity has stopped moving. Triggers {@link #completeProcess}
+     * when burst time reaches zero.</p>
+     *
+     * @param tpf         time per frame in seconds
+     * @param currentTick the current game-clock tick
+     */
+    private void updateTopProcess(double tpf, int currentTick) {
+        var arrivedProcesses = processQueue.getArrivedProcesses(currentTick);
+        if (arrivedProcesses.isEmpty()) {
+            return;
+        }
+
+        CustomerProcess topProcess = arrivedProcesses.get(0);
+        Entity topEntity = findCustomerEntity(topProcess.getCustomerId());
+
+        if (topEntity == null || !hasArrived(topEntity)) {
+            btAccumulator = 0;
+            return;
+        }
+
+        btAccumulator += tpf;
+        if (btAccumulator < BT_INTERVAL) {
+            return;
+        }
+
+        btAccumulator -= BT_INTERVAL;
+        decrementBurstTime(topProcess, currentTick);
+
+        if (topProcess.isBurstComplete()) {
+            completeProcess(topProcess);
+        }
+    }
+
+    /** Finds the game-world entity matching the given customer ID, or null. */
+    private Entity findCustomerEntity(int customerId) {
+        for (Entity entity : FXGL.getGameWorld().getEntitiesByType(CustomerType.CUSTOMER)) {
+            var entityId = entity.<Integer>getPropertyOptional("customerId");
+            if (entityId.isPresent() && entityId.get() == customerId) {
+                return entity;
+            }
+        }
+
+        return null;
+    }
+
+    /** Returns whether the entity has reached its target position. */
+    private boolean hasArrived(Entity entity) {
+        return entity.<Boolean>getPropertyOptional("arrived").orElse(false);
+    }
+
+    /** Decrements the process's burst time by 1 and refreshes the display. */
+    private void decrementBurstTime(CustomerProcess process, int currentTick) {
+        if (!process.isBurstComplete()) {
+            process.setBurstTime(process.getBurstTime() - 1);
+        }
+
+        processDisplay.update(currentTick);
+    }
+
+    /**
+     * Handles completion of a process whose burst time has reached zero.
+     *
+     * <p>Removes the process from the queue, display, and game world,
+     * then repositions remaining customers to fill the gap.</p>
+     */
+    private void completeProcess(CustomerProcess process) {
+        int customerId = process.getCustomerId();
+
+        processQueue.getProcessList().remove(process);
+        processDisplay.removeProcess(customerId);
+        spawnedIds.remove(customerId);
+
+        Entity entity = findCustomerEntity(customerId);
+        if (entity != null) {
+            entity.removeFromWorld();
+        }
+
+        btAccumulator = 0;
+        repositionCustomers();
+    }
+
+    /** Recalculates target X positions for all remaining customer entities. */
+    private void repositionCustomers() {
+        int index = 0;
+        for (Entity entity : FXGL.getGameWorld().getEntitiesByType(CustomerType.CUSTOMER)) {
+            entity.setProperty("targetX", TARGET_X + (index * LINE_GAP));
+            index++;
+        }
+    }
+
+    /**
      * Called every frame by FXGL. Moves all customer entities toward
      * their target X position and stops them when they arrive.
      */
@@ -239,24 +332,8 @@ public class Application extends GameApplication {
 			processDisplay.update(currentTick);
 		}
 
-		// --- BT Countdown for the top (first) arrived process ---
-		btAccumulator += tpf;
-		if (btAccumulator >= BT_INTERVAL) {
-			btAccumulator -= BT_INTERVAL;
-
-			var arrivedProcesses = processQueue.getArrivedProcesses(currentTick);
-			if (!arrivedProcesses.isEmpty()) {
-				CustomerProcess top = arrivedProcesses.get(0);
-				if (!top.isBurstComplete()) {
-					top.setBurstTime(top.getBurstTime() - 1);
-				}
-				if (top.isBurstComplete()) {
-					processQueue.getProcessList().remove(top);
-					processDisplay.removeProcess(top.getCustomerId());
-					btAccumulator = 0;
-				}
-			}
-		}
+        // --- BT Countdown for the top (first) arrived process ---
+        updateTopProcess(tpf, currentTick);
 
 		// Cap tpf to prevent large jumps during initialization lag
         double cappedTpf = Math.min(tpf, 1.0 / 60.0);
@@ -287,6 +364,10 @@ public class Application extends GameApplication {
                 } else if (currentY < targetY) {
                     customer.setY(Math.min(currentY + step, targetY));
                     moving = true;
+                }
+
+                if (!moving) {
+                    customer.setProperty("arrived", true);
                 }
 
                 var anim = customer.getComponentOptional(CustomerAnimationComponent.class);
