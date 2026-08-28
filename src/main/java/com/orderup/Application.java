@@ -279,13 +279,14 @@ public class Application extends GameApplication {
                 CustomerProcess front = arrived.get(0);
                 if (!front.isBurstComplete()) {
                     front.setBurstTime(front.getBurstTime() - 1);
-                    processDisplay.update(currentTick);
                     if (front.isBurstComplete()) {
                         completeProcess(front);
                     }
+                    processDisplay.update(currentTick);
                 }
             }
         }
+
 
 		// Cap tpf to prevent large jumps during initialization lag
         double cappedTpf = Math.min(tpf, 1.0 / 60.0);
