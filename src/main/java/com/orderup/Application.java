@@ -254,6 +254,11 @@ public class Application extends GameApplication {
         }
 
         repositionCustomers();
+
+        // Show Gantt overlay when all processes are done
+        if (processQueue.getProcessList().isEmpty() && waitingLineScene != null) {
+            waitingLineScene.showGanttOverlay(originalProcesses);
+        }
     }
 
     /** Recalculates target X positions for all remaining customer entities. */
