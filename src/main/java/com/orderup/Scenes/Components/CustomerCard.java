@@ -119,6 +119,7 @@ public class CustomerCard extends VBox {
         HBox header = new HBox(titleText);
         header.setAlignment(Pos.CENTER);
         header.getStyleClass().add("customer-header");
+        header.setPadding(Insets.EMPTY);
 
         // ── 2. Character sprite with arrows on either side ───
         Button prevCharBtn = createArrowButton("\u276E");
@@ -130,13 +131,16 @@ public class CustomerCard extends VBox {
 
         VBox spriteBox = new VBox(spriteView);
         spriteBox.setAlignment(Pos.CENTER);
-        spriteBox.setPadding(new Insets(-20, 0, 0, 0));
+        spriteBox.setSpacing(0);
+        spriteBox.setPadding(Insets.EMPTY);
 
         Button nextCharBtn = createArrowButton("\u276F");
         nextCharBtn.setOnAction(e -> changeCharacter(1));
 
-        HBox characterRow = new HBox(10, prevCharBtn, spriteBox, nextCharBtn);
+        HBox characterRow = new HBox(15, prevCharBtn, spriteBox, nextCharBtn);
         characterRow.setAlignment(Pos.CENTER);
+        characterRow.setPadding(new Insets(16, 0, 16, 0));
+        VBox.setMargin(characterRow, new Insets(-80, 0, 0, 0));
 
         // ── 3. Sliders with value labels and fill bars ───────
         for (int i = 0; i < CUSTOMER_COUNT; i++) {
@@ -366,7 +370,7 @@ public class CustomerCard extends VBox {
     private Text createValueLabel() {
         Text label = new Text("00:00 A.M. (00)");
         label.getStyleClass().add("slider-value-label");
-        label.setWrappingWidth(160);
+        label.setWrappingWidth(180);
         return label;
     }
 
