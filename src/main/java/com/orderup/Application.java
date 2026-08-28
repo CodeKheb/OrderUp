@@ -276,7 +276,10 @@ public class Application extends GameApplication {
             arrived = processQueue.getArrivedProcesses(currentTick);
             if (!arrived.isEmpty()) {
                 CustomerProcess front = arrived.get(0);
-                if (!front.isBurstComplete()) {
+                Entity frontEntity = findCustomerEntity(front.getCustomerId());
+                boolean atCounter = frontEntity != null
+                    && frontEntity.<Boolean>getPropertyOptional("arrived").orElse(false);
+                if (atCounter && !front.isBurstComplete()) {
                     front.setBurstTime(front.getBurstTime() - 1);
                     if (front.isBurstComplete()) {
                         completeProcess(front);
