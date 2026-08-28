@@ -18,9 +18,9 @@ public class ClickHandler {
         var scene = Application.getWaitingLineScene();
         if (scene == null) return;
 
-        var processes = Application.getProcessQueue();
+        var processes = Application.getOriginalProcesses();
         if (processes == null) return;
 
-        scene.showGanttOverlay(processes.getProcessList());
+        scene.showGanttOverlay(processes);
     }
 }
