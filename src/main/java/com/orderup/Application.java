@@ -208,6 +208,7 @@ public class Application extends GameApplication {
         FXGL.spawn("customer", data);
     }
 
+    //TODO: Further tests on BT countdown (Idk if I'm trippin or sometimes the BT countdown is faster/slower than the increment)
     /**
      * Drives the BT countdown for the top arrived process.
      *
