@@ -123,3 +123,22 @@
     -fx-min-width: 180;
     -fx-max-width: 180;
 }
+
+/* ── Add button ──────────────────────────────────────────────
+ * Large button to confirm the current customer entry.
+ */
+.add-btn {
+    -fx-min-width: 300;
+    -fx-min-height: 50;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-background-color: #cc5114;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-padding: 10 40;
+}
+
+.add-btn:hover {
+    -fx-background-color: #dd9223;
+}
