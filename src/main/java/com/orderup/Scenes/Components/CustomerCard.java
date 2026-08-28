@@ -164,6 +164,9 @@ public class CustomerCard extends VBox {
             atSliders[i].valueProperty().addListener((obs, oldVal, newVal) -> {
                 updateATLabel(idx);
                 updateFillBar(atFills[idx], atSliders[idx]);
+
+                // Reset the value label color to black if AT value was initially flagged as being a duplicate
+                atValueLabels[idx].setFill(Color.BLACK);
             });
             btSliders[i].valueProperty().addListener((obs, oldVal, newVal) -> {
                 updateBTLabel(idx);
@@ -205,12 +208,10 @@ public class CustomerCard extends VBox {
         int currentAT = (int) atSliders[currentIndex].getValue();
 
         if (hasDuplicateAT(currentAT)) {
+            // Highlight the duplicate AT value
             atValueLabels[currentIndex].setFill(Color.RED);
             return;
         }
-
-        // Clear any red highlight from a previous rejected attempt
-        atValueLabels[currentIndex].setFill(Color.BLACK);
 
         confirmedATs[addedCount] = currentAT;
         addedCount++;
