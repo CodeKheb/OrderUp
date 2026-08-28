@@ -352,6 +352,10 @@ public class CustomerCard extends VBox {
         atRow.getChildren().set(2, atValueLabels[currentIndex]);
         btRow.getChildren().set(1, btSliders[currentIndex]);
         btRow.getChildren().set(2, btValueLabels[currentIndex]);
+
+        // Update labels to reflect the new customer's slider values
+        updateATLabel(currentIndex);
+        updateBTLabel(currentIndex);
     }
 
     /** Updates the header to show "Customer N". */
