@@ -53,6 +53,9 @@ public class Application extends GameApplication {
     /** The process queue for the current game session, set by controllers before starting. */
     private static ProcessQueue processQueue;
 
+    /** Original process list, never modified during gameplay. Used by the Gantt overlay. */
+    private static java.util.List<CustomerProcess> originalProcesses;
+
     /** Reference to the waiting line scene, so ClickHandler can access it. */
     private static WaitingLineScene waitingLineScene;
 
@@ -101,6 +104,15 @@ public class Application extends GameApplication {
     /** Sets the process queue for the current game session. */
     public static void setProcessQueue(ProcessQueue queue) {
         processQueue = queue;
+        originalProcesses = new java.util.ArrayList<>();
+        for (CustomerProcess p : queue.getProcessList()) {
+            originalProcesses.add(new CustomerProcess(p));
+        }
+    }
+
+    /** Returns the original, unmodified process list. */
+    public static java.util.List<CustomerProcess> getOriginalProcesses() {
+        return originalProcesses;
     }
 
     /** Returns the process queue for the current game session. */
