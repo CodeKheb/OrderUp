@@ -42,7 +42,7 @@ public class ProcessGenerator {
         for (int i = 1; i < listSize; i++) {
             CustomerProcess newProcess;
             do { // Creates the process' unique arrival time and burst time
-                int arrival = (int) (Math.random() * 8) + 1;
+                int arrival = (int) (Math.random() * 20) + 1;
                 int burst = (int) (Math.random() * 8) + 1;
                 newProcess = new CustomerProcess((i + 1), arrival, burst);
             } // checks if a process' arrival time matches with any other process' arrival time
