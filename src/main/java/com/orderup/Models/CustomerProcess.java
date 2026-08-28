@@ -12,6 +12,14 @@ public class CustomerProcess implements Comparable<CustomerProcess> {
 	private int burstTime;
 	private final CharacterType characterType;
 
+	/** Creates a copy of an existing customer process. */
+	public CustomerProcess(CustomerProcess other) {
+		this.customerId = other.customerId;
+		this.arrivalTime = other.arrivalTime;
+		this.burstTime = other.burstTime;
+		this.characterType = other.characterType;
+	}
+
 	/** Creates a customer process with its scheduling values. */
 	public CustomerProcess(int customerId, int arrivalTime, int burstTime) {
 		this(customerId, arrivalTime, burstTime, (customerId % 2 != 0) ? CharacterType.GIRL : CharacterType.MAN);

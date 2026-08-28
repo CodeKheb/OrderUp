@@ -53,6 +53,12 @@ public class Application extends GameApplication {
     /** The process queue for the current game session, set by controllers before starting. */
     private static ProcessQueue processQueue;
 
+    /** Original process list, never modified during gameplay. Used by the Gantt overlay. */
+    private static java.util.List<CustomerProcess> originalProcesses;
+
+    /** Reference to the waiting line scene, so ClickHandler can access it. */
+    private static WaitingLineScene waitingLineScene;
+
     /** The process display for the current game session, set in {@link #initGame()} before starting. */
     private ProcessDisplay processDisplay;
 
@@ -98,11 +104,25 @@ public class Application extends GameApplication {
     /** Sets the process queue for the current game session. */
     public static void setProcessQueue(ProcessQueue queue) {
         processQueue = queue;
+        originalProcesses = new java.util.ArrayList<>();
+        for (CustomerProcess p : queue.getProcessList()) {
+            originalProcesses.add(new CustomerProcess(p));
+        }
+    }
+
+    /** Returns the original, unmodified process list. */
+    public static java.util.List<CustomerProcess> getOriginalProcesses() {
+        return originalProcesses;
     }
 
     /** Returns the process queue for the current game session. */
     public static ProcessQueue getProcessQueue() {
         return processQueue;
+    }
+
+    /** Returns the waiting line scene instance. */
+    public static WaitingLineScene getWaitingLineScene() {
+        return waitingLineScene;
     }
 
     /**
@@ -151,7 +171,8 @@ public class Application extends GameApplication {
                 SceneManager.show(new ManualScene());
                 break;
             default:
-                SceneManager.show(new WaitingLineScene());
+                waitingLineScene = new WaitingLineScene();
+                SceneManager.show(waitingLineScene);
                 SceneManager.showClockUI();
                 Group queueDisplay = processDisplay.getDisplayGroup();
                 queueDisplay.setTranslateX(50);
@@ -233,6 +254,11 @@ public class Application extends GameApplication {
         }
 
         repositionCustomers();
+
+        // Show Gantt overlay when all processes are done
+        if (processQueue.getProcessList().isEmpty() && waitingLineScene != null) {
+            waitingLineScene.showGanttOverlay(originalProcesses);
+        }
     }
 
     /** Recalculates target X positions for all remaining customer entities. */
