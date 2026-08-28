@@ -43,6 +43,9 @@ public class CustomerCard extends VBox {
 
     private static final int CUSTOMER_COUNT = 6;
 
+    /** Minimum value for Burst Time (Patience) slider. Change this to adjust the range. */
+    private static final int MIN_BURST_TIME = 1;
+
     /** Maximum value for Burst Time (Patience) slider. Change this to adjust the range. */
     private static final int MAX_BURST_TIME = 8;
 
@@ -87,6 +90,9 @@ public class CustomerCard extends VBox {
 
     /** Character type chosen per customer (GIRL or MAN). */
     private final CharacterType[] characterTypes = new CharacterType[CUSTOMER_COUNT];
+
+    /** Arrival times confirmed for previous customers (index 0 to addedCount-1). */
+    private final int[] confirmedATs = new int[CUSTOMER_COUNT];
 
     /** Current sprite frame index for the animated display. */
     private int currentFrameIndex = 0;
@@ -145,7 +151,7 @@ public class CustomerCard extends VBox {
         // ── 3. Sliders with value labels and fill bars ───────
         for (int i = 0; i < CUSTOMER_COUNT; i++) {
             atSliders[i] = createSlider(MIN_ARRIVAL_TIME, MAX_ARRIVAL_TIME);
-            btSliders[i] = createSlider(1, MAX_BURST_TIME);
+            btSliders[i] = createSlider(MIN_BURST_TIME, MAX_BURST_TIME);
             atValueLabels[i] = createValueLabel();
             btValueLabels[i] = createValueLabel();
             atFills[i] = createFillBar();
@@ -158,6 +164,9 @@ public class CustomerCard extends VBox {
             atSliders[i].valueProperty().addListener((obs, oldVal, newVal) -> {
                 updateATLabel(idx);
                 updateFillBar(atFills[idx], atSliders[idx]);
+
+                // Reset the value label color to black if AT value was initially flagged as being a duplicate
+                atValueLabels[idx].setFill(Color.BLACK);
             });
             btSliders[i].valueProperty().addListener((obs, oldVal, newVal) -> {
                 updateBTLabel(idx);
@@ -192,9 +201,19 @@ public class CustomerCard extends VBox {
 
     /**
      * Advances to the next customer after the user clicks Add.
+     * If the current AT matches a previously confirmed AT, the add is blocked.
      * If all 6 customers have been added, the button is disabled.
      */
     private void addCustomer() {
+        int currentAT = (int) atSliders[currentIndex].getValue();
+
+        if (hasDuplicateAT(currentAT)) {
+            // Highlight the duplicate AT value
+            atValueLabels[currentIndex].setFill(Color.RED);
+            return;
+        }
+
+        confirmedATs[addedCount] = currentAT;
         addedCount++;
 
         if (currentIndex < CUSTOMER_COUNT - 1) {
@@ -206,6 +225,21 @@ public class CustomerCard extends VBox {
             addBtn.setDisable(true);
             addBtn.setText("Done");
         }
+    }
+
+    /**
+     * Checks whether the given AT value matches any previously confirmed AT.
+     *
+     * @param at the arrival time to check
+     * @return true if a duplicate exists, false otherwise
+     */
+    private boolean hasDuplicateAT(int at) {
+        for (int i = 0; i < addedCount; i++) {
+            if (confirmedATs[i] == at) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Returns how many customers have been confirmed via the Add button. */
@@ -435,4 +469,5 @@ public class CustomerCard extends VBox {
         HBox.setHgrow(slider, Priority.ALWAYS);
         return row;
     }
+
 }

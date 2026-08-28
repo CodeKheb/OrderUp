@@ -32,6 +32,9 @@ public class CustomerAnimationComponent extends Component {
     /**
      * Creates the animation component for a customer.
      *
+     * CURRENTLY: only supports male and female characters in binary order (odd IDs = female, even IDs = male)
+     * TODO: add support for explicit multiple character types
+     *
      * @param customerId the customer's ID; odd IDs use the girl sprite,
      *                   even IDs use the man sprite
      */
