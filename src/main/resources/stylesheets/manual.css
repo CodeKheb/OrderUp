@@ -16,11 +16,11 @@
     -fx-border-radius: 8;
     -fx-background-color: #f9f9f9;
     -fx-background-radius: 8;
-    -fx-padding: 20 30;
+    -fx-padding: 25 40;
     -fx-alignment: CENTER;
-    -fx-spacing: 10;
-    -fx-min-width: 220;
-    -fx-max-width: 220;
+    -fx-spacing: 12;
+    -fx-min-width: 1000;
+    -fx-max-width: 1000;
 }
 
 /* ── Card Header ─────────────────────────────────────────────
@@ -34,7 +34,7 @@
 
 /* ── "Customer N" title text ───────────────────────────────── */
 .customer-header-text {
-    -fx-font-size: 18px;
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
     -fx-fill: #333;
 }
@@ -44,7 +44,7 @@
  * Background is transparent by default, fills grey on hover.
  */
 .arrow-btn {
-    -fx-font-size: 20px;
+    -fx-font-size: 24px;
     -fx-background-color: transparent;
     -fx-border-color: #333;
     -fx-border-width: 1;
@@ -68,7 +68,7 @@
 
 /* ── Input label text ──────────────────────────────────────── */
 .input-label {
-    -fx-font-size: 14px;
+    -fx-font-size: 18px;
     -fx-fill: #333;
     -fx-font-weight: bold;
 }
@@ -81,4 +81,43 @@
     -fx-max-width: 80;
     -fx-min-height: 25;
     -fx-font-size: 13px;
+}
+
+/* ── Slider controls ─────────────────────────────────────────
+ * Style for the AT and BT sliders in the customer card.
+ */
+.input-slider {
+    -fx-padding: 5 10;
+}
+
+.input-slider .track {
+    -fx-background-color: #ddd;
+    -fx-background-radius: 4;
+    -fx-pref-height: 6;
+}
+
+.input-slider .thumb {
+    -fx-background-color: #333;
+    -fx-background-radius: 50%;
+    -fx-padding: 6;
+    -fx-cursor: hand;
+}
+
+.input-slider .axis .tick-mark {
+    -fx-stroke: #999;
+}
+
+.input-slider .axis .tick-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #666;
+}
+
+/* ── Slider value label ──────────────────────────────────────
+ * Shows the current value of the slider to the right.
+ */
+.slider-value-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-fill: #333;
+    -fx-min-width: 120;
 }
