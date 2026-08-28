@@ -5,15 +5,13 @@ public class CustomerProcess implements Comparable<CustomerProcess> {
 
 	private final int customerId;
 	private final int arrivalTime;
-	private final int burstTime;
+	private int burstTime;
 
 	/** Creates a customer process with its scheduling values. */
 	public CustomerProcess(int customerId, int arrivalTime, int burstTime) {
 
 		if (customerId < 0) throw new IllegalArgumentException("Customer ID cannot be negative");
 		if (arrivalTime < 0) throw new IllegalArgumentException("Arrival time cannot be negative");
-		if (burstTime <= 0) throw new IllegalArgumentException("Burst time must be greater than zero");
-
 		this.customerId = customerId;
 		this.arrivalTime = arrivalTime;
 		this.burstTime = burstTime;
@@ -29,6 +27,15 @@ public class CustomerProcess implements Comparable<CustomerProcess> {
 
 	public int getBurstTime() {
 		return burstTime;
+	}
+
+	public void setBurstTime(int burstTime) {
+		this.burstTime = burstTime;
+	}
+
+	/** Returns whether this process's burst time has been fully served. */
+	public boolean isBurstComplete() {
+		return burstTime <= 0;
 	}
 
 	/** Returns whether this process has arrived by the given time. */
