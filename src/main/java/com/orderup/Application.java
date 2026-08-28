@@ -268,11 +268,10 @@ public class Application extends GameApplication {
             if (!processDisplay.containsProcess(process.getCustomerId())) {
                 processDisplay.addProcess(process);
             }
-        }		
-        
+        }
+
         if (currentTick != lastTick) {
             lastTick = currentTick;
-            processDisplay.update(currentTick);
 
             arrived = processQueue.getArrivedProcesses(currentTick);
             if (!arrived.isEmpty()) {
@@ -282,9 +281,9 @@ public class Application extends GameApplication {
                     if (front.isBurstComplete()) {
                         completeProcess(front);
                     }
-                    processDisplay.update(currentTick);
                 }
             }
+            processDisplay.update(currentTick);
         }
 
 
