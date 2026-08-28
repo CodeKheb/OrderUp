@@ -154,12 +154,15 @@ public class ProcessDisplay {
         }
 
         return String.format("%02d:%02d %s", hours12, minutes, amPm);
-    }
+    }	/** Checks if a process with this customer ID is already displayed. */
+	public boolean containsProcess(int customerId) {
+		return processes.stream().anyMatch(p -> p.getCustomerId() == customerId);
+	}
 
-    /** Checks if a process with this customer ID is already displayed. */
-    public boolean containsProcess(int customerId) {
-        return processes.stream().anyMatch(p -> p.getCustomerId() == customerId);
-    }
+	/** Removes a process by customer ID from the display list. */
+	public void removeProcess(int customerId) {
+		processes.removeIf(p -> p.getCustomerId() == customerId);
+	}
 
     /** Returns the JavaFX Group containing all display text nodes. */
     public Group getDisplayGroup() {
