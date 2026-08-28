@@ -160,12 +160,6 @@ public class Application extends GameApplication {
                 break;
         }
     }	
-    
-    /** Accumulates real-time seconds for the BT countdown. */
-	private double btAccumulator = 0.0;
-
-	/** Real seconds between each BT decrement. */
-	private static final double BT_INTERVAL = 0.30;
 
 	/**
 	 * Horizontal position where the waiting line / counter sits.
@@ -208,45 +202,6 @@ public class Application extends GameApplication {
         FXGL.spawn("customer", data);
     }
 
-    //TODO: Further tests on BT countdown (Idk if I'm trippin or sometimes the BT countdown is faster/slower than the increment)
-    /**
-     * Drives the BT countdown for the top arrived process.
-     *
-     * <p>Accumulates real-time {@code tpf} and decrements the top process's
-     * burst time every {@link #BT_INTERVAL} seconds. Only ticks when the
-     * customer entity has stopped moving. Triggers {@link #completeProcess}
-     * when burst time reaches zero.</p>
-     *
-     * @param tpf         time per frame in seconds
-     * @param currentTick the current game-clock tick
-     */
-    private void updateTopProcess(double tpf, int currentTick) {
-        var arrivedProcesses = processQueue.getArrivedProcesses(currentTick);
-        if (arrivedProcesses.isEmpty()) {
-            return;
-        }
-
-        CustomerProcess topProcess = arrivedProcesses.get(0);
-        Entity topEntity = findCustomerEntity(topProcess.getCustomerId());
-
-        if (topEntity == null || !hasArrived(topEntity)) {
-            btAccumulator = 0;
-            return;
-        }
-
-        btAccumulator += tpf;
-        if (btAccumulator < BT_INTERVAL) {
-            return;
-        }
-
-        btAccumulator -= BT_INTERVAL;
-        decrementBurstTime(topProcess, currentTick);
-
-        if (topProcess.isBurstComplete()) {
-            completeProcess(topProcess);
-        }
-    }
-
     /** Finds the game-world entity matching the given customer ID, or null. */
     private Entity findCustomerEntity(int customerId) {
         for (Entity entity : FXGL.getGameWorld().getEntitiesByType(CustomerType.CUSTOMER)) {
@@ -257,20 +212,6 @@ public class Application extends GameApplication {
         }
 
         return null;
-    }
-
-    /** Returns whether the entity has reached its target position. */
-    private boolean hasArrived(Entity entity) {
-        return entity.<Boolean>getPropertyOptional("arrived").orElse(false);
-    }
-
-    /** Decrements the process's burst time by 1 and refreshes the display. */
-    private void decrementBurstTime(CustomerProcess process, int currentTick) {
-        if (!process.isBurstComplete()) {
-            process.setBurstTime(process.getBurstTime() - 1);
-        }
-
-        processDisplay.update(currentTick);
     }
 
     /**
@@ -291,7 +232,6 @@ public class Application extends GameApplication {
             entity.removeFromWorld();
         }
 
-        btAccumulator = 0;
         repositionCustomers();
     }
 
@@ -328,13 +268,24 @@ public class Application extends GameApplication {
             if (!processDisplay.containsProcess(process.getCustomerId())) {
                 processDisplay.addProcess(process);
             }
-        }		if (currentTick != lastTick) {
-			lastTick = currentTick;
-			processDisplay.update(currentTick);
-		}
+        }		
+        
+        if (currentTick != lastTick) {
+            lastTick = currentTick;
+            processDisplay.update(currentTick);
 
-        // --- BT Countdown for the top (first) arrived process ---
-        updateTopProcess(tpf, currentTick);
+            arrived = processQueue.getArrivedProcesses(currentTick);
+            if (!arrived.isEmpty()) {
+                CustomerProcess front = arrived.get(0);
+                if (!front.isBurstComplete()) {
+                    front.setBurstTime(front.getBurstTime() - 1);
+                    processDisplay.update(currentTick);
+                    if (front.isBurstComplete()) {
+                        completeProcess(front);
+                    }
+                }
+            }
+        }
 
 		// Cap tpf to prevent large jumps during initialization lag
         double cappedTpf = Math.min(tpf, 1.0 / 60.0);
