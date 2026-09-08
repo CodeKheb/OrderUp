@@ -25,6 +25,7 @@ import javafx.util.StringConverter;
 /**
  * A card for inputting one customer's arrival and burst time (Manual mode).
  *
+<<<<<<< Updated upstream
  * <p>Shows an animated character with arrow buttons on either side (for changing
  * the character's sprite), two sliders (AT and BT), and an Add button that
  * confirms the entry and advances to the next customer.</p>
@@ -37,12 +38,29 @@ import javafx.util.StringConverter;
  * │   Patience (BT): [====slider====]  3           │
  * │                  [Add]                         │
  * └──────────────────────────────────────────────┘
+=======
+ * <p>Shows a stickman with the auto-cycling sprite label, two input fields
+ * (AT and BT), and an Add button that confirms the entry and advances
+ * to the next customer.</p>
+ *
+ * <pre>
+ * +-----------------+
+ * |   Customer 1     |
+ * |      O           |   ← auto-cycling sprite
+ * |     /|\          |
+ * |    / | \         |
+ * | Arrival (AT): [] |
+ * | Patience (BT):[] |
+ * |      [Add]       |   ← confirms & advances
+ * +-----------------+
+>>>>>>> Stashed changes
  * </pre>
  */
 public class CustomerCard extends VBox {
 
     private static final int CUSTOMER_COUNT = 6;
 
+<<<<<<< Updated upstream
     /** Minimum value for Burst Time (Patience) slider. Change this to adjust the range. */
     private static final int MIN_BURST_TIME = 1;
 
@@ -66,12 +84,15 @@ public class CustomerCard extends VBox {
     private static final Color SLIDER_FILL_COLOR = Color.web("#4a90d9");
 
     /** Index of the customer currently being edited (0–5). */
+=======
+    /** Index of the customer currently being edited (0-5). */
+>>>>>>> Stashed changes
     private int currentIndex = 0;
 
     /** Number of customers the user has confirmed via the Add button. */
     private int addedCount = 0;
 
-    /** Displays "Customer N" in the header — updates as the user advances. */
+    /** Displays "Customer N" in the header -- updates as the user advances. */
     private final Text titleText = new Text();
 
     /** One slider per customer for Arrival Time. */
@@ -113,13 +134,20 @@ public class CustomerCard extends VBox {
     /** Button to confirm the current customer and advance to the next. */
     private final Button addBtn;
 
+    /** Shows the auto-cycling sprite label (e.g., "Girl 1", "Man 2"). */
+    private final Text spriteLabel = new Text();
+
     public CustomerCard() {
+<<<<<<< Updated upstream
         // Initialize all character types to GIRL by default
         for (int i = 0; i < CUSTOMER_COUNT; i++) {
             characterTypes[i] = CharacterType.GIRL;
         }
 
         // ── 1. Header: just the title ────────────────────────
+=======
+        // -- 1. Header: just the title -------------------------
+>>>>>>> Stashed changes
         titleText.getStyleClass().add("customer-header-text");
 
         HBox header = new HBox(titleText);
@@ -127,6 +155,7 @@ public class CustomerCard extends VBox {
         header.getStyleClass().add("customer-header");
         header.setPadding(Insets.EMPTY);
 
+<<<<<<< Updated upstream
         // ── 2. Character sprite with arrows on either side ───
         Button prevCharBtn = createArrowButton("\u276E");
         prevCharBtn.setOnAction(e -> changeCharacter(-1));
@@ -149,6 +178,18 @@ public class CustomerCard extends VBox {
         VBox.setMargin(characterRow, new Insets(-80, 0, 0, 0));
 
         // ── 3. Sliders with value labels and fill bars ───────
+=======
+        // -- 2. Stickman with auto-cycling sprite label --------
+        VBox stickmanBox = new VBox(StickmanFigure.create());
+        stickmanBox.setAlignment(Pos.CENTER);
+
+        updateSpriteLabel();
+
+        VBox characterBox = new VBox(2, stickmanBox, spriteLabel);
+        characterBox.setAlignment(Pos.CENTER);
+
+        // -- 3. Input fields -----------------------------------
+>>>>>>> Stashed changes
         for (int i = 0; i < CUSTOMER_COUNT; i++) {
             atSliders[i] = createSlider(MIN_ARRIVAL_TIME, MAX_ARRIVAL_TIME);
             btSliders[i] = createSlider(MIN_BURST_TIME, MAX_BURST_TIME);
@@ -183,13 +224,13 @@ public class CustomerCard extends VBox {
         updateFillBar(atFills[0], atSliders[0]);
         updateFillBar(btFills[0], btSliders[0]);
 
-        // ── 4. Add button ────────────────────────────────────
+        // -- 4. Add button -------------------------------------
         addBtn = new Button("Add");
         addBtn.getStyleClass().add("add-btn");
         addBtn.setOnAction(e -> addCustomer());
 
-        // ── 5. Assemble ──────────────────────────────────────
-        this.getChildren().addAll(header, characterRow, atRow, btRow, addBtn);
+        // -- 5. Assemble ---------------------------------------
+        this.getChildren().addAll(header, characterBox, atRow, btRow, addBtn);
         this.setAlignment(Pos.CENTER);
         this.getStyleClass().add("customer-card");
 
@@ -197,7 +238,7 @@ public class CustomerCard extends VBox {
         loadCharacterSprite();
     }
 
-    // ── Navigation ────────────────────────────────────────────
+    // -- Navigation -----------------------------------------------
 
     /**
      * Advances to the next customer after the user clicks Add.
@@ -220,7 +261,11 @@ public class CustomerCard extends VBox {
             currentIndex++;
             swapSliders();
             updateTitle();
+<<<<<<< Updated upstream
             loadCharacterSprite();
+=======
+            updateSpriteLabel();
+>>>>>>> Stashed changes
         } else {
             addBtn.setDisable(true);
             addBtn.setText("Done");
@@ -248,6 +293,7 @@ public class CustomerCard extends VBox {
     }
 
     /**
+<<<<<<< Updated upstream
      * Changes the character type (GIRL ↔ MAN) for the current customer.
      *
      * @param direction -1 for previous character, +1 for next character
@@ -291,15 +337,43 @@ public class CustomerCard extends VBox {
     private void updateFillBar(Rectangle fill, Slider slider) {
         double progress = (slider.getValue() - slider.getMin()) / (slider.getMax() - slider.getMin());
         fill.widthProperty().bind(slider.widthProperty().multiply(progress));
+=======
+     * Returns the sprite variant index (1-based) for a specific customer.
+     * Variants auto-cycle: Customer 1→girl1, 2→man1, 3→girl2, 4→man2, etc.
+     *
+     * @param index customer index (0-5, where 0 = Customer 1)
+     * @return the sprite variant index (1-3)
+     */
+    public int getSpriteIndex(int index) {
+        // customer number (1-based) → variant index (1-3)
+        int customerNum = index + 1;
+        return ((customerNum - 1) / 2) % CustomerAnimationComponent.getMaxSpriteVariant() + 1;
+>>>>>>> Stashed changes
     }
 
-    // ── Reading values ────────────────────────────────────────
+    /**
+     * Updates the sprite label to show the current customer's sprite variant.
+     */
+    private void updateSpriteLabel() {
+        boolean isGirl = (currentIndex % 2 == 0);
+        String prefix = isGirl ? "Girl" : "Man";
+        int variant = getSpriteIndex(currentIndex);
+        spriteLabel.setText(prefix + " " + variant);
+        spriteLabel.getStyleClass().add("variant-label-text");
+    }
+
+    // -- Reading values -------------------------------------------
 
     /**
      * Gets the Arrival Time selected for a specific customer.
      *
+<<<<<<< Updated upstream
      * @param index customer index (0–5, where 0 = Customer 1)
      * @return the slider value as a string
+=======
+     * @param index customer index (0-5, where 0 = Customer 1)
+     * @return the typed value, or "0" if the field is empty
+>>>>>>> Stashed changes
      */
     public String getArrivalTime(int index) {
         return String.valueOf((int) atSliders[index].getValue());
@@ -308,8 +382,13 @@ public class CustomerCard extends VBox {
     /**
      * Gets the Patience (Burst Time) selected for a specific customer.
      *
+<<<<<<< Updated upstream
      * @param index customer index (0–5, where 0 = Customer 1)
      * @return the slider value as a string
+=======
+     * @param index customer index (0-5, where 0 = Customer 1)
+     * @return the typed value, or "0" if the field is empty
+>>>>>>> Stashed changes
      */
     public String getPatience(int index) {
         return String.valueOf((int) btSliders[index].getValue());
@@ -376,7 +455,7 @@ public class CustomerCard extends VBox {
         return frames;
     }
 
-    // ── Internal helpers ──────────────────────────────────────
+    // -- Internal helpers ----------------------------------------
 
     /**
      * Swaps the sliders and labels in each row to show the current customer's controls.
@@ -397,6 +476,7 @@ public class CustomerCard extends VBox {
         titleText.setText("Customer " + (currentIndex + 1));
     }
 
+<<<<<<< Updated upstream
     /** Creates a styled arrow button for character navigation. */
     private Button createArrowButton(String symbol) {
         Button btn = new Button(symbol);
@@ -410,6 +490,14 @@ public class CustomerCard extends VBox {
         label.getStyleClass().add("slider-value-label");
         label.setWrappingWidth(180);
         return label;
+=======
+    /** Creates an empty text input field with a placeholder. */
+    private TextField createInputField() {
+        TextField field = new TextField();
+        field.getStyleClass().add("input-field");
+        field.setPromptText("0");
+        return field;
+>>>>>>> Stashed changes
     }
 
     /** Creates a thin rectangle used as a visual fill bar on the slider. */

@@ -49,6 +49,8 @@ public class CustomerFactory implements EntityFactory {
         double floorY = 320.0;
         double spawnY = data.hasKey("y") ? data.get("y") : floorY;
 
+        // Sprite variant auto-cycles based on customer ID:
+        // girl1, man1, girl2, man2, girl3, man3, girl1, man1, ...
         var entity = FXGL.entityBuilder(data)
                 .type(CustomerType.CUSTOMER)
                 .at(data.getX(), spawnY)

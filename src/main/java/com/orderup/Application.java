@@ -189,7 +189,7 @@ public class Application extends GameApplication {
 	private static final double TARGET_X = 200;
 
     /** Horizontal gap between consecutive customers in the line. */
-    private static final double LINE_GAP = 90;
+    private static final double LINE_GAP = 100;
 
     /** Pixels per second that customers move toward their target. */
     private static final double MOVE_SPEED = 200;

@@ -45,7 +45,6 @@ public class MenuController {
         List<CustomerProcess> processes = gen.createRandom();
 
         Application.setProcessQueue(new ProcessQueue(processes));
-
         Application.setInitialScene(SceneType.WAITING_LINE);
         FXGL.getGameController().startNewGame();
     }
