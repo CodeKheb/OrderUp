@@ -219,6 +219,7 @@ public class Application extends GameApplication {
         data.put("targetY", targetY);
         data.put("arrivalTime", process.getArrivalTime());
         data.put("burstTime", process.getBurstTime());
+        data.put("characterType", process.getCharacterType());
 
         FXGL.spawn("customer", data);
     }

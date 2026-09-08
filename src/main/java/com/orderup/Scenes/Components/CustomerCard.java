@@ -22,6 +22,9 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A card for inputting one customer's arrival and burst time (Manual mode).
  *
@@ -113,10 +116,17 @@ public class CustomerCard extends VBox {
     /** Button to confirm the current customer and advance to the next. */
     private final Button addBtn;
 
+    /** Current sprite index in the display order (0-5 for girl1, man1, girl2, man2, girl3, man3). */
+    private int[] spriteIndices = new int[CUSTOMER_COUNT];
+
+    /** Cache for parsed sprite frames to avoid reloading. */
+    private final Map<String, WritableImage[]> frameCache = new HashMap<>();
+
     public CustomerCard() {
-        // Initialize all character types to GIRL by default
+        // Initialize all character types to GIRL1 by default
         for (int i = 0; i < CUSTOMER_COUNT; i++) {
-            characterTypes[i] = CharacterType.GIRL;
+            characterTypes[i] = CharacterType.GIRL1;
+            spriteIndices[i] = 0; // index into displayOrder array
         }
 
         // ── 1. Header: just the title ────────────────────────
@@ -248,15 +258,15 @@ public class CustomerCard extends VBox {
     }
 
     /**
-     * Changes the character type (GIRL ↔ MAN) for the current customer.
+     * Changes the character type for the current customer.
+     * Cycles through all 6 sprite variants: girl1, man1, girl2, man2, girl3, man3.
      *
      * @param direction -1 for previous character, +1 for next character
      */
     private void changeCharacter(int direction) {
-        CharacterType current = characterTypes[currentIndex];
-        characterTypes[currentIndex] = (current == CharacterType.GIRL)
-                ? CharacterType.MAN
-                : CharacterType.GIRL;
+        CharacterType[] order = CharacterType.displayOrder();
+        spriteIndices[currentIndex] = (spriteIndices[currentIndex] + direction + order.length) % order.length;
+        characterTypes[currentIndex] = order[spriteIndices[currentIndex]];
         loadCharacterSprite();
     }
 
@@ -337,12 +347,14 @@ public class CustomerCard extends VBox {
         }
 
         CharacterType type = characterTypes[currentIndex];
-        String spriteFile = (type == CharacterType.GIRL)
-                ? "girl1_idle.png"
-                : "man1_idle.png";
+        String spriteFile = type.getSpriteFile("idle.png");
+        int idleFrames = type.getIdleFrameCount();
 
-        Image spriteSheet = new Image(getClass().getResourceAsStream("/assets/textures/" + spriteFile));
-        currentIdleFrames = parseFrames(spriteSheet, type == CharacterType.GIRL ? 9 : 6);
+        // Use frame cache to avoid reloading spritesheets
+        currentIdleFrames = frameCache.computeIfAbsent(spriteFile, key -> {
+            Image spriteSheet = new Image(getClass().getResourceAsStream("/assets/textures/" + key));
+            return parseFrames(spriteSheet, idleFrames);
+        });
         currentFrameIndex = 0;
 
         if (currentIdleFrames.length > 0) {

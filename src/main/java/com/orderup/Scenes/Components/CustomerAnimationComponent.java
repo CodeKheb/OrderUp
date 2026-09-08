@@ -5,13 +5,15 @@ import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
 
+import com.orderup.Models.CustomerProcess.CharacterType;
+
 import javafx.util.Duration;
 
 /**
  * FXGL Component that manages sprite animation for customer entities.
  * <br><br>
  * Supports multiple character variants (girl1-3, man1-3) selected by
- * {@code spriteIndex}. The animated texture is attached to the entity's
+ * {@code CharacterType}. The animated texture is attached to the entity's
  * view in {@link #onAdded()}.
  */
 public class CustomerAnimationComponent extends Component {
@@ -25,15 +27,6 @@ public class CustomerAnimationComponent extends Component {
     /** Scale multiplier for the sprite on screen. */
     private static final double SPRITE_SCALE = 2.5;
 
-    /** Number of available sprite variants for each gender. */
-    private static final int MAX_SPRITE_VARIANT = 3;
-
-    /** Idle frame counts per sprite variant: [girl1, girl2, girl3] */
-    private static final int[] GIRL_IDLE_FRAMES = {9, 7, 6};
-
-    /** Idle frame counts are the same for all man variants */
-    private static final int MAN_IDLE_FRAMES = 6;
-
     /** Walk frame counts are the same for all variants of each gender */
     private static final int GIRL_WALK_FRAMES = 12;
     private static final int MAN_WALK_FRAMES = 10;
@@ -45,48 +38,25 @@ public class CustomerAnimationComponent extends Component {
     private final int spriteIndex;
 
     /**
-     * Creates the animation component for a customer.
+     * Creates the animation component for a customer with the given character type.
      * <br><br>
-     * The sprite variant is cycled automatically based on customer ID:
+     * The character type determines the sprite variant:
      * <ul>
-     *   <li>Customer 1 (girl) → girl1</li>
-     *   <li>Customer 2 (man)  → man1</li>
-     *   <li>Customer 3 (girl) → girl2</li>
-     *   <li>Customer 4 (man)  → man2</li>
-     *   <li>Customer 5 (girl) → girl3</li>
-     *   <li>Customer 6 (man)  → man3</li>
+     *   <li>GIRL1 → girl1, GIRL2 → girl2, GIRL3 → girl3</li>
+     *   <li>MAN1 → man1, MAN2 → man2, MAN3 → man3</li>
      * </ul>
      *
-<<<<<<< Updated upstream
-     * CURRENTLY: only supports male and female characters in binary order (odd IDs = female, even IDs = male)
-     * TODO: add support for explicit multiple character types
-     *
-     * @param customerId the customer's ID; odd IDs use the girl sprite,
-     *                   even IDs use the man sprite
-=======
-     * @param customerId the customer's ID (1-based); used to determine gender
-     *                   and cycle through sprite variants
->>>>>>> Stashed changes
+     * @param customerId the customer's ID (1-based)
+     * @param characterType the character type (GIRL1-3, MAN1-3) specifying sprite variant
      */
-    public CustomerAnimationComponent(int customerId) {
-        this(customerId, ((customerId - 1) / 2) % MAX_SPRITE_VARIANT + 1);
-    }
-
-    /**
-     * Creates the animation component for a customer with an explicit sprite variant.
-     *
-     * @param customerId the customer's ID; used to determine gender
-     * @param spriteIndex the sprite variant index (1-based, 1-3)
-     */
-    public CustomerAnimationComponent(int customerId, int spriteIndex) {
-        this.isGirl = (customerId % 2 != 0);
-        this.spriteIndex = Math.max(1, Math.min(spriteIndex, MAX_SPRITE_VARIANT));
-        String prefix = isGirl ? "girl" : "man";
-        String variant = prefix + this.spriteIndex + "_";
+    public CustomerAnimationComponent(int customerId, CharacterType characterType) {
+        this.isGirl = characterType.isGirl();
+        this.spriteIndex = characterType.getSpriteIndex();
+        String variant = characterType.getPrefix() + this.spriteIndex + "_";
 
         // Frame counts differ between girl and man spritesheets
         // Girl idle varies per variant (girl1=9, girl2=7, girl3=6)
-        int idleFrames = isGirl ? GIRL_IDLE_FRAMES[this.spriteIndex - 1] : MAN_IDLE_FRAMES;
+        int idleFrames = characterType.getIdleFrameCount();
         int walkFrames = isGirl ? GIRL_WALK_FRAMES : MAN_WALK_FRAMES;
 
         idleAnim = new AnimationChannel(
@@ -149,13 +119,6 @@ public class CustomerAnimationComponent extends Component {
      */
     public boolean isGirl() {
         return isGirl;
-    }
-
-    /**
-     * Returns the maximum number of sprite variants available.
-     */
-    public static int getMaxSpriteVariant() {
-        return MAX_SPRITE_VARIANT;
     }
 
     /**
