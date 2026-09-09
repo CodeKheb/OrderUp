@@ -39,6 +39,7 @@
     -fx-padding: 10px 50px;
     -fx-cursor: hand;
 }
+
 .btn:hover {
     -fx-background-color: #cc5114;
     -fx-border-color: #cc5114;
@@ -67,3 +68,45 @@
     -fx-background-color: #cc5114;
     -fx-border-color: #cc5114;
 }
+
+.confirm-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+    -fx-pref-width: 1280;
+    -fx-pref-height: 720;
+}
+
+.confirm-panel {
+    -fx-background-color: #FFF8E7;
+    -fx-background-radius: 16px;
+    -fx-border-color: #D9A45B;
+    -fx-border-width: 2px;
+    -fx-border-radius: 16px;
+    -fx-padding: 30px 50px;
+    -fx-spacing: 20px;
+    -fx-alignment: center;
+}
+
+.confirm-text {
+    -fx-font-size: 48px;
+    -fx-fill: black;
+}
+
+.confirm-btn {
+    -fx-min-width: 500;
+    -fx-min-height: 100;
+    -fx-font-size: 32px;
+    -fx-background-color: #FFF8E7;
+    -fx-text-fill: black;
+    -fx-border-color: #D9A45B;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 10px 50px;
+    -fx-cursor: hand;
+}
+
+.confirm-btn:hover {
+    -fx-background-color: #cc5114;
+    -fx-border-color: #cc5114;
+}
+
