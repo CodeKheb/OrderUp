@@ -37,6 +37,11 @@
     -fx-border-radius: 20px;
     -fx-background-radius: 20px;
     -fx-padding: 10px 50px;
+    -fx-cursor: hand;
+}
+.btn:hover {
+    -fx-background-color: #cc5114;
+    -fx-border-color: #cc5114;
 }
 
 .btn-order {
@@ -56,4 +61,9 @@
     -fx-border-radius: 15px;
     -fx-background-radius: 15px;
     -fx-padding: 8px 20px;
+    -fx-cursor: hand;
+}
+.btn-manual:hover {
+    -fx-background-color: #cc5114;
+    -fx-border-color: #cc5114;
 }
