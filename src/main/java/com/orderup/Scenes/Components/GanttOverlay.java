@@ -170,7 +170,7 @@ public class GanttOverlay extends Pane {
                 label = "IDLE";
             } else {
                 CustomerProcess p = cell.getProcessId();
-                boolean isGirl = p.getCharacterType() == CharacterType.GIRL;
+                boolean isGirl = p.getCharacterType().isGirl();
                 fillColor = isGirl ? GIRL_COLOR : MAN_COLOR;
                 strokeColor = isGirl ? GIRL_STROKE : MAN_STROKE;
                 label = "C" + p.getCustomerId();
