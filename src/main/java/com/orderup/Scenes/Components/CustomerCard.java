@@ -20,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import javafx.util.StringConverter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -172,10 +171,15 @@ public class CustomerCard extends VBox {
         for (int i = 0; i < CUSTOMER_COUNT; i++) {
             final int idx = i;
             atSliders[i].valueProperty().addListener((obs, oldVal, newVal) -> {
+                int val = newVal.intValue();
+                if (hasDuplicateAT(val)) {
+                    // snap to the nearest available if hasDuplicateAT
+                    int snapped = findNearestAvailable(val);
+                    atSliders[idx].setValue(snapped);
+                    return;
+                }
                 updateATLabel(idx);
                 updateFillBar(atFills[idx], atSliders[idx]);
-
-                // Reset the value label color to black if AT value was initially flagged as being a duplicate
                 atValueLabels[idx].setFill(Color.BLACK);
             });
             btSliders[i].valueProperty().addListener((obs, oldVal, newVal) -> {
@@ -211,16 +215,17 @@ public class CustomerCard extends VBox {
 
     /**
      * Advances to the next customer after the user clicks Add.
-     * If the current AT matches a previously confirmed AT, the add is blocked.
-     * If all 6 customers have been added, the button is disabled.
+     * If the current AT matches a previously confirmed AT, the slider snaps
+     * to the nearest available value before adding.
      */
     private void addCustomer() {
         int currentAT = (int) atSliders[currentIndex].getValue();
 
         if (hasDuplicateAT(currentAT)) {
-            // Highlight the duplicate AT value
-            atValueLabels[currentIndex].setFill(Color.RED);
-            return;
+            // Snap to the nearest available AT and proceed
+            int snapped = findNearestAvailable(currentAT);
+            atSliders[currentIndex].setValue(snapped);
+            currentAT = snapped;
         }
 
         confirmedATs[addedCount] = currentAT;
@@ -229,6 +234,7 @@ public class CustomerCard extends VBox {
         if (currentIndex < CUSTOMER_COUNT - 1) {
             currentIndex++;
             swapSliders();
+            snapCurrentSliderIfDuplicate();
             updateTitle();
             loadCharacterSprite();
         } else {
@@ -250,6 +256,38 @@ public class CustomerCard extends VBox {
             }
         }
         return false;
+    }
+
+    /**
+     * If the current customer's AT slider is on a duplicate value,
+     * snaps it to the nearest available value.
+     */
+    private void snapCurrentSliderIfDuplicate() {
+        int currentAT = (int) atSliders[currentIndex].getValue();
+        if (hasDuplicateAT(currentAT)) {
+            int snapped = findNearestAvailable(currentAT);
+            atSliders[currentIndex].setValue(snapped);
+        }
+    }
+
+
+    /**
+     * Finds the nearest available AT value that is not a duplicate.
+     *
+     * @param from the starting value to search from
+     * @return the nearest non-duplicate AT value
+     */
+    private int findNearestAvailable(int from) {
+        // increment
+        for (int v = from + 1; v <= MAX_ARRIVAL_TIME; v++) {
+            if (!hasDuplicateAT(v)) return v;
+        }
+        // decrement
+        for (int v = from - 1; v >= MIN_ARRIVAL_TIME; v--) {
+            if (!hasDuplicateAT(v)) return v;
+        }
+        
+        return from;
     }
 
     /** Returns how many customers have been confirmed via the Add button. */
