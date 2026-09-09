@@ -6,11 +6,15 @@ import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 import com.orderup.Scenes.Controllers.PauseController;
 
-import static com.almasb.fxgl.dsl.FXGL.getDialogService;
 import static com.almasb.fxgl.dsl.FXGL.getGameController;
 
 /**
@@ -21,6 +25,9 @@ import static com.almasb.fxgl.dsl.FXGL.getGameController;
  * and connects it to the {@link PauseController}.
  */
 public class PauseInterface extends FXGLMenu {
+
+    /** Confirmation overlay shown over the pause menu */
+    private StackPane confirmOverlay;
 
     /**
      * Constructs the pause menu by loading the FXML layout and
@@ -41,6 +48,13 @@ public class PauseInterface extends FXGLMenu {
 
         // Add the FXML content to FXGL's menu content root
         getContentRoot().getChildren().add(root);
+
+        // Hide the overlay if pause menu closes
+        getContentRoot().sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null) {
+                hideConfirmOverlay();
+            }
+        });
     }
 
     /**
@@ -52,18 +66,43 @@ public class PauseInterface extends FXGLMenu {
 
     /**
      * Exits the game to the main menu with a confirmation dialog.
-     * <br><br>
-     * Overrides the default exit behavior to show a confirmation box
-     * before returning to the main menu.
      */
     public void exitToMainMenu() {
-        getDialogService().showConfirmationBox(
-            "Are you sure you want to return to the main menu?",
-            (Boolean answer) -> {
-                if (answer) {
-                    getGameController().gotoMainMenu();
-                }
-            }
+        // -- Message text --
+        Text message = new Text("Are you sure you want to return to the main menu?");
+        message.getStyleClass().add("confirm-text");
+
+        // -- Buttons --
+        Button btnYes = new Button("Yes");
+        Button btnNo = new Button("No");
+        btnYes.getStyleClass().add("confirm-btn");
+        btnNo.getStyleClass().add("confirm-btn");
+
+        btnYes.setOnAction(e -> getGameController().gotoMainMenu());
+
+        // -- Panel holding message + buttons --
+        VBox panel = new VBox(20, message, btnYes, btnNo);
+        panel.getStyleClass().add("confirm-panel");
+
+        // -- Full-screen dim overlay wrapping the panel --
+        confirmOverlay = new StackPane(panel);
+        confirmOverlay.getStyleClass().add("confirm-overlay");
+        confirmOverlay.setAlignment(Pos.CENTER);
+
+        confirmOverlay.getStylesheets().add(
+            getClass().getResource("/stylesheets/stylesheet.css").toExternalForm()
         );
+
+        btnNo.setOnAction(e -> hideConfirmOverlay());
+
+        getContentRoot().getChildren().add(confirmOverlay);
+    }
+
+    /** Removes the confirmation overlay from the pause menu, if shown. */
+    private void hideConfirmOverlay() {
+        if (confirmOverlay != null) {
+            getContentRoot().getChildren().remove(confirmOverlay);
+            confirmOverlay = null;
+        }
     }
 }
