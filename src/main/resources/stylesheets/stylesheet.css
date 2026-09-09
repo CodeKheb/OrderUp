@@ -10,15 +10,15 @@
 }
 
 .title {
-    -fx-font-size: 36px;
+    -fx-font-size: 72px;
     -fx-font-weight: bold;
     -fx-fill: black;
 }
 
 .subtitle {
-    -fx-font-size: 28px;
+    -fx-font-size: 68px;
     -fx-font-weight: bold;
-    -fx-fill: black;
+    -fx-fill: white;
 }
 
 .placeholder-text {
@@ -27,13 +27,43 @@
 }
 
 .btn {
-    -fx-min-width: 150;
-    -fx-min-height: 40;
-    -fx-font-size: 14px;
+    -fx-min-width: 500;
+    -fx-min-height: 100;
+    -fx-font-size: 32px;
+    -fx-background-color: #FFF8E7;
+    -fx-text-fill: black;
+    -fx-border-color: #D9A45B;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 10px 50px;
+    -fx-cursor: hand;
+}
+.btn:hover {
+    -fx-background-color: #cc5114;
+    -fx-border-color: #cc5114;
 }
 
 .btn-order {
     -fx-min-width: 180;
     -fx-min-height: 40;
     -fx-font-size: 14px;
+}
+
+.btn-manual {
+    -fx-min-width: 250;
+    -fx-min-height: 60;
+    -fx-font-size: 20px;
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: #cc5114;
+    -fx-border-width: 2px;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-padding: 8px 20px;
+    -fx-cursor: hand;
+}
+.btn-manual:hover {
+    -fx-background-color: #cc5114;
+    -fx-border-color: #cc5114;
 }

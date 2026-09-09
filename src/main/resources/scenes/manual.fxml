@@ -21,8 +21,8 @@
 
         <VBox fx:id="cardContainer" alignment="CENTER" spacing="15.0" />
 
-        <Button text="Back to Menu" styleClass="btn" onAction="#onBack" />
-        <Button text="Start Game" styleClass="btn" onAction="#onPlay" />
+        <Button text="Back to Menu" styleClass="btn-manual" onAction="#onBack" />
+        <Button text="Start Game" styleClass="btn-manual" onAction="#onPlay" />
 
     </VBox>
 </Pane>
