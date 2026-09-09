@@ -8,7 +8,9 @@ import com.almasb.fxgl.entity.Spawns;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
+import com.orderup.Models.MenuItem;
 import com.orderup.Scenes.Components.CustomerAnimationComponent;
+import com.orderup.Scenes.Components.ThoughtBubbleComponent;
 
 /**
  * Entity factory for customer entities.
@@ -17,6 +19,8 @@ import com.orderup.Scenes.Components.CustomerAnimationComponent;
  * and attaches a {@link CustomerAnimationComponent} for sprite animation.
  * Animation details (idle/walk channels, texture scaling) are fully managed
  * by the component, keeping this factory focused on entity creation only.
+ * Each customer also gets a {@link ThoughtBubbleComponent} showing a random
+ * {@link MenuItem}, so they can "tell" the player what they want to order.
  */
 public class CustomerFactory implements EntityFactory {
 
@@ -57,6 +61,7 @@ public class CustomerFactory implements EntityFactory {
                 .bbox(new HitBox(BoundingShape.box(FRAME_WIDTH, FRAME_HEIGHT)))
                 .with(new CollidableComponent(true))
                 .with(new CustomerAnimationComponent(customerId))
+                .with(new ThoughtBubbleComponent(MenuItem.random().getDisplayName()))
                 .build();
 
         if (data.hasKey("targetX")) entity.setProperty("targetX", data.<Double>get("targetX"));
