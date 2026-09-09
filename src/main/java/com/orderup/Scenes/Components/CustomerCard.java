@@ -20,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import javafx.util.StringConverter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -216,16 +215,17 @@ public class CustomerCard extends VBox {
 
     /**
      * Advances to the next customer after the user clicks Add.
-     * If the current AT matches a previously confirmed AT, the add is blocked.
-     * If all 6 customers have been added, the button is disabled.
+     * If the current AT matches a previously confirmed AT, the slider snaps
+     * to the nearest available value before adding.
      */
     private void addCustomer() {
         int currentAT = (int) atSliders[currentIndex].getValue();
 
         if (hasDuplicateAT(currentAT)) {
-            // Highlight the duplicate AT value
-            atValueLabels[currentIndex].setFill(Color.RED);
-            return;
+            // Snap to the nearest available AT and proceed
+            int snapped = findNearestAvailable(currentAT);
+            atSliders[currentIndex].setValue(snapped);
+            currentAT = snapped;
         }
 
         confirmedATs[addedCount] = currentAT;
@@ -234,6 +234,7 @@ public class CustomerCard extends VBox {
         if (currentIndex < CUSTOMER_COUNT - 1) {
             currentIndex++;
             swapSliders();
+            snapCurrentSliderIfDuplicate();
             updateTitle();
             loadCharacterSprite();
         } else {
@@ -256,6 +257,19 @@ public class CustomerCard extends VBox {
         }
         return false;
     }
+
+    /**
+     * If the current customer's AT slider is on a duplicate value,
+     * snaps it to the nearest available value.
+     */
+    private void snapCurrentSliderIfDuplicate() {
+        int currentAT = (int) atSliders[currentIndex].getValue();
+        if (hasDuplicateAT(currentAT)) {
+            int snapped = findNearestAvailable(currentAT);
+            atSliders[currentIndex].setValue(snapped);
+        }
+    }
+
 
     /**
      * Finds the nearest available AT value that is not a duplicate.
