@@ -16,9 +16,9 @@
 }
 
 .subtitle {
-    -fx-font-size: 28px;
+    -fx-font-size: 68px;
     -fx-font-weight: bold;
-    -fx-fill: black;
+    -fx-fill: white;
 }
 
 .placeholder-text {
