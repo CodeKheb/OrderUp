@@ -172,10 +172,15 @@ public class CustomerCard extends VBox {
         for (int i = 0; i < CUSTOMER_COUNT; i++) {
             final int idx = i;
             atSliders[i].valueProperty().addListener((obs, oldVal, newVal) -> {
+                int val = newVal.intValue();
+                if (hasDuplicateAT(val)) {
+                    // snap to the nearest available if hasDuplicateAT
+                    int snapped = findNearestAvailable(val);
+                    atSliders[idx].setValue(snapped);
+                    return;
+                }
                 updateATLabel(idx);
                 updateFillBar(atFills[idx], atSliders[idx]);
-
-                // Reset the value label color to black if AT value was initially flagged as being a duplicate
                 atValueLabels[idx].setFill(Color.BLACK);
             });
             btSliders[i].valueProperty().addListener((obs, oldVal, newVal) -> {
@@ -250,6 +255,25 @@ public class CustomerCard extends VBox {
             }
         }
         return false;
+    }
+
+    /**
+     * Finds the nearest available AT value that is not a duplicate.
+     *
+     * @param from the starting value to search from
+     * @return the nearest non-duplicate AT value
+     */
+    private int findNearestAvailable(int from) {
+        // increment
+        for (int v = from + 1; v <= MAX_ARRIVAL_TIME; v++) {
+            if (!hasDuplicateAT(v)) return v;
+        }
+        // decrement
+        for (int v = from - 1; v >= MIN_ARRIVAL_TIME; v--) {
+            if (!hasDuplicateAT(v)) return v;
+        }
+        
+        return from;
     }
 
     /** Returns how many customers have been confirmed via the Add button. */
