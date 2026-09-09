@@ -69,10 +69,20 @@
     -fx-border-color: #cc5114;
 }
 
+.pause-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-min-width: 1280;
+    -fx-min-height: 800;
+    -fx-pref-width: 1280;
+    -fx-pref-height: 800;
+}
+
 .confirm-overlay {
     -fx-background-color: rgba(0, 0, 0, 0.6);
+    -fx-min-width: 1280;
+    -fx-min-height: 800;
     -fx-pref-width: 1280;
-    -fx-pref-height: 720;
+    -fx-pref-height: 800;
 }
 
 .confirm-panel {
