@@ -44,3 +44,16 @@
     -fx-min-height: 40;
     -fx-font-size: 14px;
 }
+
+.btn-manual {
+    -fx-min-width: 250;
+    -fx-min-height: 60;
+    -fx-font-size: 20px;
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: #cc5114;
+    -fx-border-width: 2px;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-padding: 8px 20px;
+}
