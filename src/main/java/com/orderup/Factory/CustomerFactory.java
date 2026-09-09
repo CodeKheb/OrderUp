@@ -8,6 +8,7 @@ import com.almasb.fxgl.entity.Spawns;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
+import com.orderup.Models.CustomerProcess.CharacterType;
 import com.orderup.Scenes.Components.CustomerAnimationComponent;
 
 /**
@@ -45,16 +46,23 @@ public class CustomerFactory implements EntityFactory {
     public Entity customer(SpawnData data) {
         int customerId = data.hasKey("customerId") ? data.get("customerId") : 1;
 
+        // Get character type from SpawnData, or default based on customer ID
+        CharacterType characterType = data.hasKey("characterType") 
+                ? data.get("characterType") 
+                : CharacterType.displayOrder()[(customerId - 1) % 6];
+
         // Floor baseline alignment
         double floorY = 320.0;
         double spawnY = data.hasKey("y") ? data.get("y") : floorY;
 
+        // Sprite variant auto-cycles based on customer ID:
+        // girl1, man1, girl2, man2, girl3, man3, girl1, man1, ...
         var entity = FXGL.entityBuilder(data)
                 .type(CustomerType.CUSTOMER)
                 .at(data.getX(), spawnY)
                 .bbox(new HitBox(BoundingShape.box(FRAME_WIDTH, FRAME_HEIGHT)))
                 .with(new CollidableComponent(true))
-                .with(new CustomerAnimationComponent(customerId))
+                .with(new CustomerAnimationComponent(customerId, characterType))
                 .build();
 
         if (data.hasKey("targetX")) entity.setProperty("targetX", data.<Double>get("targetX"));

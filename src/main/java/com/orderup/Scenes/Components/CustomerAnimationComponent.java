@@ -5,14 +5,16 @@ import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.AnimationChannel;
 
+import com.orderup.Models.CustomerProcess.CharacterType;
+
 import javafx.util.Duration;
 
 /**
  * FXGL Component that manages sprite animation for customer entities.
  * <br><br>
- * Determines the character variant (male/female) based on the customer's ID,
- * then sets up idle and walking animation channels accordingly. The animated
- * texture is attached to the entity's view in {@link #onAdded()}.
+ * Supports multiple character variants (girl1-3, man1-3) selected by
+ * {@code CharacterType}. The animated texture is attached to the entity's
+ * view in {@link #onAdded()}.
  */
 public class CustomerAnimationComponent extends Component {
 
@@ -25,29 +27,45 @@ public class CustomerAnimationComponent extends Component {
     /** Scale multiplier for the sprite on screen. */
     private static final double SPRITE_SCALE = 2.5;
 
+    /** Walk frame counts are the same for all variants of each gender */
+    private static final int GIRL_WALK_FRAMES = 12;
+    private static final int MAN_WALK_FRAMES = 10;
+
     private final AnimationChannel idleAnim;
     private final AnimationChannel walkAnim;
     private final AnimatedTexture texture;
+    private final boolean isGirl;
+    private final int spriteIndex;
 
     /**
-     * Creates the animation component for a customer.
+     * Creates the animation component for a customer with the given character type.
+     * <br><br>
+     * The character type determines the sprite variant:
+     * <ul>
+     *   <li>GIRL1 → girl1, GIRL2 → girl2, GIRL3 → girl3</li>
+     *   <li>MAN1 → man1, MAN2 → man2, MAN3 → man3</li>
+     * </ul>
      *
-     * CURRENTLY: only supports male and female characters in binary order (odd IDs = female, even IDs = male)
-     * TODO: add support for explicit multiple character types
-     *
-     * @param customerId the customer's ID; odd IDs use the girl sprite,
-     *                   even IDs use the man sprite
+     * @param customerId the customer's ID (1-based)
+     * @param characterType the character type (GIRL1-3, MAN1-3) specifying sprite variant
      */
-    public CustomerAnimationComponent(int customerId) {
-        boolean isGirl = (customerId % 2 != 0);
+    public CustomerAnimationComponent(int customerId, CharacterType characterType) {
+        this.isGirl = characterType.isGirl();
+        this.spriteIndex = characterType.getSpriteIndex();
+        String variant = characterType.getPrefix() + this.spriteIndex + "_";
 
-        idleAnim = isGirl
-                ? new AnimationChannel(FXGL.image("girl1_idle.png"), 9, FRAME_WIDTH, FRAME_HEIGHT, Duration.seconds(3), 0, 8)
-                : new AnimationChannel(FXGL.image("man1_idle.png"), 6, FRAME_WIDTH, FRAME_HEIGHT, Duration.seconds(3), 0, 5);
+        // Frame counts differ between girl and man spritesheets
+        // Girl idle varies per variant (girl1=9, girl2=7, girl3=6)
+        int idleFrames = characterType.getIdleFrameCount();
+        int walkFrames = isGirl ? GIRL_WALK_FRAMES : MAN_WALK_FRAMES;
 
-        walkAnim = isGirl
-                ? new AnimationChannel(FXGL.image("girl1_walk.png"), 12, FRAME_WIDTH, FRAME_HEIGHT, Duration.seconds(1), 0, 11)
-                : new AnimationChannel(FXGL.image("man1_walk.png"), 10, FRAME_WIDTH, FRAME_HEIGHT, Duration.seconds(1), 0, 9);
+        idleAnim = new AnimationChannel(
+                FXGL.image(variant + "idle.png"), idleFrames, FRAME_WIDTH, FRAME_HEIGHT,
+                Duration.seconds(3), 0, idleFrames - 1);
+
+        walkAnim = new AnimationChannel(
+                FXGL.image(variant + "walk.png"), walkFrames, FRAME_WIDTH, FRAME_HEIGHT,
+                Duration.seconds(1), 0, walkFrames - 1);
 
         texture = new AnimatedTexture(walkAnim);
         texture.loop();
@@ -87,6 +105,20 @@ public class CustomerAnimationComponent extends Component {
      */
     public AnimatedTexture getTexture() {
         return texture;
+    }
+
+    /**
+     * Returns the sprite variant index (1-3).
+     */
+    public int getSpriteIndex() {
+        return spriteIndex;
+    }
+
+    /**
+     * Returns true if this is a girl character.
+     */
+    public boolean isGirl() {
+        return isGirl;
     }
 
     /**
