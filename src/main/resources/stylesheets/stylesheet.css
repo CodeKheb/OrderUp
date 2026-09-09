@@ -10,7 +10,7 @@
 }
 
 .title {
-    -fx-font-size: 36px;
+    -fx-font-size: 72px;
     -fx-font-weight: bold;
     -fx-fill: black;
 }
@@ -27,9 +27,16 @@
 }
 
 .btn {
-    -fx-min-width: 150;
-    -fx-min-height: 40;
-    -fx-font-size: 14px;
+    -fx-min-width: 500;
+    -fx-min-height: 100;
+    -fx-font-size: 32px;
+    -fx-background-color: #FFF8E7;
+    -fx-text-fill: black;
+    -fx-border-color: #D9A45B;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 10px 50px;
 }
 
 .btn-order {
