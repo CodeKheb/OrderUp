@@ -18,12 +18,15 @@ import javafx.scene.text.Text;
  *
  * <p>The bubble is a soft cloud-shaped box containing the order text, with a
  * chain of shrinking dots trailing down toward the character's head (the classic
- * "thinking" look). It is rendered as a UI overlay node, repositioned every frame
+ * "thinking" look). The trail drifts diagonally back over the character's head,
+ * so the whole bubble leans off to one side instead of sitting straight up.
+ * It is rendered as a UI overlay node, repositioned every frame
  * to stay above the customer while they walk to and wait in the line, and removed
  * automatically when the customer leaves the game world after being served.</p>
  *
- * <p>All layout constants are in screen pixels. The bubble sits centered over the
- * entity, with the lowest thought dot just above the character's head.</p>
+ * <p>All layout constants are in screen pixels. The bubble is offset to the side
+ * of the entity's head, with the lowest thought dot landing just above the
+ * character's head.</p>
  */
 public class ThoughtBubbleComponent extends Component {
 
@@ -50,7 +53,21 @@ public class ThoughtBubbleComponent extends Component {
     private static final double BUBBLE_TO_DOT_GAP = 3.0;
 
     /** Distance from the entity center up to the lowest point of the thought chain. */
-    private static final double HEAD_ABOVE_ORIGIN = 70.0;
+    private static final double HEAD_ABOVE_ORIGIN = 76.0;
+
+    /**
+     * Horizontal distance the bubble center leans away from the character's
+     * head (px) — the diagonal offset. Positive leans left, negative leans
+     * right; the thought-dot trail always angles back toward the head.
+     */
+    private static final double BUBBLE_SIDE_OFFSET = 15.0;
+
+    /**
+     * Curve exponent of the thought-dot trail: 1.0 = straight diagonal line,
+     * higher values make the trail hug the bubble before swinging toward the
+     * head (more of a curved "S" feel).
+     */
+    private static final double TRAIL_CURVE = 1.4;
 
     // ── Styling ─────────────────────────────────────────────
     private static final Color BUBBLE_FILL = Color.web("#FFF8E7");
@@ -116,9 +133,14 @@ public class ThoughtBubbleComponent extends Component {
         }
     }
 
-    /** Positions the bubble centered horizontally over the entity and above its head. */
+    /**
+     * Positions the bubble leaning diagonally off to the side of the
+     * character's head: the cloud is offset horizontally by
+     * {@link #BUBBLE_SIDE_OFFSET} while the thought-dot trail angles back
+     * toward the head (see the drift in {@link #buildBubble()}).
+     */
     private void reposition() {
-        bubbleGroup.setTranslateX(entity.getX() - contentWidth - 1/ 2.0);
+        bubbleGroup.setTranslateX(entity.getX() - BUBBLE_SIDE_OFFSET - contentWidth - 2 / 2.0);
         bubbleGroup.setTranslateY(entity.getY() - HEAD_ABOVE_ORIGIN - contentHeight);
     }
 
@@ -155,11 +177,15 @@ public class ThoughtBubbleComponent extends Component {
         label.setTranslateY(labelTop + baselineOffset);
         bubbleGroup.getChildren().add(label);
 
-        // Thought dots shrinking as they get closer to the character's head
+        // Thought dots shrink as they descend and drift diagonally from the
+        // bubble's underside back over the character's head, giving the trail
+        // a curved, dynamic look instead of a straight vertical column.
         double cursorY = BUBBLE_HEIGHT + BUBBLE_TO_DOT_GAP;
         for (int i = 0; i < DOT_DIAMETERS.length; i++) {
             double diameter = DOT_DIAMETERS[i];
-            Circle dot = new Circle(contentWidth / 2.0, cursorY + diameter / 2.0, diameter / 2.0);
+            double progress = (i + 1) / (double) DOT_DIAMETERS.length;
+            double drift = BUBBLE_SIDE_OFFSET * Math.pow(progress, TRAIL_CURVE);
+            Circle dot = new Circle(contentWidth / 2.0 + drift, cursorY + diameter / 2.0, diameter / 2.0);
             dot.setFill(BUBBLE_FILL);
             dot.setStroke(BUBBLE_BORDER);
             dot.setStrokeWidth(DOT_STROKE_WIDTH);
