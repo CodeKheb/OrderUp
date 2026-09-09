@@ -27,6 +27,9 @@ public class CustomerAnimationComponent extends Component {
     /** Scale multiplier for the sprite on screen. */
     private static final double SPRITE_SCALE = 2.5;
 
+    /** Scale multiplier for male sprites (larger to match girl proportions). */
+    private static final double MAN_SPRITE_SCALE = 2.8;
+
     /** Walk frame counts are the same for all variants of each gender */
     private static final int GIRL_WALK_FRAMES = 12;
     private static final int MAN_WALK_FRAMES = 10;
@@ -82,8 +85,9 @@ public class CustomerAnimationComponent extends Component {
         texture.setTranslateX(-FRAME_WIDTH / 2.0);
         texture.setTranslateY(-FRAME_HEIGHT / 2.0);
         entity.getViewComponent().addChild(texture);
-        entity.setScaleX(SPRITE_SCALE);
-        entity.setScaleY(SPRITE_SCALE);
+        double scale = isGirl ? SPRITE_SCALE : MAN_SPRITE_SCALE;
+        entity.setScaleX(scale);
+        entity.setScaleY(scale);
     }
 
     /**

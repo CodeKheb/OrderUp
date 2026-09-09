@@ -8,8 +8,10 @@ import com.almasb.fxgl.entity.Spawns;
 import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
+import com.orderup.Models.MenuItem;
 import com.orderup.Models.CustomerProcess.CharacterType;
 import com.orderup.Scenes.Components.CustomerAnimationComponent;
+import com.orderup.Scenes.Components.ThoughtBubbleComponent;
 
 /**
  * Entity factory for customer entities.
@@ -18,6 +20,8 @@ import com.orderup.Scenes.Components.CustomerAnimationComponent;
  * and attaches a {@link CustomerAnimationComponent} for sprite animation.
  * Animation details (idle/walk channels, texture scaling) are fully managed
  * by the component, keeping this factory focused on entity creation only.
+ * Each customer also gets a {@link ThoughtBubbleComponent} showing a random
+ * {@link MenuItem}, so they can "tell" the player what they want to order.
  */
 public class CustomerFactory implements EntityFactory {
 
@@ -47,8 +51,8 @@ public class CustomerFactory implements EntityFactory {
         int customerId = data.hasKey("customerId") ? data.get("customerId") : 1;
 
         // Get character type from SpawnData, or default based on customer ID
-        CharacterType characterType = data.hasKey("characterType") 
-                ? data.get("characterType") 
+        CharacterType characterType = data.hasKey("characterType")
+                ? data.get("characterType")
                 : CharacterType.displayOrder()[(customerId - 1) % 6];
 
         // Floor baseline alignment
@@ -62,6 +66,7 @@ public class CustomerFactory implements EntityFactory {
                 .at(data.getX(), spawnY)
                 .bbox(new HitBox(BoundingShape.box(FRAME_WIDTH, FRAME_HEIGHT)))
                 .with(new CollidableComponent(true))
+                .with(new ThoughtBubbleComponent(MenuItem.random().getDisplayName()))
                 .with(new CustomerAnimationComponent(customerId, characterType))
                 .build();
 
