@@ -207,17 +207,21 @@ public class Application extends GameApplication {
 
     /**
      * Raw game-clock offset for the start of the simulation timeline.
-     * <br><br>
      * The queue begins at 7:00 AM, which is 25,200 seconds after midnight.
      */
     private static final int SIMULATION_START_TIME_SECONDS = 7 * 60 * 60;
 
     /**
      * Number of raw game-clock seconds represented by one simulation tick.
-     * <br><br>
      * This keeps the queue timeline aligned with the game's 20-minute tick granularity.
      */
     private static final int TICK_DURATION_SECONDS = 20 * 60;
+
+    /**
+     * The game-clock timestamp in seconds when the normal simulation ends and
+     * the after-hours processing window begins (5:00 PM).
+     */
+    private static final int FIVE_PM_IN_SECONDS = 61200;
 
     /**
      * Spawns a single customer entity off-screen and records its target position.
@@ -319,7 +323,7 @@ public class Application extends GameApplication {
         }
 
         // Track when clock hits 5 PM
-        if (!clockStopped && gameClock.getTime() >= 61200) {
+        if (!clockStopped && gameClock.getTime() >= FIVE_PM_IN_SECONDS) {
             clockStopped = true;
             afterHoursAccumulator = 0.0;
         }
