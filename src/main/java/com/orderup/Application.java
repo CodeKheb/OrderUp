@@ -205,6 +205,19 @@ public class Application extends GameApplication {
     /** x axis where customers spawn from (right edge). */
     private static final double SPAWN_X = 1100;
 
+    /**
+     * Raw game-clock offset for the start of the simulation timeline.
+     * <br><br>
+     * The queue begins at 7:00 AM, which is 25,200 seconds after midnight.
+     */
+    private static final int SIMULATION_START_TIME_SECONDS = 7 * 60 * 60;
+
+    /**
+     * Number of raw game-clock seconds represented by one simulation tick.
+     * <br><br>
+     * This keeps the queue timeline aligned with the game's 20-minute tick granularity.
+     */
+    private static final int TICK_DURATION_SECONDS = 20 * 60;
 
     /**
      * Spawns a single customer entity off-screen and records its target position.
@@ -291,8 +304,8 @@ public class Application extends GameApplication {
         gameClock.update();
         // spawn customers
 
-        //Syncs/converts raw gameclock value to seconds-based ticks for AT
-        var currentTick = (gameClock.getTime() - 25200) / 1200;
+        // Converts the raw game clock into simulation ticks using the documented constants.
+        var currentTick = (gameClock.getTime() - SIMULATION_START_TIME_SECONDS) / TICK_DURATION_SECONDS;
 
         var arrived = processQueue.getArrivedProcesses(currentTick);
         for (CustomerProcess process : arrived) {
