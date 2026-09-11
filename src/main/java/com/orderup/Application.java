@@ -70,6 +70,12 @@ public class Application extends GameApplication {
 
     private int lastTick = -1;
 
+    /** Whether the game clock has stopped at 5:00 PM. */
+    private boolean clockStopped = false;
+
+    /** Accumulates frame time for after-hours tick pacing (1 tick per second). */
+    private double afterHoursAccumulator = 0.0;
+
     /**
      * Enum representing the different in-game scenes that can be
      * shown when the game starts.
@@ -161,6 +167,8 @@ public class Application extends GameApplication {
         gameClock.reset();
         initFactory();
         lastTick = -1;
+        clockStopped = false;
+        afterHoursAccumulator = 0.0;
 
         processDisplay = new ProcessDisplay(gameClock, 30);
 
@@ -297,7 +305,25 @@ public class Application extends GameApplication {
             }
         }
 
-        if (currentTick != lastTick) {
+        // Track when clock hits 5 PM
+        if (!clockStopped && gameClock.getTime() >= 61200) {
+            clockStopped = true;
+            afterHoursAccumulator = 0.0;
+        }
+
+        // Keep processing burst times while clock is running normally,
+        // OR after 5 PM if there are still customers to serve.
+        boolean tickChanged = currentTick != lastTick;
+        boolean hasRemainingCustomers = !processQueue.getProcessList().isEmpty();
+        boolean afterHoursTick = false;
+        if (clockStopped && hasRemainingCustomers) {
+            afterHoursAccumulator += tpf;
+            if (afterHoursAccumulator >= 1.0) {
+                afterHoursAccumulator -= 1.0;
+                afterHoursTick = true;
+            }
+        }
+        if (tickChanged || afterHoursTick) {
             lastTick = currentTick;
 
             arrived = processQueue.getArrivedProcesses(currentTick);
