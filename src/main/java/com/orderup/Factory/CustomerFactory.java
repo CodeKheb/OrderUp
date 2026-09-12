@@ -59,6 +59,10 @@ public class CustomerFactory implements EntityFactory {
         double floorY = 320.0;
         double spawnY = data.hasKey("y") ? data.get("y") : floorY;
 
+        // The customer's order — shown in the thought bubble and used to
+        // place the matching food icon on their rhythm circle.
+        MenuItem order = MenuItem.random();
+
         // Sprite variant auto-cycles based on customer ID:
         // girl1, man1, girl2, man2, girl3, man3, girl1, man1, ...
         var entity = FXGL.entityBuilder(data)
@@ -66,9 +70,11 @@ public class CustomerFactory implements EntityFactory {
                 .at(data.getX(), spawnY)
                 .bbox(new HitBox(BoundingShape.box(FRAME_WIDTH, FRAME_HEIGHT)))
                 .with(new CollidableComponent(true))
-                .with(new ThoughtBubbleComponent(MenuItem.random().getDisplayName()))
+                .with(new ThoughtBubbleComponent(order.getDisplayName()))
                 .with(new CustomerAnimationComponent(customerId, characterType))
                 .build();
+
+        entity.setProperty("order", order);
 
         if (data.hasKey("targetX")) entity.setProperty("targetX", data.<Double>get("targetX"));
         if (data.hasKey("targetY")) entity.setProperty("targetY", data.<Double>get("targetY"));
