@@ -21,6 +21,7 @@
             <String fx:value="paused" />
          </styleClass></Text>
         <Button onAction="#onResume" styleClass="btn" text="Resume" />
+        <Button onAction="#onShowGanttChart" styleClass="btn" text="Gantt Chart" />
         <Button onAction="#onMainMenu" styleClass="btn" text="Main Menu" />
 
     </VBox>

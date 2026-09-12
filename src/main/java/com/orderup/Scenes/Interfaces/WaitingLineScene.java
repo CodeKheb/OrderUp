@@ -3,12 +3,14 @@ package com.orderup.Scenes.Interfaces;
 import java.util.List;
 
 import com.almasb.fxgl.dsl.FXGL;
+import com.orderup.Handlers.AudioManager;
 import com.orderup.Models.CustomerProcess;
 import com.orderup.Models.GanttCell;
 import com.orderup.Models.GanttChart;
 import com.orderup.Scenes.Components.GanttOverlay;
 
 import com.almasb.fxgl.entity.Entity;
+import com.orderup.Models.MenuItem;
 
 import javafx.scene.layout.Pane;
 
@@ -86,8 +88,10 @@ public class WaitingLineScene extends Pane {
      * pair is removed first.
      *
      * @param burstTime the front customer's patience (BT)
+     * @param order     the dish this customer ordered (drives the food icon
+     *                  on the circle), or null for no icon
      */
-    public void spawnRhythmCircle(int burstTime) {
+    public void spawnRhythmCircle(int burstTime, MenuItem order) {
         removeRhythmCircle();
 
         double x = CIRCLE_ZONE_MIN_X + CIRCLE_SPAWN_MARGIN + Math.random()
@@ -97,6 +101,7 @@ public class WaitingLineScene extends Pane {
 
         var data = new com.almasb.fxgl.entity.SpawnData(x, y);
         data.put("burstTime", burstTime);
+        data.put("order", order);
 
         rhythmPair = FXGL.spawn("rhythm_pair", data);
     }
@@ -111,6 +116,15 @@ public class WaitingLineScene extends Pane {
         if (rhythmPair != null) {
             boolean wasActive = rhythmPair.isActive();
             if (wasActive) {
+                // Expired unclicked (patience/BT ran out) — red fade-in
+                // cue as a standalone effect entity (the pair is removed
+                // below). Clicked circles instead get the gold burst in
+                // ClickHandler.
+                AudioManager.missed();
+                com.orderup.Handlers.EffectsHandler.spawnExpireFade(rhythmPair.getPosition(),
+                        rhythmPair.getComponent(
+                                com.orderup.Scenes.Components.RhythmComponent.class)
+                                .getCurrentOuterRadius());
                 rhythmPair.removeFromWorld();
             }
             rhythmPair = null;

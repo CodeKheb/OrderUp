@@ -17,6 +17,7 @@ import com.orderup.Handlers.SceneManager;
 import com.orderup.Handlers.AudioManager;
 import com.orderup.Models.CustomerProcess;
 import com.orderup.Models.GameClock;
+import com.orderup.Models.MenuItem;
 import com.orderup.Models.ProcessDisplay;
 import com.orderup.Models.ProcessQueue;
 import com.orderup.Models.RhythmScore;
@@ -26,6 +27,7 @@ import com.orderup.Scenes.Interfaces.WaitingLineScene;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.util.Duration;
 
 /**
  * Main application class for OrderUp.
@@ -73,14 +75,16 @@ public class Application extends GameApplication {
 
     private int lastTick = -1;
 
-    /** Whether the game clock has stopped at 5:00 PM. */
-    private boolean clockStopped = false;
-
-    /** Accumulates frame time for after-hours tick pacing (1 tick per second). */
-    private double afterHoursAccumulator = 0.0;
-
     /** Customer ID the rhythm circle was spawned for (-1 = none active). */
     private int rhythmCustomerId = -1;
+
+    /** Set when the pause menu requests the Gantt chart. */
+    private static boolean ganttChartRequested = false;
+
+    /** Requests the Gantt chart overlay to be shown over the game scene. */
+    public static void requestGanttChart() {
+        ganttChartRequested = true;
+    }
 
     /**
      * Enum representing the different in-game scenes that can be
@@ -149,6 +153,12 @@ public class Application extends GameApplication {
         FXGL.getGameWorld().addEntityFactory(new RhythmFactory());
     }
 
+    /** Runs once when the application launches, before FXGL initializes. */
+    @Override
+    protected void onPreInit() {
+        AudioManager.playBackgroundMusic();
+    }
+
     /**
      * Initializes the game world when a new game starts.
      * <br><br>
@@ -170,15 +180,13 @@ public class Application extends GameApplication {
             // Ignore if no nodes exist yet
         }
 
-        AudioManager.playBackgroundMusic();
         spawnedIds.clear();
         gameClock.reset();
         RhythmScore.reset();
         initFactory();
         lastTick = -1;
-        clockStopped = false;
-        afterHoursAccumulator = 0.0;
         rhythmCustomerId = -1;
+        ganttChartRequested = false;
 
         processDisplay = new ProcessDisplay(gameClock, 30);
 
@@ -227,12 +235,6 @@ public class Application extends GameApplication {
      * This keeps the queue timeline aligned with the game's 20-minute tick granularity.
      */
     private static final int TICK_DURATION_SECONDS = 20 * 60;
-
-    /**
-     * The game-clock timestamp in seconds when the normal simulation ends and
-     * the after-hours processing window begins (5:00 PM).
-     */
-    private static final int FIVE_PM_IN_SECONDS = 61200;
 
     /**
      * Spawns a single customer entity off-screen and records its target position.
@@ -302,9 +304,13 @@ public class Application extends GameApplication {
 
         repositionCustomers();
 
-        // Show Gantt overlay when all processes are done
+        // Day is done: show the Gantt chart 2 seconds after the last
+        // customer is served, then freeze the clock (end of day).
         if (processQueue.getProcessList().isEmpty() && waitingLineScene != null) {
-            waitingLineScene.showGanttOverlay(originalProcesses);
+            FXGL.getGameTimer().runOnceAfter(() -> {
+                waitingLineScene.showGanttOverlay(originalProcesses);
+                gameClock.pause();
+            }, Duration.seconds(2));
         }
     }
 
@@ -325,6 +331,16 @@ public class Application extends GameApplication {
     protected void onUpdate(double tpf) {
         // guard this lmao, it bugged
     if (initialScene != SceneType.WAITING_LINE) return;
+
+        // Deferred Gantt chart request from the pause menu — runs here so
+        // the overlay is added after the game scene is visible again.
+        if (ganttChartRequested) {
+            ganttChartRequested = false;
+            if (waitingLineScene != null && !waitingLineScene.isGanttOverlayVisible()) {
+                waitingLineScene.showGanttOverlay(originalProcesses);
+            }
+        }
+
         // game clock 
         gameClock.update();
         // spawn customers
@@ -343,25 +359,10 @@ public class Application extends GameApplication {
             }
         }
 
-        // Track when clock hits 5 PM
-        if (!clockStopped && gameClock.getTime() >= FIVE_PM_IN_SECONDS) {
-            clockStopped = true;
-            afterHoursAccumulator = 0.0;
-        }
-
-        // Keep processing burst times while clock is running normally,
-        // OR after 5 PM if there are still customers to serve.
+        // The clock keeps running past 5:00 PM
+        // so every tick is now delivered by the game clock at the same 1-tick-per-second rate.
         boolean tickChanged = currentTick != lastTick;
-        boolean hasRemainingCustomers = !processQueue.getProcessList().isEmpty();
-        boolean afterHoursTick = false;
-        if (clockStopped && hasRemainingCustomers) {
-            afterHoursAccumulator += tpf;
-            if (afterHoursAccumulator >= 1.0) {
-                afterHoursAccumulator -= 1.0;
-                afterHoursTick = true;
-            }
-        }
-        if (tickChanged || afterHoursTick) {
+        if (tickChanged) {
             lastTick = currentTick;
 
             arrived = processQueue.getArrivedProcesses(currentTick);
@@ -390,7 +391,11 @@ public class Application extends GameApplication {
                     boolean atCounter = frontEntity != null
                         && frontEntity.<Boolean>getPropertyOptional("arrived").orElse(false);
                     if (atCounter) {
-                        waitingLineScene.spawnRhythmCircle(front.getBurstTime());
+                        // The circle shows the dish this customer ordered.
+                        MenuItem order = frontEntity != null
+                                ? frontEntity.<MenuItem>getPropertyOptional("order").orElse(null)
+                                : null;
+                        waitingLineScene.spawnRhythmCircle(front.getBurstTime(), order);
                         rhythmCustomerId = front.getCustomerId();
                     }
                 }

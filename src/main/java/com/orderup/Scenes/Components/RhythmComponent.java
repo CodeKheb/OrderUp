@@ -12,7 +12,7 @@ public class RhythmComponent extends Component {
     private static final double SECONDS_PER_TICK = 1.0;
 
     /** Clicks within this many seconds of the ring fully closing count as a perfect hit. */
-    private static final double PERFECT_GRACE_SECONDS = 1;
+    private static final double PERFECT_GRACE_SECONDS = 0.85;
 
     /** The outer ring node whose radius is animated. */
     private final Circle outerCircle;
@@ -126,6 +126,10 @@ public class RhythmComponent extends Component {
         }
 
         return 1.0 - (timeLeft / duration);
+    }
+
+    public double getCurrentOuterRadius() {
+        return outerCircle.getRadius();
     }
 
     /**

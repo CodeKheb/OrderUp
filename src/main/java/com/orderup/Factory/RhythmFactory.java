@@ -7,6 +7,7 @@ import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
 
 import com.orderup.Handlers.ClickHandler;
+import com.orderup.Models.MenuItem;
 import com.orderup.Scenes.Components.RhythmComponent;
 
 import javafx.scene.paint.Color;
@@ -25,11 +26,16 @@ public class RhythmFactory implements EntityFactory {
 
     public enum RhythmType {
         RHYTHM_PAIR,
+        COFFEE,
+        BURGER,
+        PIZZA,
+        FRIES,
     }
 
-    private static final double INNER_RADIUS = 35;
-    private static final double RADIUS_PER_BT = 12;
+    private static final double INNER_RADIUS = 40;
+    private static final double RADIUS_PER_BT = 8;
     private static final double MAX_OUTER_RADIUS = 150;
+    private static final double ICON_SCALE = 1; // DO NOT TOUCH, IF YOU WANT CENTERED
 
     /**
      * Spawns the rhythm pair (inner circle + closing outer ring) at the
@@ -60,7 +66,19 @@ public class RhythmFactory implements EntityFactory {
         outer.setStroke(Color.web("#D9A45B"));
         outer.setStrokeWidth(4);
 
+        // Center the icon
         Group view = new Group(inner, outer);
+        MenuItem order = data.get("order");
+        if (order != null) {
+            var icon = FXGL.texture(order.name().toLowerCase() + ".png");
+            double iconW = icon.getImage().getWidth();
+            double iconH = icon.getImage().getHeight();
+            icon.setTranslateX(-(iconW * ICON_SCALE) / 2.0);
+            icon.setTranslateY(-(iconH * ICON_SCALE) / 2.0);
+            icon.setScaleX(ICON_SCALE);
+            icon.setScaleY(ICON_SCALE);
+            view.getChildren().add(icon);
+        }
 
         return FXGL.entityBuilder(data)
                 .type(RhythmType.RHYTHM_PAIR)

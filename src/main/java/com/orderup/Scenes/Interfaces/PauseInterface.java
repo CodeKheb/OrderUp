@@ -13,7 +13,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-import com.orderup.Handlers.AudioManager;
 import com.orderup.Handlers.SceneManager;
 import com.orderup.Models.GameClock;
 import com.orderup.Scenes.Controllers.PauseController;
@@ -109,7 +108,6 @@ public class PauseInterface extends FXGLMenu {
 
         btnYes.setOnAction(e -> {
             getGameController().gotoMainMenu();
-            AudioManager.stopMusic();
         });
 
         // -- Panel holding message + buttons --

@@ -3,7 +3,6 @@ package com.orderup.Scenes.Components;
 import java.util.List;
 
 import com.orderup.Models.CustomerProcess;
-import com.orderup.Models.CustomerProcess.CharacterType;
 import com.orderup.Models.GanttCell;
 
 import javafx.scene.Group;

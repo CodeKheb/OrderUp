@@ -19,6 +19,9 @@ import javafx.scene.text.Text;
  */
 public class GameClock {
 
+    /** Wall-clock second of 5:00 PM — the clock turns red from here on. */
+    private static final int FIVE_PM_SECONDS = 17 * 3600;
+
     /** Starts at hour 7 (7*60*60 = 25200) */
     private final int startingSeconds = 25200;
 
@@ -58,9 +61,10 @@ public class GameClock {
     public void update() {
         if (paused) return;
 
-        if (formatTime(time.get()).equals("05:00 PM")) {
-            clockText.setText("05:00 PM");
-            return;
+        // The clock never stops — past 5:00 PM it just runs red while the
+        // remaining customers are served (the day ends when the last one leaves).
+        if (time.get() >= FIVE_PM_SECONDS) {
+            clockText.setFill(Color.RED);
         }
 
         long now = System.nanoTime();
@@ -120,6 +124,7 @@ public class GameClock {
         accumulator = 0.0;
         lastNano = 0;
         paused = false;
+        clockText.setFill(Color.BLACK);
         clockText.setText(formatTime(time.get()));
     }
 

@@ -2,6 +2,7 @@ package com.orderup.Scenes.Controllers;
 
 import javafx.fxml.FXML;
 
+import com.orderup.Application;
 import com.orderup.Scenes.Interfaces.PauseInterface;
 
 /**
@@ -34,6 +35,18 @@ public class PauseController {
      */
     @FXML
     private void onResume() {
+        menu.resume();
+    }
+
+    /**
+     * Resumes the game and then shows the Gantt chart overlay over the
+     * running game scene. The overlay request is deferred to the next
+     * game frame because the game scene only becomes visible after the
+     * pause menu closes.
+     */
+    @FXML
+    private void onShowGanttChart() {
+        Application.requestGanttChart();
         menu.resume();
     }
 

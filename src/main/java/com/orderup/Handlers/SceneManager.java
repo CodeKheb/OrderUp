@@ -75,7 +75,7 @@ public class SceneManager {
         clockBg.setStrokeType(StrokeType.INSIDE);
 
         StackPane clockPane = new StackPane(clockBg, clockText);
-        clockPane.setTranslateX(1280 / 2.2);
+        clockPane.setTranslateX(1280 / 2.6);
         clockPane.setTranslateY(720 / 20);
 
         FXGL.getGameScene().addUINode(clockPane);

@@ -55,6 +55,8 @@ public class ClickHandler {
         boolean perfect = false;
         double multiplier = 1.0;
 
+        AudioManager.click();
+
         RhythmComponent rhythm = circle.getComponent(RhythmComponent.class);
         if (rhythm != null) {
             perfect = rhythm.isPerfect();
@@ -74,6 +76,9 @@ public class ClickHandler {
         }
 
         spawnScorePopup(circle.getPosition(), points, perfect, multiplier);
+
+        EffectsHandler.spawnBurst(circle.getPosition(),
+                rhythm != null ? rhythm.getCurrentOuterRadius() : 40);
 
         circle.removeFromWorld();
     }
