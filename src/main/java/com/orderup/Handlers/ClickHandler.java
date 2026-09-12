@@ -60,6 +60,7 @@ public class ClickHandler {
             perfect = rhythm.isPerfect();
 
             if (perfect) {
+                AudioManager.perfect();
                 int combo = RhythmScore.registerPerfect();
                 multiplier = RhythmScore.multiplierFor(combo);
             } else {

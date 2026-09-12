@@ -14,6 +14,10 @@ public class AudioManager {
     public static void pop() {
         FXGL.play("pop.wav");
     }
+    
+    public static void perfect() {
+        FXGL.play("perfect.wav");
+    }
 
     public static void stopMusic() {
         FXGL.getAudioPlayer().stopAllMusic();
