@@ -32,6 +32,15 @@ public class SceneManager {
     }
 
     /**
+     * Returns the GameClock instance, or null if not set yet.
+     *
+     * @return the game clock instance
+     */
+    public static GameClock getGameClock() {
+        return gameClock;
+    }
+
+    /**
      * Shows a given node in the game scene by clearing existing UI nodes
      * and adding the new one. Also adds the clock UI if a GameClock is set.
      *

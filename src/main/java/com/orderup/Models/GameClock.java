@@ -31,6 +31,9 @@ public class GameClock {
     /** Nano-time of the last update call. */
     private long lastNano;
 
+    /** When true, the clock is frozen. */
+    private boolean paused;
+
     /** Accumulated sub-second time. */
     private double accumulator;
 
@@ -53,6 +56,8 @@ public class GameClock {
      * Uses wall-clock time so the clock is unaffected by game loop lag.
      */
     public void update() {
+        if (paused) return;
+
         if (formatTime(time.get()).equals("05:00 PM")) {
             clockText.setText("05:00 PM");
             return;
@@ -88,11 +93,28 @@ public class GameClock {
         return clockText;
     }
 
+    /** Freezes the clock. */
+    public void pause() {
+        paused = true;
+    }
+
+    /** Unfreezes the clock. */
+    public void resume() {
+        paused = false;
+        lastNano = 0;
+    }
+
+    /** Returns true if the clock is currently paused. */
+    public boolean isPaused() {
+        return paused;
+    }
+
     /** Resets the clock to 07:00. */
     public void reset() {
         time.set(startingSeconds);
         accumulator = 0.0;
         lastNano = 0;
+        paused = false;
         clockText.setText(formatTime(time.get()));
     }
 
