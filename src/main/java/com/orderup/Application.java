@@ -205,7 +205,7 @@ public class Application extends GameApplication {
     private static final double MOVE_SPEED = 200;
 
     /** x axis where customers spawn from (right edge). */
-    private static final double SPAWN_X = 1100;
+    private static final double SPAWN_X = 800;
 
     /**
      * Raw game-clock offset for the start of the simulation timeline.
