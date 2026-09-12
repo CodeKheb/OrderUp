@@ -62,7 +62,7 @@ public class CustomerCard extends VBox {
     private static final int FRAME_HEIGHT = 128;
 
     /** Display size for the character sprite in the card (pixels). */
-    private static final int SPRITE_DISPLAY_SIZE = 250;
+    private static final int SPRITE_DISPLAY_SIZE = 200;
 
     /** Fill color for the slider progress bar. */
     private static final Color SLIDER_FILL_COLOR = Color.web("#4a90d9");
@@ -154,8 +154,8 @@ public class CustomerCard extends VBox {
 
         HBox characterRow = new HBox(15, prevCharBtn, spriteBox, nextCharBtn);
         characterRow.setAlignment(Pos.CENTER);
-        characterRow.setPadding(new Insets(16, 0, 16, 0));
-        VBox.setMargin(characterRow, new Insets(-80, 0, 0, 0));
+        characterRow.setPadding(new Insets(4, 0, 4, 0));
+        VBox.setMargin(characterRow, new Insets(0, 0, 0, 0));
 
         // ── 3. Sliders with value labels and fill bars ───────
         for (int i = 0; i < CUSTOMER_COUNT; i++) {
@@ -458,7 +458,7 @@ public class CustomerCard extends VBox {
     private Text createValueLabel() {
         Text label = new Text("00:00 A.M. (00)");
         label.getStyleClass().add("slider-value-label");
-        label.setWrappingWidth(180);
+        label.setWrappingWidth(160);
         return label;
     }
 
