@@ -13,6 +13,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import com.orderup.Handlers.AudioManager;
 import com.orderup.Handlers.SceneManager;
 import com.orderup.Models.GameClock;
 import com.orderup.Scenes.Controllers.PauseController;
@@ -106,7 +107,10 @@ public class PauseInterface extends FXGLMenu {
         btnYes.getStyleClass().add("confirm-btn");
         btnNo.getStyleClass().add("confirm-btn");
 
-        btnYes.setOnAction(e -> getGameController().gotoMainMenu());
+        btnYes.setOnAction(e -> {
+            getGameController().gotoMainMenu();
+            AudioManager.stopMusic();
+        });
 
         // -- Panel holding message + buttons --
         VBox panel = new VBox(20, message, btnYes, btnNo);

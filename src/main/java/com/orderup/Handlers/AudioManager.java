@@ -11,6 +11,10 @@ public class AudioManager {
         music.getAudio().setVolume(1);
     }
 
+    public static void pop() {
+        FXGL.play("pop.wav");
+    }
+
     public static void stopMusic() {
         FXGL.getAudioPlayer().stopAllMusic();
         FXGL.getAudioPlayer().stopAllSounds();

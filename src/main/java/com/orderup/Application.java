@@ -249,6 +249,7 @@ public class Application extends GameApplication {
         data.put("characterType", process.getCharacterType());
 
         FXGL.spawn("customer", data);
+        AudioManager.pop();
     }
 
     /** Finds the game-world entity matching the given customer ID, or null. */
