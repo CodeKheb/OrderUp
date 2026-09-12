@@ -13,6 +13,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import com.orderup.Handlers.AudioManager;
+import com.orderup.Handlers.SceneManager;
+import com.orderup.Models.GameClock;
 import com.orderup.Scenes.Controllers.PauseController;
 
 import static com.almasb.fxgl.dsl.FXGL.getGameController;
@@ -65,6 +68,32 @@ public class PauseInterface extends FXGLMenu {
     }
 
     /**
+     * Called every time the pause menu opens (ESC). Pauses the game clock
+     * so time does not advance in the background.
+     */
+    @Override
+    public void onEnteredFrom(com.almasb.fxgl.scene.Scene prev) {
+        super.onEnteredFrom(prev);
+        GameClock clock = SceneManager.getGameClock();
+        if (clock != null) {
+            clock.pause();
+        }
+    }
+
+    /**
+     * Called every time the pause menu closes (ESC again or Resume).
+     * Resumes the game clock without a time jump.
+     */
+    @Override
+    public void onExitingTo(com.almasb.fxgl.scene.Scene next) {
+        super.onExitingTo(next);
+        GameClock clock = SceneManager.getGameClock();
+        if (clock != null) {
+            clock.resume();
+        }
+    }
+
+    /**
      * Exits the game to the main menu with a confirmation dialog.
      */
     public void exitToMainMenu() {
@@ -78,7 +107,10 @@ public class PauseInterface extends FXGLMenu {
         btnYes.getStyleClass().add("confirm-btn");
         btnNo.getStyleClass().add("confirm-btn");
 
-        btnYes.setOnAction(e -> getGameController().gotoMainMenu());
+        btnYes.setOnAction(e -> {
+            getGameController().gotoMainMenu();
+            AudioManager.stopMusic();
+        });
 
         // -- Panel holding message + buttons --
         VBox panel = new VBox(20, message, btnYes, btnNo);

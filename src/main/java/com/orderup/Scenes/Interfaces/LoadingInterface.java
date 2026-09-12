@@ -35,8 +35,8 @@ public class LoadingInterface extends LoadingScene {
         VBox loadingLayout = new VBox(loadingText);
         loadingLayout.setAlignment(Pos.CENTER);
         loadingLayout.setPrefWidth(w);
-        loadingLayout.setPrefHeight(h);
-        loadingLayout.setStyle("-fx-background-color: #1a1a2e;");
+        loadingLayout.setPrefHeight(h + 100);
+        loadingLayout.setStyle("-fx-background-color: #dd9223;");
 
         getContentRoot().getChildren().add(loadingLayout);
     }

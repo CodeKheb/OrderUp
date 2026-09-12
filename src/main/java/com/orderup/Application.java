@@ -13,6 +13,7 @@ import com.orderup.Factory.CustomerFactory.CustomerType;
 import com.orderup.Factory.MainSceneFactory;
 import com.orderup.Factory.WaitingLineUIFactory;
 import com.orderup.Handlers.SceneManager;
+import com.orderup.Handlers.AudioManager;
 import com.orderup.Models.CustomerProcess;
 import com.orderup.Models.GameClock;
 import com.orderup.Models.ProcessDisplay;
@@ -56,7 +57,7 @@ public class Application extends GameApplication {
     /** Original process list, never modified during gameplay. Used by the Gantt overlay. */
     private static java.util.List<CustomerProcess> originalProcesses;
 
-    /** Reference to the waiting line scene, so ClickHandler can access it. */
+    /** Reference to the waiting line scene. */
     private static WaitingLineScene waitingLineScene;
 
     /** The process display for the current game session, set in {@link #initGame()} before starting. */
@@ -163,6 +164,7 @@ public class Application extends GameApplication {
             // Ignore if no nodes exist yet
         }
 
+        AudioManager.playBackgroundMusic();
         spawnedIds.clear();
         gameClock.reset();
         initFactory();
@@ -203,7 +205,7 @@ public class Application extends GameApplication {
     private static final double MOVE_SPEED = 200;
 
     /** x axis where customers spawn from (right edge). */
-    private static final double SPAWN_X = 1100;
+    private static final double SPAWN_X = 800;
 
     /**
      * Raw game-clock offset for the start of the simulation timeline.
@@ -247,6 +249,7 @@ public class Application extends GameApplication {
         data.put("characterType", process.getCharacterType());
 
         FXGL.spawn("customer", data);
+        AudioManager.pop();
     }
 
     /** Finds the game-world entity matching the given customer ID, or null. */
