@@ -21,7 +21,6 @@ import javafx.scene.shape.Rectangle;
 public class WaitingLineUIFactory implements EntityFactory {
     public enum WaitingUIType {
         ORDER_BUTTON,
-        ORDER_LIST,
         WAITING_LINE,
         BACKGROUND
     }
@@ -57,17 +56,6 @@ public class WaitingLineUIFactory implements EntityFactory {
                 .type(WaitingUIType.WAITING_LINE)
                 .view(FXGL.texture("waiting_line.png", 0, 0))
                 .scale(2.0, 1.5)
-                .zIndex(-10)
-                .build();
-    }
-
-    @Spawns("order_list")
-    public Entity orderList(SpawnData data) {
-        return FXGL.entityBuilder(data)
-                .type(WaitingUIType.ORDER_LIST)
-                .at(1100, 0)
-                .view(FXGL.texture("order_list.png", 0, 0))
-                .scale(2.2, 2.2)
                 .zIndex(-10)
                 .build();
     }

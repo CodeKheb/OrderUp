@@ -29,7 +29,6 @@ public class WaitingLineScene extends Pane {
         FXGL.spawn("background");
         FXGL.spawn("order_button");
         FXGL.spawn("waiting_line");
-        FXGL.spawn("order_list");
     }
 
     /**
