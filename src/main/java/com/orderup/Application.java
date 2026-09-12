@@ -11,6 +11,7 @@ import com.almasb.fxgl.entity.SpawnData;
 import com.orderup.Factory.CustomerFactory;
 import com.orderup.Factory.CustomerFactory.CustomerType;
 import com.orderup.Factory.MainSceneFactory;
+import com.orderup.Factory.RhythmFactory;
 import com.orderup.Factory.WaitingLineUIFactory;
 import com.orderup.Handlers.SceneManager;
 import com.orderup.Handlers.AudioManager;
@@ -77,6 +78,9 @@ public class Application extends GameApplication {
     /** Accumulates frame time for after-hours tick pacing (1 tick per second). */
     private double afterHoursAccumulator = 0.0;
 
+    /** Customer ID the rhythm circle was spawned for (-1 = none active). */
+    private int rhythmCustomerId = -1;
+
     /**
      * Enum representing the different in-game scenes that can be
      * shown when the game starts.
@@ -141,6 +145,7 @@ public class Application extends GameApplication {
     protected void initFactory() {
         FXGL.getGameWorld().addEntityFactory(new WaitingLineUIFactory());
         FXGL.getGameWorld().addEntityFactory(new CustomerFactory());
+        FXGL.getGameWorld().addEntityFactory(new RhythmFactory());
     }
 
     /**
@@ -171,6 +176,7 @@ public class Application extends GameApplication {
         lastTick = -1;
         clockStopped = false;
         afterHoursAccumulator = 0.0;
+        rhythmCustomerId = -1;
 
         processDisplay = new ProcessDisplay(gameClock, 30);
 
@@ -282,6 +288,12 @@ public class Application extends GameApplication {
             entity.removeFromWorld();
         }
 
+        // Destroy the rhythm circle together with the customer it belongs to
+        if (waitingLineScene != null) {
+            waitingLineScene.removeRhythmCircle();
+        }
+        rhythmCustomerId = -1;
+
         repositionCustomers();
 
         // Show Gantt overlay when all processes are done
@@ -360,6 +372,23 @@ public class Application extends GameApplication {
                 }
             }
             processDisplay.update(currentTick);
+        }
+
+        // Rhythm Circle spawns if customer is on the counter only
+        if (waitingLineScene != null && waitingLineScene.isRhythmDone()) {
+            var arrivedFront = processQueue.getArrivedProcesses(currentTick);
+            if (!arrivedFront.isEmpty()) {
+                CustomerProcess front = arrivedFront.get(0);
+                if (front.getCustomerId() != rhythmCustomerId) {
+                    Entity frontEntity = findCustomerEntity(front.getCustomerId());
+                    boolean atCounter = frontEntity != null
+                        && frontEntity.<Boolean>getPropertyOptional("arrived").orElse(false);
+                    if (atCounter) {
+                        waitingLineScene.spawnRhythmCircle(front.getBurstTime());
+                        rhythmCustomerId = front.getCustomerId();
+                    }
+                }
+            }
         }
 
 

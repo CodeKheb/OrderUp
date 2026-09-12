@@ -10,4 +10,7 @@ public class ClickHandler {
 
     // TODO: CLICK HANDLER FOR THE RHYTHM GAME
 
+    public static void CircleClicked() {
+
+    }
 }

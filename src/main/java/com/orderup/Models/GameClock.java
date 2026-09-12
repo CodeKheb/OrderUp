@@ -83,6 +83,11 @@ public class GameClock {
         return time.get();
     }
 
+    /** Returns the current game time in real seconds. */
+    public double getSmoothSeconds() {
+        return ((time.get() - startingSeconds) / (double) minuteInterval) + accumulator;
+    }
+
     /** Returns the time property for JavaFX binding. */
     public IntegerProperty timeProperty() {
         return time;
