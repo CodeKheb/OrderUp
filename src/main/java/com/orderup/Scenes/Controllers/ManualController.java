@@ -7,6 +7,7 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.orderup.Application;
 import com.orderup.Application.SceneType;
 import com.orderup.Factory.ProcessGenerator;
+import com.orderup.Handlers.AudioManager;
 import com.orderup.Models.CustomerProcess;
 import com.orderup.Models.ProcessQueue;
 import com.orderup.Scenes.Components.CustomerCard;
@@ -59,6 +60,7 @@ public class ManualController {
      */
     @FXML
     private void onBack() {
+        AudioManager.stopMusic();
         FXGL.getGameController().gotoMainMenu();
     }
 

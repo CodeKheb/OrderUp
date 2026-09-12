@@ -87,12 +87,6 @@
 
 .confirm-panel {
     -fx-background-color: #FFF8E7;
-    -fx-background-radius: 16px;
-    -fx-border-color: #D9A45B;
-    -fx-border-width: 2px;
-    -fx-border-radius: 16px;
-    -fx-padding: 30px 50px;
-    -fx-spacing: 20px;
     -fx-alignment: center;
 }
 

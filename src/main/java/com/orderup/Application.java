@@ -57,7 +57,7 @@ public class Application extends GameApplication {
     /** Original process list, never modified during gameplay. Used by the Gantt overlay. */
     private static java.util.List<CustomerProcess> originalProcesses;
 
-    /** Reference to the waiting line scene, so ClickHandler can access it. */
+    /** Reference to the waiting line scene. */
     private static WaitingLineScene waitingLineScene;
 
     /** The process display for the current game session, set in {@link #initGame()} before starting. */

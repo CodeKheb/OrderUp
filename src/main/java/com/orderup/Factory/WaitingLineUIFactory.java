@@ -5,7 +5,6 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
-import com.orderup.Handlers.ClickHandler;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -20,7 +19,6 @@ import javafx.scene.shape.Rectangle;
  */
 public class WaitingLineUIFactory implements EntityFactory {
     public enum WaitingUIType {
-        ORDER_BUTTON,
         WAITING_LINE,
         BACKGROUND
     }
@@ -33,21 +31,6 @@ public class WaitingLineUIFactory implements EntityFactory {
                 .viewWithBBox(rect)
                 .zIndex(-100)
                 .build();
-    }
-
-    @Spawns("order_button")
-    public Entity orderButton(SpawnData data) {
-        Entity entity = FXGL.entityBuilder(data)
-                .type(WaitingUIType.ORDER_BUTTON)
-                .at(1050, 650)
-                .view(FXGL.texture("order_button.png", 0, 0))
-                .scale(2.0, 2.0)
-                .zIndex(-10)
-                .build();
-        entity.getViewComponent().addOnClickHandler(e -> {
-            ClickHandler.onOrder();
-        });
-        return entity;
     }
 
     @Spawns("waiting_line")
