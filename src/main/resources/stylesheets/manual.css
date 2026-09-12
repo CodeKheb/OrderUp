@@ -16,11 +16,11 @@
     -fx-border-radius: 8;
     -fx-background-color: #f9f9f9;
     -fx-background-radius: 8;
-    -fx-padding: 5 40 20 40;
+    -fx-padding: 5 30 10 30;
     -fx-alignment: CENTER;
     -fx-spacing: 0;
-    -fx-min-width: 1000;
-    -fx-max-width: 1000;
+    -fx-min-width: 900;
+    -fx-max-width: 900;
 }
 
 /* ── Card Header ─────────────────────────────────────────────
@@ -34,7 +34,7 @@
 
 /* ── "Customer N" title text ───────────────────────────────── */
 .customer-header-text {
-    -fx-font-size: 24px;
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-fill: #333;
 }
@@ -64,12 +64,12 @@
 .input-row {
     -fx-alignment: CENTER_LEFT;
     -fx-spacing: 8;
-    -fx-padding: 16 0;
+    -fx-padding: 6 0;
 }
 
 /* ── Input label text ──────────────────────────────────────── */
 .input-label {
-    -fx-font-size: 20px;
+    -fx-font-size: 16px;
     -fx-fill: #333;
     -fx-font-weight: bold;
 }
@@ -117,26 +117,26 @@
  * Shows the current value of the slider to the right.
  */
 .slider-value-label {
-    -fx-font-size: 20px;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-fill: #333;
-    -fx-min-width: 180;
-    -fx-max-width: 180;
+    -fx-min-width: 160;
+    -fx-max-width: 160;
 }
 
 /* ── Add button ──────────────────────────────────────────────
  * Large button to confirm the current customer entry.
  */
 .add-btn {
-    -fx-min-width: 300;
-    -fx-min-height: 50;
-    -fx-font-size: 20px;
+    -fx-min-width: 200;
+    -fx-min-height: 40;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-background-color: #cc5114;
     -fx-text-fill: white;
     -fx-background-radius: 8;
     -fx-cursor: hand;
-    -fx-padding: 10 40;
+    -fx-padding: 6 30;
 }
 
 .add-btn:hover {
