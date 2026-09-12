@@ -16,9 +16,13 @@
 }
 
 .subtitle {
-    -fx-font-size: 68px;
+    -fx-font-size: 50px;
     -fx-font-weight: bold;
-    -fx-fill: white;
+    -fx-fill: black;
+}
+
+.subtitle.paused {
+    -fx-fill: #ffffff;
 }
 
 .placeholder-text {
@@ -27,8 +31,8 @@
 }
 
 .btn {
-    -fx-min-width: 500;
-    -fx-min-height: 100;
+    -fx-min-width: 400;
+    -fx-min-height: 75;
     -fx-font-size: 32px;
     -fx-background-color: #FFF8E7;
     -fx-text-fill: black;
@@ -113,4 +117,3 @@
     -fx-background-color: #cc5114;
     -fx-border-color: #cc5114;
 }
-
