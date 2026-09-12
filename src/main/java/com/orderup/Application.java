@@ -13,6 +13,7 @@ import com.orderup.Factory.CustomerFactory.CustomerType;
 import com.orderup.Factory.MainSceneFactory;
 import com.orderup.Factory.WaitingLineUIFactory;
 import com.orderup.Handlers.SceneManager;
+import com.orderup.Handlers.AudioManager;
 import com.orderup.Models.CustomerProcess;
 import com.orderup.Models.GameClock;
 import com.orderup.Models.ProcessDisplay;
@@ -163,6 +164,7 @@ public class Application extends GameApplication {
             // Ignore if no nodes exist yet
         }
 
+        AudioManager.playBackgroundMusic();
         spawnedIds.clear();
         gameClock.reset();
         initFactory();
