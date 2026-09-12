@@ -6,6 +6,7 @@ import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
 
+import com.orderup.Handlers.ClickHandler;
 import com.orderup.Scenes.Components.RhythmComponent;
 
 import javafx.scene.paint.Color;
@@ -63,8 +64,9 @@ public class RhythmFactory implements EntityFactory {
 
         return FXGL.entityBuilder(data)
                 .type(RhythmType.RHYTHM_PAIR)
-                .view(view)
+                .viewWithBBox(view)
                 .with(new RhythmComponent(outer, startOuterRadius, innerRadius, burstTime))
+                .onClick(e -> ClickHandler.CircleClicked(e))
                 .zIndex(50)
                 .build();
     }

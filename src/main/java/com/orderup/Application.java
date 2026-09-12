@@ -19,6 +19,7 @@ import com.orderup.Models.CustomerProcess;
 import com.orderup.Models.GameClock;
 import com.orderup.Models.ProcessDisplay;
 import com.orderup.Models.ProcessQueue;
+import com.orderup.Models.RhythmScore;
 import com.orderup.Scenes.Components.CustomerAnimationComponent;
 import com.orderup.Scenes.Interfaces.ManualScene;
 import com.orderup.Scenes.Interfaces.WaitingLineScene;
@@ -172,6 +173,7 @@ public class Application extends GameApplication {
         AudioManager.playBackgroundMusic();
         spawnedIds.clear();
         gameClock.reset();
+        RhythmScore.reset();
         initFactory();
         lastTick = -1;
         clockStopped = false;
@@ -190,6 +192,7 @@ public class Application extends GameApplication {
                 waitingLineScene = new WaitingLineScene();
                 SceneManager.show(waitingLineScene);
                 SceneManager.showClockUI();
+                SceneManager.showScoreUI();
                 Group queueDisplay = processDisplay.getDisplayGroup();
                 queueDisplay.setTranslateX(50);
                 queueDisplay.setTranslateY(510);
@@ -288,9 +291,12 @@ public class Application extends GameApplication {
             entity.removeFromWorld();
         }
 
-        // Destroy the rhythm circle together with the customer it belongs to
+        // Destroy the rhythm circle together with the customer it belongs to.
+        // A still-active circle means it expired unclicked — that breaks the combo.
         if (waitingLineScene != null) {
-            waitingLineScene.removeRhythmCircle();
+            if (waitingLineScene.removeRhythmCircle()) {
+                RhythmScore.breakCombo();
+            }
         }
         rhythmCustomerId = -1;
 

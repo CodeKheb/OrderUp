@@ -2,12 +2,18 @@ package com.orderup.Handlers;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.orderup.Models.GameClock;
+import com.orderup.Models.RhythmScore;
 
+import javafx.beans.binding.Bindings;
 import javafx.scene.Node;
+import javafx.geometry.Insets;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
@@ -73,5 +79,62 @@ public class SceneManager {
         clockPane.setTranslateY(720 / 20);
 
         FXGL.getGameScene().addUINode(clockPane);
+    }
+
+    /**
+     * Builds and adds the score text with a styled background rectangle
+     */
+    public static void showScoreUI() {
+        Text scoreText = new Text();
+        scoreText.textProperty().bind(
+                Bindings.createStringBinding(
+                        () -> "Score " + RhythmScore.getScore(),
+                        RhythmScore.scoreProperty()));
+        scoreText.setFont(Font.font("Monospace", FontWeight.BOLD, 30));
+        scoreText.setFill(Color.WHITE);
+
+        Rectangle scoreBg = new Rectangle(200, 70);
+        scoreBg.setArcWidth(10);
+        scoreBg.setArcHeight(10);
+        scoreBg.setFill(Color.web("#1a1a1a"));
+        scoreBg.setStroke(Color.web("#cc5114"));
+        scoreBg.setStrokeWidth(2);
+        scoreBg.setStrokeType(StrokeType.INSIDE);
+
+        StackPane scorePane = new StackPane(scoreBg, scoreText);
+
+        // -- Combo badge ------------------------------------------------
+        Text comboText = new Text();
+        comboText.textProperty().bind(
+                Bindings.createStringBinding(
+                        () -> "×" + RhythmScore.formatMultiplier(
+                                RhythmScore.multiplierFor(RhythmScore.getCombo())),
+                        RhythmScore.comboProperty()));
+        comboText.setFont(Font.font("Monospace", FontWeight.BOLD, 26));
+        comboText.setFill(Color.web("#D9A45B"));
+
+        Rectangle comboBg = new Rectangle(70, 50);
+        comboBg.setArcWidth(10);
+        comboBg.setArcHeight(10);
+        comboBg.setFill(Color.web("#1a1a1a"));
+        comboBg.setStroke(Color.web("#D9A45B"));
+        comboBg.setStrokeWidth(2);
+        comboBg.setStrokeType(StrokeType.INSIDE);
+
+        StackPane comboBadge = new StackPane(comboBg, comboText);
+
+        // Hide the badge when there is no combo.
+        comboBadge.visibleProperty().bind(RhythmScore.comboProperty().greaterThanOrEqualTo(2));
+        comboBadge.opacityProperty().bind(
+                Bindings.when(comboBadge.visibleProperty()).then(1.0).otherwise(0.0));
+
+        // -- Layout: badge left of the score panel -----------------------
+        HBox scoreBar = new HBox(10);
+        scoreBar.getChildren().addAll(comboBadge, scorePane);
+        scoreBar.setTranslateX(960);
+        scoreBar.setTranslateY(720 / 20);
+        HBox.setMargin(comboBadge, new Insets(0, 0, 0, 0));
+
+        FXGL.getGameScene().addUINode(scoreBar);
     }
 }

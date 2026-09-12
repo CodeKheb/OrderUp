@@ -101,14 +101,22 @@ public class WaitingLineScene extends Pane {
         rhythmPair = FXGL.spawn("rhythm_pair", data);
     }
 
-    /** Removes the active rhythm pair entity. */
-    public void removeRhythmCircle() {
+    /**
+     * Removes the active rhythm pair entity.
+     *
+     * @return true if an active (i.e. never clicked) circle was removed,
+     *         false if there was no circle or it was already clicked away
+     */
+    public boolean removeRhythmCircle() {
         if (rhythmPair != null) {
-            if (rhythmPair.isActive()) {
+            boolean wasActive = rhythmPair.isActive();
+            if (wasActive) {
                 rhythmPair.removeFromWorld();
             }
             rhythmPair = null;
+            return wasActive;
         }
+        return false;
     }
 
 
