@@ -22,16 +22,27 @@ import com.orderup.Models.ProcessDisplay;
 import com.orderup.Models.ProcessQueue;
 import com.orderup.Models.RhythmScore;
 import com.orderup.Scenes.Components.CustomerAnimationComponent;
+import com.orderup.Scenes.Interfaces.IntroInterface;
 import com.orderup.Scenes.Interfaces.ManualScene;
 import com.orderup.Scenes.Interfaces.WaitingLineScene;
+import com.orderup.Uitility.LoadFont;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 /**
  * Main application class for OrderUp.
- * <br><br>
+ * <br>
+ * <br>
  * Extends FXGL's {@link GameApplication} to leverage the FXGL game engine.
  * Configures game settings including window dimensions, title, and the
  * custom {@link MainSceneFactory} for menu and loading scenes. Registers
@@ -55,22 +66,34 @@ public class Application extends GameApplication {
     /** The scene to show when the game starts */
     private static SceneType initialScene = SceneType.WAITING_LINE;
 
-    /** The process queue for the current game session, set by controllers before starting. */
+    /**
+     * The process queue for the current game session, set by controllers before
+     * starting.
+     */
     private static ProcessQueue processQueue;
 
-    /** Original process list, never modified during gameplay. Used by the Gantt overlay. */
+    /**
+     * Original process list, never modified during gameplay. Used by the Gantt
+     * overlay.
+     */
     private static java.util.List<CustomerProcess> originalProcesses;
 
     /** Reference to the waiting line scene. */
     private static WaitingLineScene waitingLineScene;
 
-    /** The process display for the current game session, set in {@link #initGame()} before starting. */
+    /**
+     * The process display for the current game session, set in {@link #initGame()}
+     * before starting.
+     */
     private ProcessDisplay processDisplay;
 
     /** Current game-clock time in seconds, incremented each tick. */
     private GameClock gameClock = new GameClock();
 
-    /** Customer IDs that have already been spawned, prevents re-spawning on later ticks. */
+    /**
+     * Customer IDs that have already been spawned, prevents re-spawning on later
+     * ticks.
+     */
     private Set<Integer> spawnedIds = new HashSet<>();
 
     private int lastTick = -1;
@@ -107,6 +130,7 @@ public class Application extends GameApplication {
         settings.setHeight(WINDOW_HEIGHT);
         settings.setTitle(APP_TITLE);
         settings.setVersion(APP_VERSION);
+        settings.setIntroEnabled(true);
         settings.setMainMenuEnabled(true);
         settings.setGameMenuEnabled(true);
         settings.setSceneFactory(new MainSceneFactory());
@@ -161,7 +185,8 @@ public class Application extends GameApplication {
 
     /**
      * Registers the entity factories for the game world.
-     * <br><br>
+     * <br>
+     * <br>
      * Adds {@link WaitingLineUIFactory} and {@link CustomerFactory} so
      * that entities can be spawned during gameplay.
      */
@@ -171,26 +196,28 @@ public class Application extends GameApplication {
         FXGL.getGameWorld().addEntityFactory(new RhythmFactory());
     }
 
-    /** Runs once when the application launches, before FXGL initializes. */
     @Override
     protected void onPreInit() {
-        AudioManager.playBackgroundMusic();
+        PauseTransition delay = new PauseTransition(Duration.seconds(4));
+        delay.setOnFinished(e -> AudioManager.playBackgroundMusic());
+        delay.play();
     }
 
     /**
      * Initializes the game world when a new game starts.
-     * <br><br>
+     * <br>
+     * <br>
      * Clears any existing UI nodes, registers entity factories via
      * {@link #initFactory()}, and shows the scene determined by
      * {@link #initialScene}.
      */
     @Override
     protected void initGame() {
+
         // Remove any existing UI nodes first
         try {
             java.util.List<Node> nodes = new java.util.ArrayList<>(
-                FXGL.getGameScene().getUINodes()
-            );
+                    FXGL.getGameScene().getUINodes());
             for (Node node : nodes) {
                 FXGL.getGameScene().removeUINode(node);
             }
@@ -225,13 +252,13 @@ public class Application extends GameApplication {
                 FXGL.getGameScene().addUINode(queueDisplay);
                 break;
         }
-    }	
+    }
 
-	/**
-	 * Horizontal position where the waiting line / counter sits.
-	 * Customers move from off-screen right to this X.
-	 */
-	private static final double TARGET_X = 600;
+    /**
+     * Horizontal position where the waiting line / counter sits.
+     * Customers move from off-screen right to this X.
+     */
+    private static final double TARGET_X = 600;
 
     /** Horizontal gap between consecutive customers in the line. */
     private static final double LINE_GAP = 150;
@@ -250,13 +277,15 @@ public class Application extends GameApplication {
 
     /**
      * Number of raw game-clock seconds represented by one simulation tick.
-     * This keeps the queue timeline aligned with the game's 20-minute tick granularity.
+     * This keeps the queue timeline aligned with the game's 20-minute tick
+     * granularity.
      */
     private static final int TICK_DURATION_SECONDS = 20 * 60;
 
     /**
      * Spawns a single customer entity off-screen and records its target position.
-     * <br><br>
+     * <br>
+     * <br>
      * The customer is placed at {@link #SPAWN_X} (right edge) and assigned a
      * target X in the waiting line. Each subsequent customer shifts right by
      * {@link #LINE_GAP} so they form a visible queue.
@@ -296,8 +325,10 @@ public class Application extends GameApplication {
     /**
      * Handles completion of a process whose burst time has reached zero.
      *
-     * <p>Removes the process from the queue, display, and game world,
-     * then repositions remaining customers to fill the gap.</p>
+     * <p>
+     * Removes the process from the queue, display, and game world,
+     * then repositions remaining customers to fill the gap.
+     * </p>
      */
     private void completeProcess(CustomerProcess process) {
         int customerId = process.getCustomerId();
@@ -322,14 +353,111 @@ public class Application extends GameApplication {
 
         repositionCustomers();
 
-        // Day is done: show the Gantt chart 2 seconds after the last
-        // customer is served, then freeze the clock (end of day).
+        // Day is done: fade in a "no more customers" message, then swap
+        // to an earnings summary banner. The banner fades out on its own
+        // and only afterwards is the Gantt chart revealed.
+        //
+        // Full sequence budget (chart lands at exactly 2.5s):
+        // 0.00 banner 1 fades in (0.25)
+        // 0.25 hold (0.70)
+        // 0.95 banner 1 fades out (0.25)
+        // 1.20 earnings fades in (0.25)
+        // 1.45 hold (0.80)
+        // 2.25 earnings fades out (0.25)
+        // 2.50 Gantt chart shows
         if (processQueue.getProcessList().isEmpty() && waitingLineScene != null) {
+            StackPane dayEndMessage = buildDayEndMessage(
+                    "It looks like there will be no more customers today...",
+                    (WINDOW_HEIGHT - 150) / 2.0);
+            FXGL.getGameScene().addUINode(dayEndMessage);
+
+            FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.25), dayEndMessage);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+            fadeIn.play();
+
             FXGL.getGameTimer().runOnceAfter(() -> {
-                waitingLineScene.showGanttOverlay(originalProcesses, true);
                 gameClock.pause();
-            }, Duration.seconds(2));
+
+                // First banner out, earnings banner in, then the chart.
+                fadeOutUiNode(dayEndMessage, () -> {
+                    StackPane earningsMessage = buildDayEndMessage(
+                            "I earned a total of "
+                                    + RhythmScore.formatMoney(RhythmScore.getScore())
+                                    + " today...",
+                            (WINDOW_HEIGHT - 150) / 2.0);
+                    FXGL.getGameScene().addUINode(earningsMessage);
+
+                    FadeTransition earningsIn = new FadeTransition(
+                            Duration.seconds(0.25), earningsMessage);
+                    earningsIn.setFromValue(0.0);
+                    earningsIn.setToValue(1.0);
+                    // Hold the banner on its own so the total can be read,
+                    // fade it out, and reveal the Gantt chart only once it
+                    // is fully gone (completes the 2.5s budget above).
+                    earningsIn.setOnFinished(e -> FXGL.getGameTimer().runOnceAfter(
+                            () -> fadeOutUiNode(earningsMessage,
+                                    () -> waitingLineScene
+                                            .showGanttOverlay(originalProcesses, true)),
+                            Duration.seconds(0.8)));
+                    earningsIn.play();
+                });
+            }, Duration.seconds(0.95));
         }
+    }
+
+    /**
+     * Fades a UI node out over 0.25s, removes it from the game scene,
+     * then runs the given callback (if any).
+     *
+     * @param node  the node to fade out and remove
+     * @param after callback to run once the node is gone, or null
+     */
+    private void fadeOutUiNode(StackPane node, Runnable after) {
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.25), node);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        fadeOut.setOnFinished(e -> {
+            FXGL.getGameScene().removeUINode(node);
+            if (after != null) {
+                after.run();
+            }
+        });
+        fadeOut.play();
+    }
+
+    /**
+     * Builds a centered end-of-day banner with the given message.
+     * Full-screen-width panel but mouse-transparent so it never blocks
+     * input to the scene or the Gantt overlay underneath.
+     *
+     * @param message    the text to show
+     * @param translateY vertical position of the panel's top edge
+     */
+    private StackPane buildDayEndMessage(String message, double translateY) {
+        Text text = new Text(message);
+        text.setFont(LoadFont.loadPixelFont(24));
+        text.setFill(Color.WHITE);
+        text.setLineSpacing(14);
+        text.setWrappingWidth(840);
+        text.setTextAlignment(TextAlignment.CENTER);
+
+        Rectangle bg = new Rectangle(920, 150);
+        bg.setArcWidth(20);
+        bg.setArcHeight(20);
+        bg.setFill(Color.rgb(0, 0, 0, 0.7));
+
+        StackPane pane = new StackPane(bg, text);
+        pane.setAlignment(Pos.CENTER);
+        pane.setMouseTransparent(true);
+        pane.setTranslateX((WINDOW_WIDTH - 920) / 2.0);
+        pane.setTranslateY(translateY);
+        // Start hidden BEFORE the node is added to the scene. A
+        // FadeTransition's fromValue is not applied until the next
+        // animation pulse, so without this the banner renders one frame
+        // at full opacity first — visible as a "spawns twice" flash.
+        pane.setOpacity(0.0);
+        return pane;
     }
 
     /** Recalculates target X positions for all remaining customer entities. */
@@ -348,7 +476,8 @@ public class Application extends GameApplication {
     @Override
     protected void onUpdate(double tpf) {
         // guard this lmao, it bugged
-    if (initialScene != SceneType.WAITING_LINE) return;
+        if (initialScene != SceneType.WAITING_LINE)
+            return;
 
         // Deferred Gantt chart request from the pause menu — runs here so
         // the overlay is added after the game scene is visible again.
@@ -359,11 +488,12 @@ public class Application extends GameApplication {
             }
         }
 
-        // game clock 
+        // game clock
         gameClock.update();
         // spawn customers
 
-        // Converts the raw game clock into simulation ticks using the documented constants.
+        // Converts the raw game clock into simulation ticks using the documented
+        // constants.
         var currentTick = (gameClock.getTime() - SIMULATION_START_TIME_SECONDS) / TICK_DURATION_SECONDS;
 
         var arrived = processQueue.getArrivedProcesses(currentTick);
@@ -378,7 +508,8 @@ public class Application extends GameApplication {
         }
 
         // The clock keeps running past 5:00 PM
-        // so every tick is now delivered by the game clock at the same 1-tick-per-second rate.
+        // so every tick is now delivered by the game clock at the same
+        // 1-tick-per-second rate.
         boolean tickChanged = currentTick != lastTick;
         if (tickChanged) {
             lastTick = currentTick;
@@ -388,7 +519,7 @@ public class Application extends GameApplication {
                 CustomerProcess front = arrived.get(0);
                 Entity frontEntity = findCustomerEntity(front.getCustomerId());
                 boolean atCounter = frontEntity != null
-                    && frontEntity.<Boolean>getPropertyOptional("arrived").orElse(false);
+                        && frontEntity.<Boolean>getPropertyOptional("arrived").orElse(false);
                 if (atCounter && !front.isBurstComplete()) {
                     front.setBurstTime(front.getBurstTime() - 1);
                     if (front.isBurstComplete()) {
@@ -407,7 +538,7 @@ public class Application extends GameApplication {
                 if (front.getCustomerId() != rhythmCustomerId) {
                     Entity frontEntity = findCustomerEntity(front.getCustomerId());
                     boolean atCounter = frontEntity != null
-                        && frontEntity.<Boolean>getPropertyOptional("arrived").orElse(false);
+                            && frontEntity.<Boolean>getPropertyOptional("arrived").orElse(false);
                     if (atCounter) {
                         // The circle shows the dish this customer ordered.
                         MenuItem order = frontEntity != null
@@ -422,8 +553,7 @@ public class Application extends GameApplication {
             }
         }
 
-
-		// Cap tpf to prevent large jumps during initialization lag
+        // Cap tpf to prevent large jumps during initialization lag
         double cappedTpf = Math.min(tpf, 1.0 / 60.0);
         double step = MOVE_SPEED * cappedTpf;
 

@@ -2,9 +2,12 @@ package com.orderup.Scenes.Interfaces;
 
 import java.io.IOException;
 
+import com.orderup.Uitility.ImageCache;
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
@@ -32,6 +35,13 @@ public class ManualScene extends VBox {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/manual.fxml"));
             Parent root = loader.load();
+
+            // Reuse the shared, cached GIF so the manual never decodes a second copy
+            ImageView backgroundView = (ImageView) root.lookup("#backgroundView");
+            if (backgroundView != null) {
+                backgroundView.setImage(ImageCache.get("/assets/textures/menu_animation.gif"));
+            }
+
             getChildren().add(root);
             setAlignment(javafx.geometry.Pos.CENTER);
             setSpacing(20);

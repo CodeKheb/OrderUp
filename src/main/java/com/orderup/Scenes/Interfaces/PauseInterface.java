@@ -4,11 +4,13 @@ import java.io.IOException;
 
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.MenuType;
+import com.almasb.fxgl.dsl.FXGL;
 
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -16,6 +18,7 @@ import javafx.scene.text.Text;
 import com.orderup.Handlers.SceneManager;
 import com.orderup.Models.GameClock;
 import com.orderup.Scenes.Controllers.PauseController;
+import com.orderup.Uitility.ImageCache;
 
 import static com.almasb.fxgl.dsl.FXGL.getGameController;
 
@@ -94,10 +97,12 @@ public class PauseInterface extends FXGLMenu {
 
     /**
      * Exits the game to the main menu with a confirmation dialog.
+     * The dialog uses {@code loading_background.png} as a full-screen
+     * backdrop instead of a plain dim.
      */
     public void exitToMainMenu() {
         // -- Message text --
-        Text message = new Text("Are you sure you want to return to the main menu?");
+        Text message = new Text("Return to Main Menu?");
         message.getStyleClass().add("confirm-text");
 
         // -- Buttons --
@@ -111,13 +116,38 @@ public class PauseInterface extends FXGLMenu {
         });
 
         // -- Panel holding message + buttons --
+        // No cream background — the text and buttons float on the image,
+        // exactly like the loading screen shows it.
         VBox panel = new VBox(20, message, btnYes, btnNo);
-        panel.getStyleClass().add("confirm-panel");
+        panel.setAlignment(Pos.CENTER);
+        panel.setMaxSize(VBox.USE_PREF_SIZE, VBox.USE_PREF_SIZE);
 
-        // -- Full-screen dim overlay wrapping the panel --
-        confirmOverlay = new StackPane(panel);
-        confirmOverlay.getStyleClass().add("confirm-overlay");
+        // -- Full-screen image backdrop wrapping the panel --
+        // Built exactly like LoadingInterface: a viewport-sized overlay
+        // containing the art stretched to 1440x810 and shifted -80/-45,
+        // pinned to the top-left so the geometry cannot drift with the
+        // parent's layout. The FXGL menu content root does not stretch
+        // children, hence the explicit viewport-sized container.
+        ImageView backdropView = new ImageView(
+                ImageCache.get("/assets/textures/loading_background.png"));
+        backdropView.setFitWidth(LoadingInterface.BG_FIT_WIDTH);
+        backdropView.setFitHeight(LoadingInterface.BG_FIT_HEIGHT);
+        backdropView.setPreserveRatio(false);
+        backdropView.setSmooth(true);
+        backdropView.setTranslateX(LoadingInterface.BG_TRANSLATE_X);
+        backdropView.setTranslateY(LoadingInterface.BG_TRANSLATE_Y);
+        StackPane.setAlignment(backdropView, Pos.TOP_LEFT);
+
+        confirmOverlay = new StackPane(backdropView, panel);
         confirmOverlay.setAlignment(Pos.CENTER);
+        // Pin to the exact viewport: the 1440x810 backdrop child would
+        // otherwise inflate the StackPane's preferred size (children's
+        // pref = their fit size), and centering inside that oversized
+        // canvas shifts the panel right/down by exactly the overscan
+        // offsets (+80, +45).
+        confirmOverlay.setMinSize(FXGL.getAppWidth(), FXGL.getAppHeight());
+        confirmOverlay.setMaxSize(FXGL.getAppWidth(), FXGL.getAppHeight());
+        confirmOverlay.setPrefSize(FXGL.getAppWidth(), FXGL.getAppHeight());
 
         confirmOverlay.getStylesheets().add(
             getClass().getResource("/stylesheets/stylesheet.css").toExternalForm()

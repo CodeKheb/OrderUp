@@ -3,9 +3,13 @@ package com.orderup.Factory;
 import java.io.IOException;
 
 import com.almasb.fxgl.app.scene.FXGLMenu;
+import com.almasb.fxgl.app.scene.IntroScene;
 import com.almasb.fxgl.app.scene.LoadingScene;
+import com.almasb.fxgl.app.scene.StartupScene;
 import com.almasb.fxgl.app.scene.SceneFactory;
+import com.orderup.Scenes.Interfaces.IntroInterface;
 import com.orderup.Scenes.Interfaces.LoadingInterface;
+import com.orderup.Scenes.Interfaces.StartupInterface;
 import com.orderup.Scenes.Interfaces.MenuInterface;
 import com.orderup.Scenes.Interfaces.PauseInterface;
 
@@ -54,5 +58,27 @@ public class MainSceneFactory extends SceneFactory {
     @Override
     public LoadingScene newLoadingScene() {
         return new LoadingInterface();
+    }
+
+    /**
+     * Creates the intro scene shown once at launch, replacing FXGL's
+     * default starfield logo animation with the OrderUp loading art.
+     *
+     * @return a new {@link IntroInterface} instance
+     */
+    @Override
+    public IntroScene newIntro() {
+        return new IntroInterface();
+    }
+
+    /**
+     * Creates the startup scene shown while the engine boots, replacing
+     * FXGL's default blue splash with the OrderUp loading art.
+     *
+     * @return a new {@link StartupInterface} instance
+     */
+    @Override
+    public StartupScene newStartup(int w, int h) {
+        return new StartupInterface(w, h);
     }
 }

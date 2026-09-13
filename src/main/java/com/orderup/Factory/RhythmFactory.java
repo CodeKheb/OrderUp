@@ -37,7 +37,7 @@ public class RhythmFactory implements EntityFactory {
     private static final double INNER_RADIUS = 55;
     private static final double INNER_STROKE_RADIUS = 60;
     private static final double RADIUS_PER_BT = 8;
-    private static final double MAX_OUTER_RADIUS = 180;
+    private static final double MAX_OUTER_RADIUS = 150;
     private static final double ICON_SCALE = 1; // DO NOT TOUCH, IF YOU WANT CENTERED
 
     /**
