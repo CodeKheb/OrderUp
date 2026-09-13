@@ -1,6 +1,7 @@
 package com.orderup.Handlers;
 
 import com.almasb.fxgl.dsl.FXGL;
+import com.almasb.fxgl.entity.Entity;
 import com.orderup.Models.GameClock;
 import com.orderup.Models.RhythmScore;
 
@@ -18,7 +19,8 @@ import javafx.scene.text.Text;
 
 /**
  * Utility class for managing scene transitions within the game.
- * <br><br>
+ * <br>
+ * <br>
  * Provides static methods to show UI nodes in the game scene
  * using FXGL's game scene management system.
  */
@@ -61,7 +63,8 @@ public class SceneManager {
      * Builds and adds the clock text with a styled background rectangle.
      */
     public static void showClockUI() {
-        if (gameClock == null) return;
+        if (gameClock == null)
+            return;
 
         Text clockText = gameClock.getClockText();
         clockText.setFill(Color.WHITE);
@@ -69,16 +72,22 @@ public class SceneManager {
         Rectangle clockBg = new Rectangle(260, 70);
         clockBg.setArcWidth(10);
         clockBg.setArcHeight(10);
-        clockBg.setFill(Color.web("#1a1a1a"));
-        clockBg.setStroke(Color.web("#cc5114"));
+        clockBg.setFill(Color.web("#50452c"));
+        clockBg.setStroke(Color.web("#000000"));
         clockBg.setStrokeWidth(2);
         clockBg.setStrokeType(StrokeType.INSIDE);
 
         StackPane clockPane = new StackPane(clockBg, clockText);
-        clockPane.setTranslateX(1280 / 2.6);
-        clockPane.setTranslateY(720 / 20);
+        clockPane.setScaleX(0.6);
+        clockPane.setScaleY(0.6);
 
-        FXGL.getGameScene().addUINode(clockPane);
+        Entity clockEntity = FXGL.entityBuilder()
+                .at(880, 65)
+                .view(clockPane)
+                .zIndex(0)
+                .build();
+
+        FXGL.getGameWorld().addEntity(clockEntity);
     }
 
     /**
@@ -131,7 +140,7 @@ public class SceneManager {
         // -- Layout: badge left of the score panel -----------------------
         HBox scoreBar = new HBox(10);
         scoreBar.getChildren().addAll(comboBadge, scorePane);
-        scoreBar.setTranslateX(960);
+        scoreBar.setTranslateX(30);
         scoreBar.setTranslateY(720 / 20);
         HBox.setMargin(comboBadge, new Insets(0, 0, 0, 0));
 

@@ -29,10 +29,10 @@ public class WaitingLineScene extends Pane {
     private Entity rhythmPair;
 
     /** Spawn zone for rhythm circles. */
-    private static final int CIRCLE_ZONE_MIN_X = 1000;
+    private static final int CIRCLE_ZONE_MIN_X = 0;
 
     /** Spawn zone for rhythm circles. */
-    private static final int CIRCLE_ZONE_MAX_X = 1280;
+    private static final int CIRCLE_ZONE_MAX_X = 280;
 
     /** Spawn zone for rhythm circles. */
     private static final int CIRCLE_ZONE_MIN_Y = 100;
@@ -50,6 +50,7 @@ public class WaitingLineScene extends Pane {
     public WaitingLineScene() {
         FXGL.spawn("background");
         FXGL.spawn("waiting_line");
+        FXGL.spawn("rhythm_background");
     }
 
     /**

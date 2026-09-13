@@ -213,16 +213,16 @@ public class Application extends GameApplication {
 	 * Horizontal position where the waiting line / counter sits.
 	 * Customers move from off-screen right to this X.
 	 */
-	private static final double TARGET_X = 200;
+	private static final double TARGET_X = 600;
 
     /** Horizontal gap between consecutive customers in the line. */
-    private static final double LINE_GAP = 100;
+    private static final double LINE_GAP = 150;
 
     /** Pixels per second that customers move toward their target. */
     private static final double MOVE_SPEED = 200;
 
     /** x axis where customers spawn from (right edge). */
-    private static final double SPAWN_X = 800;
+    private static final double SPAWN_X = 1320;
 
     /**
      * Raw game-clock offset for the start of the simulation timeline.
@@ -249,7 +249,7 @@ public class Application extends GameApplication {
         int id = process.getCustomerId();
         int index = spawnedIds.size();
         double targetX = TARGET_X + (index * LINE_GAP);
-        double targetY = (WINDOW_HEIGHT - 100) / 2.0;
+        double targetY = (WINDOW_HEIGHT - 150) / 2.0;
 
         SpawnData data = new SpawnData(SPAWN_X, targetY);
         data.put("customerId", id);
