@@ -49,8 +49,6 @@ public class GanttOverlay extends Pane {
     // ── Colors (warm autumnal pixel art cafe palette) ─────────
     private static final Color GIRL_COLOR = Color.web("#CC5522");
     private static final Color GIRL_STROKE = Color.web("#993311");
-    private static final Color MAN_COLOR = Color.web("#D9A45B");
-    private static final Color MAN_STROKE = Color.web("#B8860B");
     private static final Color IDLE_COLOR = Color.web("#6B5D4F");
     private static final Color IDLE_STROKE = Color.web("#4A3F35");
     private static final Color TIMELINE_COLOR = Color.web("#8B7355");
@@ -440,9 +438,8 @@ public class GanttOverlay extends Pane {
                 label = "IDLE";
             } else {
                 CustomerProcess p = cell.getProcessId();
-                boolean isGirl = p.getCharacterType().isGirl();
-                fillColor = isGirl ? GIRL_COLOR : MAN_COLOR;
-                strokeColor = isGirl ? GIRL_STROKE : MAN_STROKE;
+                fillColor = GIRL_COLOR;
+                strokeColor = GIRL_STROKE;
                 label = "C" + p.getCustomerId();
             }
 
