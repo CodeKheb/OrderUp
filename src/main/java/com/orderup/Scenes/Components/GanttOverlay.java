@@ -70,7 +70,8 @@ public class GanttOverlay extends Pane {
     private static final double FRAME_L = 60;
     private static final double FRAME_T = 150;
     private static final double FRAME_R = 1220;
-    private static final double FRAME_B = 570;
+    private static final double FRAME_B_MIN = 520;
+    private double frameBottom;
 
     // Centered content area within the frame
     private static final double CONTENT_WIDTH = 1100;
@@ -113,6 +114,15 @@ public class GanttOverlay extends Pane {
 
         // Full-screen dark backdrop
         Rectangle backdrop = new Rectangle(1280, 720, Color.web("#000000BB"));
+
+        // Dynamic frame bottom based on number of processes
+        int processCount = processes.size();
+        double tableHeight = ROW_H + (processCount * ROW_H);
+        double separatorAndAvg = 5 + ROW_H + 10;
+        double buttonArea = 45;
+        frameBottom = Math.max(FRAME_B_MIN,
+                TABLE_TOP_OFFSET + tableHeight + separatorAndAvg + buttonArea + 20);
+        frameBottom = Math.min(frameBottom, OVERLAY_H - 15);
 
         // Pixel art frame
         Group frame = buildPixelFrame();
@@ -160,7 +170,7 @@ public class GanttOverlay extends Pane {
 
         actions.getChildren().addAll(continueBtn, mainMenuBtn);
         actions.setPrefWidth(1280);
-        actions.setTranslateY(OVERLAY_H - 110);
+        actions.setTranslateY(frameBottom - buttonArea - 15);
 
         // Bar chart
         drawChart(cells);
@@ -181,27 +191,27 @@ public class GanttOverlay extends Pane {
 
         // Outermost border — dark wood
         frame.getChildren().add(createFrameRect(FRAME_L - 12, FRAME_T - 12,
-                FRAME_R - FRAME_L + 24, FRAME_B - FRAME_T + 24,
+                FRAME_R - FRAME_L + 24, frameBottom - FRAME_T + 24,
                 FRAME_OUTER, 0));
 
         // Mid border — warm wood
         frame.getChildren().add(createFrameRect(FRAME_L - 6, FRAME_T - 6,
-                FRAME_R - FRAME_L + 12, FRAME_B - FRAME_T + 12,
+                FRAME_R - FRAME_L + 12, frameBottom - FRAME_T + 12,
                 FRAME_MID, 0));
 
         // Inner border — amber trim
         frame.getChildren().add(createFrameRect(FRAME_L - 2, FRAME_T - 2,
-                FRAME_R - FRAME_L + 4, FRAME_B - FRAME_T + 4,
+                FRAME_R - FRAME_L + 4, frameBottom - FRAME_T + 4,
                 FRAME_INNER, 0));
 
         // Innermost edge highlight — cream
         frame.getChildren().add(createFrameRect(FRAME_L, FRAME_T,
-                FRAME_R - FRAME_L, FRAME_B - FRAME_T,
+                FRAME_R - FRAME_L, frameBottom - FRAME_T,
                 FRAME_HIGHLIGHT, 0));
 
         // Chalkboard background
         frame.getChildren().add(createFrameRect(FRAME_L + 4, FRAME_T + 4,
-                FRAME_R - FRAME_L - 8, FRAME_B - FRAME_T - 8,
+                FRAME_R - FRAME_L - 8, frameBottom - FRAME_T - 8,
                 CHALKBOARD, 0));
 
         return frame;
