@@ -4,18 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 /**
  * Manages a text-based FCFS scheduling queue display.
  *
  * <p>
  * Processes are displayed with their arrival time as a readable AM clock
- * (e.g. "7:00 AM (0)"). No burst time logic for now — just a list of arrived
- * processes.
+ * (e.g. "7:00 AM (0)"). Each column is a separately positioned text node
+ * at a fixed pixel x-offset, so alignment never depends on the font
+ * actually being monospace (Font.font("Monospace") can fall back to a
+ * proportional font, which previously broke the char-count padding).
  * </p>
  */
 public class ProcessDisplay {
@@ -35,17 +39,23 @@ public class ProcessDisplay {
     /** Vertical spacing between text lines. */
     private static final double LINE_HEIGHT = 28;
 
+    /** X offset of the Arrival Time column (pixels from the group origin). */
+    private static final double COL_ARRIVAL_X = 130;
+
+    /** Left edge of the Patience column zone (pixels). */
+    private static final double COL_PATIENCE_X = 300;
+
+    /** Width of the Patience column zone; its text is centered inside it (pixels). */
+    private static final double COL_PATIENCE_WIDTH = 100;
+
     /** All processes that have arrived, in order. */
     private final List<CustomerProcess> processes = new ArrayList<>();
 
     /** The JavaFX Group holding all text nodes. Add this to the scene. */
     private final Group displayGroup = new Group();
 
-    /** Header text. */
-    private final Text headerText;
-
-    /** Individual process text lines. */
-    private final List<Text> processLines = new ArrayList<>();
+    /** Individual process rows. */
+    private final List<Node> processRows = new ArrayList<>();
 
     /**
      * Creates a ProcessDisplay.
@@ -54,13 +64,48 @@ public class ProcessDisplay {
      * @param maxBurstTime unused, kept for future progress bar
      */
     public ProcessDisplay(GameClock gameClock, int maxBurstTime) {
-        this.headerText = new Text("ORDER UP    Arrival Time   Patience");
-        this.headerText.setFont(HEADER_FONT);
-        this.headerText.setFill(Color.web("#cc5114"));
+        // Header columns at the exact same pixel offsets as the data rows:
+        // "ORDER UP" and "Arrival Time" are left-aligned at their column
+        // start; "Patience" is centered within its zone. Original orange
+        // header color preserved.
+        Color headerColor = Color.web("#cc5114");
+        Group header = new Group(
+                columnText("ORDER UP", 0, 0, headerColor, HEADER_FONT),
+                columnText("Arrival Time", COL_ARRIVAL_X, 0, headerColor, HEADER_FONT),
+                columnText("Patience", COL_PATIENCE_X, COL_PATIENCE_WIDTH, headerColor, HEADER_FONT));
 
         displayGroup.setLayoutX(300);
 
-        displayGroup.getChildren().add(headerText);
+        displayGroup.getChildren().add(header);
+    }
+
+    /**
+     * Builds one column cell. When {@code centeredZoneWidth} is greater
+     * than zero the text is horizontally centered within a zone of that
+     * width starting at {@code x}; otherwise it is left-aligned at
+     * {@code x}.
+     *
+     * @param content           the text content
+     * @param x                 pixel x-offset of the column
+     * @param centeredZoneWidth zone width to center within, or 0 for left-aligned
+     * @param color             the text fill color
+     * @param font              the font to use
+     * @return the positioned text node
+     */
+    private static Text columnText(String content, double x,
+                                   double centeredZoneWidth, Color color, Font font) {
+        Text text = new Text(content);
+        text.setFont(font);
+        text.setFill(color);
+        if (centeredZoneWidth > 0) {
+            // Centering via wrapping-width + CENTER alignment: JavaFX
+            // centers the (shorter) line inside the wrapping width, giving
+            // pixel-exact centering independent of the font.
+            text.setWrappingWidth(centeredZoneWidth);
+            text.setTextAlignment(TextAlignment.CENTER);
+        }
+        text.setTranslateX(x);
+        return text;
     }
 
     /**
@@ -82,13 +127,13 @@ public class ProcessDisplay {
     }
 
     /**
-     * Refreshes all text nodes to reflect current processes.
+     * Refreshes all rows to reflect current processes.
      */
     private void refreshDisplay(int currentTick) {
-        for (Text line : processLines) {
-            displayGroup.getChildren().remove(line);
+        for (Node row : processRows) {
+            displayGroup.getChildren().remove(row);
         }
-        processLines.clear();
+        processRows.clear();
 
         double y = LINE_HEIGHT + 4; // start below header
 
@@ -96,30 +141,38 @@ public class ProcessDisplay {
             CustomerProcess p = processes.get(i);
             String atTime = formatArrivalTime(p.getArrivalTime());
 
-            Text line = new Text("Customer " + p.getCustomerId() + "    " + atTime + " (" + p.getArrivalTime() + ")"
-                    + "        " + p.getBurstTime());
-            line.setFont(PROCESS_FONT);
-
+            // Each column is its own node at a fixed pixel x — single vs
+            // double-digit AT/IDs can never shift the later columns.
+            // The patience digit is centered in its zone so it sits under
+            // the middle of the "Patience" header. Original colors kept:
+            // first row white + bold, the rest light grey.
+            Font font = PROCESS_FONT;
+            Color color = Color.web("#cccccc");
             if (i == 0) {
-                line.setFill(Color.WHITE);
-                line.setFont(Font.font("Monospace", FontWeight.BOLD, 16));
-            } else {
-                line.setFill(Color.web("#cccccc"));
+                font = Font.font("Monospace", FontWeight.BOLD, 16);
+                color = Color.WHITE;
             }
 
-            line.setTranslateY(y);
-            displayGroup.getChildren().add(line);
-            processLines.add(line);
+            Group row = new Group(
+                    columnText("Customer " + p.getCustomerId(), 0, 0, color, font),
+                    columnText(atTime + " (" + p.getArrivalTime() + ")",
+                            COL_ARRIVAL_X, 0, color, font),
+                    columnText(String.valueOf(p.getBurstTime()),
+                            COL_PATIENCE_X, COL_PATIENCE_WIDTH, color, font));
+
+            row.setTranslateY(y);
+            displayGroup.getChildren().add(row);
+            processRows.add(row);
             y += LINE_HEIGHT;
         }
 
-        if (processLines.isEmpty()) {
+        if (processRows.isEmpty()) {
             Text empty = new Text("No processes yet...");
             empty.setFont(PROCESS_FONT);
             empty.setFill(Color.web("#888888"));
             empty.setTranslateY(y);
             displayGroup.getChildren().add(empty);
-            processLines.add(empty);
+            processRows.add(empty);
         }
     }
 
@@ -152,7 +205,9 @@ public class ProcessDisplay {
         }
 
         return String.format("%02d:%02d %s", hours12, minutes, amPm);
-    }	/** Checks if a process with this customer ID is already displayed. */
+    }
+
+	/** Checks if a process with this customer ID is already displayed. */
 	public boolean containsProcess(int customerId) {
 		return processes.stream().anyMatch(p -> p.getCustomerId() == customerId);
 	}

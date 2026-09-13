@@ -129,7 +129,7 @@ public class GanttOverlay extends Pane {
         this.setViewOrder(-1000);
 
         // Full-screen dark backdrop
-        Rectangle backdrop = new Rectangle(1280, 720, Color.web("#000000BB"));
+        Rectangle backdrop = new Rectangle(1280, 820, Color.web("#000000BB"));
 
         // Dynamic frame bottom based on number of processes
         int processCount = processes.size();

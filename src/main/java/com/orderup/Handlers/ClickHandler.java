@@ -87,8 +87,8 @@ public class ClickHandler {
     /**
      * Spawns a floating score popup that rises and fades out above the
      * given position. Perfect hits show "PERFECT!" (plus the combo
-     * multiplier once it exceeds ×1) in gold; other hits show "+N" in
-     * white.
+     * multiplier once it exceeds ×1) in gold; other hits show "+$N" in
+     * green.
      *
      * @param position center position to anchor the popup at
      * @param points points awarded for this hit
@@ -108,8 +108,8 @@ public class ClickHandler {
             color = Color.web("#D9A45B");
             fontSize = POPUP_FONT_SIZE_PERFECT;
         } else {
-            label = "+" + points;
-            color = Color.WHITE;
+            label = "+$" + points;
+            color = Color.LIMEGREEN;
             fontSize = POPUP_FONT_SIZE;
         }
 

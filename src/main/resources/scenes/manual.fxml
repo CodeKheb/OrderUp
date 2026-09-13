@@ -5,7 +5,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import java.lang.String?>
@@ -16,13 +15,10 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.orderup.Scenes.Controllers.ManualController">
 
-    <ImageView fitWidth="1440.0" fitHeight="810.0" preserveRatio="false"
+    <ImageView fx:id="backgroundView" fitWidth="1440.0" fitHeight="810.0" preserveRatio="false"
                translateX="-80.0" translateY="-45.0"
-               smooth="false" cache="true">
-        <image>
-            <Image url="@../assets/textures/menu_animation.gif" />
-        </image>
-    </ImageView>
+               smooth="false" cache="true" />
+
 
 
     <VBox alignment="CENTER" spacing="12.0"
