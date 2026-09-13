@@ -367,7 +367,7 @@ public class Application extends GameApplication {
         // 2.50 Gantt chart shows
         if (processQueue.getProcessList().isEmpty() && waitingLineScene != null) {
             StackPane dayEndMessage = buildDayEndMessage(
-                    "It looks like there will be no more customers today...",
+                    "It looks like there will be no more customers coming...",
                     (WINDOW_HEIGHT - 150) / 2.0);
             FXGL.getGameScene().addUINode(dayEndMessage);
 
