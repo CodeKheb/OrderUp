@@ -117,13 +117,16 @@ public class GanttOverlay extends Pane {
     /**
      * Creates the Gantt overlay with the given cells and original process list.
      *
-     * @param cells     the Gantt chart cells (processes + idle gaps)
-     * @param processes the original process list (for AT/BT values)
-     * @param onClose   callback to close the overlay
+     * @param cells        the Gantt chart cells (processes + idle gaps)
+     * @param processes    the original process list (for AT/BT values)
+     * @param onClose      callback to close the overlay
+     * @param gameFinished true if all processes are done, false if paused mid-game
      */
-    public GanttOverlay(List<GanttCell> cells, List<CustomerProcess> processes, Runnable onClose) {
+    public GanttOverlay(List<GanttCell> cells, List<CustomerProcess> processes,
+                        Runnable onClose, boolean gameFinished) {
         this.onClose = onClose;
         this.getStyleClass().add("gantt-overlay");
+        this.setViewOrder(-1000);
 
         // Full-screen dark backdrop
         Rectangle backdrop = new Rectangle(1280, 720, Color.web("#000000BB"));
@@ -171,7 +174,11 @@ public class GanttOverlay extends Pane {
         continueBtn.setStyle("-fx-background-color: #cc5114; -fx-background-radius: 15; "
                 + "-fx-border-color: #D9A45B; -fx-border-width: 2; -fx-border-radius: 15; "
                 + "-fx-padding: 10 40 10 40; -fx-cursor: hand;");
-        continueBtn.setOnMouseClicked(e -> Application.resetDay());
+        if (gameFinished) {
+            continueBtn.setOnMouseClicked(e -> Application.resetDay());
+        } else {
+            continueBtn.setOnMouseClicked(e -> onClose.run());
+        }
 
         Button mainMenuBtn = new Button("Back to Main Menu");
         mainMenuBtn.setFont(Font.font(PIXEL_FONT, 12));

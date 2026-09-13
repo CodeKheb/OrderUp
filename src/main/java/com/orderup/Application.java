@@ -13,8 +13,8 @@ import com.orderup.Factory.CustomerFactory.CustomerType;
 import com.orderup.Factory.MainSceneFactory;
 import com.orderup.Factory.RhythmFactory;
 import com.orderup.Factory.WaitingLineUIFactory;
-import com.orderup.Handlers.SceneManager;
 import com.orderup.Handlers.AudioManager;
+import com.orderup.Handlers.SceneManager;
 import com.orderup.Models.CustomerProcess;
 import com.orderup.Models.GameClock;
 import com.orderup.Models.MenuItem;
@@ -326,7 +326,7 @@ public class Application extends GameApplication {
         // customer is served, then freeze the clock (end of day).
         if (processQueue.getProcessList().isEmpty() && waitingLineScene != null) {
             FXGL.getGameTimer().runOnceAfter(() -> {
-                waitingLineScene.showGanttOverlay(originalProcesses);
+                waitingLineScene.showGanttOverlay(originalProcesses, true);
                 gameClock.pause();
             }, Duration.seconds(2));
         }
@@ -355,7 +355,7 @@ public class Application extends GameApplication {
         if (ganttChartRequested) {
             ganttChartRequested = false;
             if (waitingLineScene != null && !waitingLineScene.isGanttOverlayVisible()) {
-                waitingLineScene.showGanttOverlay(originalProcesses);
+                waitingLineScene.showGanttOverlay(originalProcesses, false);
             }
         }
 
