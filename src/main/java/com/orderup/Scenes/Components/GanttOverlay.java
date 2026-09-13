@@ -161,7 +161,7 @@ public class GanttOverlay extends Pane {
         Group divider = buildPixelDivider(200, DIVIDER_Y, 880);
 
         // Pixel art decorations — coffee cup and leaf
-        Group coffeeCup = buildCoffeeCup(FRAME_L + 25, FRAME_T - 55);
+        Group bee = buildBee(FRAME_L + 25, FRAME_T - 55);
         Group leaf = buildLeaf(FRAME_R - 68, FRAME_T - 55);
 
         // Day-action buttons
@@ -199,7 +199,7 @@ public class GanttOverlay extends Pane {
         Group table = buildMetricsTable(cells, processes);
 
         this.getChildren().addAll(backdrop, frame,
-                title, subtitle, divider, coffeeCup, leaf, chartGroup, table, actions);
+                title, subtitle, divider, bee, leaf, chartGroup, table, actions);
     }
 
     // ══════════════════════════════════════════════════════════
@@ -250,10 +250,10 @@ public class GanttOverlay extends Pane {
     //  PIXEL ART DECORATIONS
     // ══════════════════════════════════════════════════════════
 
-    private Group buildCoffeeCup(double ox, double oy) {
+    private Group buildBee(double ox, double oy) {
         Group cup = new Group();
 
-        // Cup body (filled brown)
+        // Bee body (filled brown)
         String[] body = {
             "..####..",
             ".######.",
@@ -265,49 +265,30 @@ public class GanttOverlay extends Pane {
             ".#....#.",
         };
 
-        // Handle (outline)
-        String[] handle = {
-            "...####.",
-            "...#..#.",
-            "...####.",
-        };
-
-        // Steam (wispy white)
-        String[] steam = {
+        // Antenna (wispy white)
+        String[] antenna = {
             "..#...#.",
             "...#.#..",
             "........",
         };
 
-        // Steam wisps offset upward
-        for (int row = 0; row < steam.length; row++) {
-            for (int col = 0; col < steam[row].length(); col++) {
-                if (steam[row].charAt(col) == '#') {
+        // Antenna offset upward
+        for (int row = 0; row < antenna.length; row++) {
+            for (int col = 0; col < antenna[row].length(); col++) {
+                if (antenna[row].charAt(col) == '#') {
                     cup.getChildren().add(createPixel(
-                            ox + col * PIXEL, oy - (steam.length - row) * PIXEL,
+                            ox + col * PIXEL, oy - (antenna.length - row) * PIXEL,
                             Color.web("#FFF8E788")));
                 }
             }
         }
 
-        // Cup body
+        // Bee body
         for (int row = 0; row < body.length; row++) {
             for (int col = 0; col < body[row].length(); col++) {
                 if (body[row].charAt(col) == '#') {
                     cup.getChildren().add(createPixel(
                             ox + col * PIXEL, oy + row * PIXEL,
-                            Color.web("#D9A45B")));
-                }
-            }
-        }
-
-        // Handle (offset right of cup)
-        for (int row = 0; row < handle.length; row++) {
-            for (int col = 0; col < handle[row].length(); col++) {
-                if (handle[row].charAt(col) == '#') {
-                    cup.getChildren().add(createPixel(
-                            ox + (body[0].length() + col) * PIXEL,
-                            oy + 1.5 * PIXEL + row * PIXEL,
                             Color.web("#D9A45B")));
                 }
             }
