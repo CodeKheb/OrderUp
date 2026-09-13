@@ -10,6 +10,7 @@ import com.orderup.Models.GanttChart;
 import com.orderup.Scenes.Components.GanttOverlay;
 
 import com.almasb.fxgl.entity.Entity;
+import com.orderup.Models.CustomerProcess.CharacterType;
 import com.orderup.Models.MenuItem;
 
 import javafx.scene.layout.Pane;
@@ -27,6 +28,9 @@ public class WaitingLineScene extends Pane {
 
     /** The currently active rhythm pair entity, or null if none. */
     private Entity rhythmPair;
+
+    /** Character type of the customer the active rhythm pair belongs to. */
+    private CharacterType rhythmCharacterType;
 
     /** Spawn zone for rhythm circles. */
     private static final int CIRCLE_ZONE_MIN_X = 0;
@@ -92,7 +96,7 @@ public class WaitingLineScene extends Pane {
      * @param order     the dish this customer ordered (drives the food icon
      *                  on the circle), or null for no icon
      */
-    public void spawnRhythmCircle(int burstTime, MenuItem order) {
+    public void spawnRhythmCircle(int burstTime, MenuItem order, CharacterType characterType) {
         removeRhythmCircle();
 
         double x = CIRCLE_ZONE_MIN_X + CIRCLE_SPAWN_MARGIN + Math.random()
@@ -103,8 +107,10 @@ public class WaitingLineScene extends Pane {
         var data = new com.almasb.fxgl.entity.SpawnData(x, y);
         data.put("burstTime", burstTime);
         data.put("order", order);
+        data.put("characterType", characterType);
 
         rhythmPair = FXGL.spawn("rhythm_pair", data);
+        rhythmCharacterType = characterType;
     }
 
     /**
@@ -122,6 +128,9 @@ public class WaitingLineScene extends Pane {
                 // below). Clicked circles instead get the gold burst in
                 // ClickHandler.
                 AudioManager.missed();
+                if (rhythmCharacterType != null) {
+                    AudioManager.playAnnoyed(rhythmCharacterType);
+                }
                 com.orderup.Handlers.EffectsHandler.spawnExpireFade(rhythmPair.getPosition(),
                         rhythmPair.getComponent(
                                 com.orderup.Scenes.Components.RhythmComponent.class)

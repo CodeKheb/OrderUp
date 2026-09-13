@@ -7,6 +7,7 @@ import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
 
 import com.orderup.Handlers.ClickHandler;
+import com.orderup.Models.CustomerProcess.CharacterType;
 import com.orderup.Models.MenuItem;
 import com.orderup.Scenes.Components.RhythmComponent;
 
@@ -57,6 +58,9 @@ public class RhythmFactory implements EntityFactory {
     @Spawns("rhythm_pair")
     public Entity rhythmPair(SpawnData data) {
         int burstTime = data.get("burstTime");
+        CharacterType characterType = data.hasKey("characterType")
+                ? data.get("characterType")
+                : null;
 
         double innerRadius = INNER_RADIUS;
         double startOuterRadius = Math.min(
@@ -88,12 +92,18 @@ public class RhythmFactory implements EntityFactory {
             view.getChildren().add(icon);
         }
 
-        return FXGL.entityBuilder(data)
+        Entity entity = FXGL.entityBuilder(data)
                 .type(RhythmType.RHYTHM_PAIR)
                 .viewWithBBox(view)
                 .with(new RhythmComponent(outer, startOuterRadius, innerRadius, burstTime))
                 .onClick(e -> ClickHandler.CircleClicked(e))
                 .zIndex(50)
                 .build();
+
+        if (characterType != null) {
+            entity.setProperty("characterType", characterType);
+        }
+
+        return entity;
     }
 }

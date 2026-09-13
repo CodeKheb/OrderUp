@@ -3,6 +3,7 @@ package com.orderup.Handlers;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 
+import com.orderup.Models.CustomerProcess.CharacterType;
 import com.orderup.Models.RhythmScore;
 import com.orderup.Scenes.Components.RhythmComponent;
 
@@ -62,7 +63,10 @@ public class ClickHandler {
             perfect = rhythm.isPerfect();
 
             if (perfect) {
-                AudioManager.perfect();
+                CharacterType characterType = circle.<CharacterType>getPropertyOptional("characterType").orElse(null);
+                if (characterType != null) {
+                    AudioManager.playPerfect(characterType);
+                }
                 int combo = RhythmScore.registerPerfect();
                 multiplier = RhythmScore.multiplierFor(combo);
             } else {

@@ -3,6 +3,8 @@ package com.orderup.Handlers;
 import com.almasb.fxgl.audio.Music;
 import com.almasb.fxgl.dsl.FXGL;
 
+import com.orderup.Models.CustomerProcess.CharacterType;
+
 public class AudioManager {
 
     /** The looping background music track, or null if not started yet. */
@@ -23,7 +25,7 @@ public class AudioManager {
 
         backgroundMusic = FXGL.getAssetLoader().loadMusic("background_music.wav");
         FXGL.getAudioPlayer().loopMusic(backgroundMusic);
-        backgroundMusic.getAudio().setVolume(1);
+        backgroundMusic.getAudio().setVolume(0.65);
     }
 
     public static void pop() {
@@ -38,7 +40,15 @@ public class AudioManager {
         FXGL.play("missed.wav");
     }
     
-    public static void perfect() {
-        FXGL.play("perfect.wav");
+    public static void playIntro(CharacterType type) {
+        FXGL.play(type.getPrefix() + type.getSpriteIndex() + "_introduction.wav");
+    }
+
+    public static void playAnnoyed(CharacterType type) {
+        FXGL.play(type.getPrefix() + type.getSpriteIndex() + "_annoyed.wav");
+    }
+
+    public static void playPerfect(CharacterType type) {
+        FXGL.play(type.getPrefix() + type.getSpriteIndex() + "_perfect.wav");
     }
 }
