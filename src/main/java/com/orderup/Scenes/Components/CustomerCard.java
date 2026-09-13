@@ -222,6 +222,8 @@ public class CustomerCard extends VBox {
     private void addCustomer() {
         int currentAT = (int) atSliders[currentIndex].getValue();
 
+        CharacterType type = characterTypes[currentIndex];
+        AudioManager.playIntro(type);
         if (hasDuplicateAT(currentAT)) {
             // Snap to the nearest available AT and proceed
             int snapped = findNearestAvailable(currentAT);
@@ -386,7 +388,6 @@ public class CustomerCard extends VBox {
         }
 
         CharacterType type = characterTypes[currentIndex];
-        AudioManager.playIntro(type);
         String spriteFile = type.getSpriteFile("idle.png");
         int idleFrames = type.getIdleFrameCount();
 
