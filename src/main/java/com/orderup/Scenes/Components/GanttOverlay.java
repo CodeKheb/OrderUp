@@ -6,6 +6,7 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.orderup.Application;
 import com.orderup.Models.CustomerProcess;
 import com.orderup.Models.GanttCell;
+import com.orderup.Uitility.LoadFont;
 
 import javafx.scene.Group;
 import javafx.scene.control.Button;
@@ -91,23 +92,10 @@ public class GanttOverlay extends Pane {
     private static final double TABLE_LEFT = CONTENT_LEFT;
     private static final double COL_W = CONTENT_WIDTH / 5;
     private static final double CELL_PAD = 8;
-    private static final String PIXEL_FONT = loadPixelFont();
+    private static final String PIXEL_FONT = LoadFont.loadPixelFont();
     private static final Font HEADER_FONT = Font.font(PIXEL_FONT, 10);
     private static final Font LABEL_FONT = Font.font(PIXEL_FONT, 8);
     private static final Font METRIC_FONT = Font.font(PIXEL_FONT, 8);
-
-    private static String loadPixelFont() {
-        try {
-            var url = GanttOverlay.class.getResource("/assets/fonts/PressStart2P-Regular.ttf");
-            if (url != null) {
-                Font.loadFont(url.toExternalForm(), 16);
-                return "Press Start 2P";
-            }
-        } catch (Exception e) {
-            // fall through
-        }
-        return "Courier New";
-    }
 
     private final Group chartGroup = new Group();
 
