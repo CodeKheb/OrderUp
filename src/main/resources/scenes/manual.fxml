@@ -25,7 +25,7 @@
           prefWidth="1280.0" prefHeight="720.0">
 
         <Text text="Manual Setup" styleClass="subtitle" />
-        <Text text="Input Name, Arrival Time, Patience for each Customer" styleClass="placeholder-text" />
+        <Text text="Minimum of 2, maximum of 6 customers" styleClass="placeholder-text" />
 
         <VBox fx:id="cardContainer" alignment="CENTER" spacing="15.0" />
 

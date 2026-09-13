@@ -257,6 +257,9 @@ public class CustomerCard extends StackPane {
 
         if (currentIndex < CUSTOMER_COUNT - 1) {
             currentIndex++;
+            characterTypes[currentIndex] = characterTypes[currentIndex - 1];
+            spriteIndices[currentIndex] = spriteIndices[currentIndex - 1];
+            btSliders[currentIndex].setValue(btSliders[currentIndex - 1].getValue());
             swapSliders();
             snapCurrentSliderIfDuplicate();
             updateTitle();
