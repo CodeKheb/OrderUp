@@ -400,8 +400,16 @@ public class GanttOverlay extends Pane {
         axis.setStrokeWidth(2);
         chartGroup.getChildren().add(axis);
 
-        // Tick marks and labels
-        for (int t = 0; t <= totalTime; t++) {
+        // Collect unique time points (AT/ET of each cell)
+        java.util.TreeSet<Integer> timePoints = new java.util.TreeSet<>();
+        timePoints.add(0);
+        for (GanttCell cell : cells) {
+            timePoints.add(cell.getStartTime());
+            timePoints.add(cell.getEndTime());
+        }
+
+        // Tick marks and labels at AT/ET boundaries only
+        for (int t : timePoints) {
             double x = CHART_LEFT + ((double) t / totalTime) * CHART_WIDTH;
 
             Line tick = new Line(x, BAR_Y - TICK_H / 2, x, BAR_Y + TICK_H / 2);
