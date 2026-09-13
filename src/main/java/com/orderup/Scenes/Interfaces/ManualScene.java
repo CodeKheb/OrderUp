@@ -2,8 +2,11 @@ package com.orderup.Scenes.Interfaces;
 
 import java.io.IOException;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 
 /**
@@ -14,6 +17,12 @@ import javafx.scene.layout.VBox;
  * gameplay.
  */
 public class ManualScene extends VBox {
+
+    private final EventHandler<KeyEvent> escBlocker = e -> {
+        if (e.getCode() == KeyCode.ESCAPE) {
+            e.consume();
+        }
+    };
 
     /**
      * Constructs the manual scene by loading the FXML layout
@@ -29,5 +38,13 @@ public class ManualScene extends VBox {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.addEventFilter(KeyEvent.KEY_PRESSED, escBlocker);
+            } else if (oldScene != null) {
+                oldScene.removeEventFilter(KeyEvent.KEY_PRESSED, escBlocker);
+            }
+        });
     }
 }

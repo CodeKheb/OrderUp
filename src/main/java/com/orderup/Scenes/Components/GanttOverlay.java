@@ -2,10 +2,13 @@ package com.orderup.Scenes.Components;
 
 import java.util.List;
 
+import com.almasb.fxgl.dsl.FXGL;
+import com.orderup.Application;
 import com.orderup.Models.CustomerProcess;
 import com.orderup.Models.GanttCell;
 
 import javafx.scene.Group;
+import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -114,13 +117,37 @@ public class GanttOverlay extends Pane {
         closeBtn.setLayoutX(1280 - 70);
         closeBtn.setLayoutY(VERTICAL_OFFSET - 20);
 
+        // Day-action buttons
+        HBox actions = new HBox(30);
+        actions.setAlignment(javafx.geometry.Pos.CENTER);
+
+        Button continueBtn = new Button("Continue");
+        continueBtn.setFont(Font.font("Monospace", FontWeight.BOLD, 20));
+        continueBtn.setTextFill(Color.WHITE);
+        continueBtn.setStyle("-fx-background-color: #cc5114; -fx-background-radius: 15; "
+                + "-fx-border-color: #D9A45B; -fx-border-width: 2; -fx-border-radius: 15; "
+                + "-fx-padding: 10 40 10 40; -fx-cursor: hand;");
+        continueBtn.setOnMouseClicked(e -> Application.resetDay());
+
+        Button mainMenuBtn = new Button("Back to Main Menu");
+        mainMenuBtn.setFont(Font.font("Monospace", FontWeight.BOLD, 20));
+        mainMenuBtn.setTextFill(Color.WHITE);
+        mainMenuBtn.setStyle("-fx-background-color: #555555; -fx-background-radius: 15; "
+                + "-fx-border-color: #999999; -fx-border-width: 2; -fx-border-radius: 15; "
+                + "-fx-padding: 10 40 10 40; -fx-cursor: hand;");
+        mainMenuBtn.setOnMouseClicked(e -> FXGL.getGameController().gotoMainMenu());
+
+        actions.getChildren().addAll(continueBtn, mainMenuBtn);
+        actions.setPrefWidth(1280);
+        actions.setTranslateY(OVERLAY_H - 110);
+
         // Bar chart
         drawChart(cells);
 
         // Metrics table
         Group table = buildMetricsTable(cells, processes);
 
-        this.getChildren().addAll(bg, title, closeBtn, chartGroup, table);
+        this.getChildren().addAll(bg, title, closeBtn, chartGroup, table, actions);
     }
 
     // ── Chart rendering ─────────────────────────────────────

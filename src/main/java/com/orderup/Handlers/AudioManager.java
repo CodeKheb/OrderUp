@@ -41,6 +41,10 @@ public class AudioManager {
         playSfx("click.wav");
     }
 
+    public static void perfect() {
+        playSfx("perfect.wav");
+    }
+
     public static void missed() {
         playSfx("missed.wav");
     }

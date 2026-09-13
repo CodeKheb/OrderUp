@@ -63,14 +63,13 @@ public class ClickHandler {
             perfect = rhythm.isPerfect();
 
             if (perfect) {
-                CharacterType characterType = circle.<CharacterType>getPropertyOptional("characterType").orElse(null);
-                if (characterType != null) {
-                    AudioManager.playPerfect(characterType);
-                }
+                AudioManager.perfect();
                 int combo = RhythmScore.registerPerfect();
                 multiplier = RhythmScore.multiplierFor(combo);
             } else {
+                CharacterType characterType = circle.<CharacterType>getPropertyOptional("characterType").orElse(null);
                 RhythmScore.breakCombo();
+                AudioManager.playPerfect(characterType);
             }
 
             int base = (int) Math.round(
