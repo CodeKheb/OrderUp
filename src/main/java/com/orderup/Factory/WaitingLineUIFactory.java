@@ -21,7 +21,8 @@ public class WaitingLineUIFactory implements EntityFactory {
     public enum WaitingUIType {
         WAITING_LINE,
         BACKGROUND,
-        RHYTHM_BACKGROUN
+        RHYTHM_BACKGROUND,
+        CLOCK
     }
 
     @Spawns("background")
@@ -44,10 +45,21 @@ public class WaitingLineUIFactory implements EntityFactory {
                 .build();
     }
 
+    @Spawns("clock")
+    public Entity clock(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(WaitingUIType.CLOCK)
+                .view(FXGL.texture("clock.png", 390, 200))
+                .at(850, 520)
+                .zIndex(-90)
+                .build();
+    }
+
+
     @Spawns("rhythm_background")
     public Entity rhythmBackground(SpawnData data) {
         return FXGL.entityBuilder(data)
-                .type(WaitingUIType.RHYTHM_BACKGROUN)
+                .type(WaitingUIType.RHYTHM_BACKGROUND)
                 .view(FXGL.texture("rhythm_background.png", 330, 780))
                 .at(0, 0)
                 .zIndex(-100)
