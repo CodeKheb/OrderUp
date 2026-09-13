@@ -138,27 +138,6 @@ public class GanttOverlay extends Pane {
         Group coffeeCup = buildCoffeeCup(FRAME_L + 25, FRAME_T - 55);
         Group leaf = buildLeaf(FRAME_R - 68, FRAME_T - 55);
 
-        // Close button — chunky pixel style with drop shadow
-        Button closeBtn = new Button("\u2716");
-        closeBtn.setFont(Font.font("Monospace", FontWeight.BOLD, 16));
-        closeBtn.setTextFill(Color.web("#2A1C14"));
-        closeBtn.setStyle(
-                "-fx-background-color: #FFF8E7; " +
-                "-fx-background-radius: 0; " +
-                "-fx-min-width: 32; -fx-min-height: 32; " +
-                "-fx-max-width: 32; -fx-max-height: 32; " +
-                "-fx-border-color: #D9A45B; " +
-                "-fx-border-width: 2; " +
-                "-fx-border-radius: 0; " +
-                "-fx-cursor: hand;"
-        );
-        closeBtn.setOnMouseClicked(e -> onClose.run());
-        closeBtn.setLayoutX(FRAME_R - 48);
-        closeBtn.setLayoutY(FRAME_T + 12);
-
-        // Drop shadow behind close button
-        Rectangle btnShadow = new Rectangle(FRAME_R - 45, FRAME_T + 17, 32, 32);
-
         // Day-action buttons
         HBox actions = new HBox(30);
         actions.setAlignment(javafx.geometry.Pos.CENTER);
@@ -189,7 +168,7 @@ public class GanttOverlay extends Pane {
         // Metrics table
         Group table = buildMetricsTable(cells, processes);
 
-        this.getChildren().addAll(backdrop, frame, btnShadow, closeBtn,
+        this.getChildren().addAll(backdrop, frame,
                 title, subtitle, divider, coffeeCup, leaf, chartGroup, table, actions);
     }
 
