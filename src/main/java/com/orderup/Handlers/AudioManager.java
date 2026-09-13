@@ -1,6 +1,7 @@
 package com.orderup.Handlers;
 
 import com.almasb.fxgl.audio.Music;
+import com.almasb.fxgl.audio.Sound;
 import com.almasb.fxgl.dsl.FXGL;
 
 import com.orderup.Models.CustomerProcess.CharacterType;
@@ -9,6 +10,10 @@ public class AudioManager {
 
     /** The looping background music track, or null if not started yet. */
     private static Music backgroundMusic;
+
+    private static double musicVolume = 0.65;
+
+    private static double soundVolume = 1.0;
 
     /**
      * Starts the background music from the beginning, looping forever.
@@ -25,30 +30,55 @@ public class AudioManager {
 
         backgroundMusic = FXGL.getAssetLoader().loadMusic("background_music.wav");
         FXGL.getAudioPlayer().loopMusic(backgroundMusic);
-        backgroundMusic.getAudio().setVolume(0.65);
+        backgroundMusic.getAudio().setVolume(musicVolume);
     }
 
     public static void pop() {
-        FXGL.play("pop.wav");
+        playSfx("pop.wav");
     }
 
     public static void click() {
-        FXGL.play("click.wav");
+        playSfx("click.wav");
     }
 
     public static void missed() {
-        FXGL.play("missed.wav");
+        playSfx("missed.wav");
     }
     
     public static void playIntro(CharacterType type) {
-        FXGL.play(type.getPrefix() + type.getSpriteIndex() + "_introduction.wav");
+        playSfx(type.getPrefix() + type.getSpriteIndex() + "_introduction.wav");
     }
 
     public static void playAnnoyed(CharacterType type) {
-        FXGL.play(type.getPrefix() + type.getSpriteIndex() + "_annoyed.wav");
+        playSfx(type.getPrefix() + type.getSpriteIndex() + "_annoyed.wav");
     }
 
     public static void playPerfect(CharacterType type) {
-        FXGL.play(type.getPrefix() + type.getSpriteIndex() + "_perfect.wav");
+        playSfx(type.getPrefix() + type.getSpriteIndex() + "_perfect.wav");
+    }
+
+    public static double getMusicVolume() {
+        return musicVolume;
+    }
+
+    public static void setMusicVolume(double volume) {
+        musicVolume = Math.min(Math.max(volume, 0.0), 1.0);
+        if (backgroundMusic != null) {
+            backgroundMusic.getAudio().setVolume(musicVolume);
+        }
+    }
+
+    public static double getAudioVolume() {
+        return soundVolume;
+    }
+
+    public static void setGlobalSoundVolume(double volume) {
+        soundVolume = Math.min(Math.max(volume, 0.0), 1.0);
+    }
+
+    private static void playSfx(String name) {
+        Sound sound = FXGL.getAssetLoader().loadSound(name);
+        sound.getAudio().setVolume(soundVolume);
+        FXGL.getAudioPlayer().playSound(sound);
     }
 }

@@ -1,8 +1,10 @@
 package com.orderup.Scenes.Controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Slider;
 
 import com.orderup.Application;
+import com.orderup.Handlers.AudioManager;
 import com.orderup.Scenes.Interfaces.PauseInterface;
 
 /**
@@ -14,8 +16,28 @@ import com.orderup.Scenes.Interfaces.PauseInterface;
  */
 public class PauseController {
 
+    @FXML
+    private Slider musicVolumeSlider;
+
+    @FXML
+    private Slider soundVolumeSlider;
+
     /** Reference to the parent pause menu interface */
     private PauseInterface menu;
+
+    @FXML
+    private void initialize() {
+        musicVolumeSlider.setValue(AudioManager.getMusicVolume());
+        soundVolumeSlider.setValue(AudioManager.getAudioVolume());
+
+        musicVolumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            AudioManager.setMusicVolume(newVal.doubleValue());
+        });
+
+        soundVolumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            AudioManager.setGlobalSoundVolume(newVal.doubleValue());
+        });
+    }
 
     /**
      * Sets the parent pause menu interface reference.

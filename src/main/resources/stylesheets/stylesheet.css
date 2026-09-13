@@ -56,6 +56,17 @@
     -fx-border-color: #cc5114;
 }
 
+.slider-label {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+
+.volume-slider {
+    -fx-pref-width: 260px;
+    -fx-pref-height: 30px;
+}
+
 .btn-order {
     -fx-min-width: 180;
     -fx-min-height: 40;
