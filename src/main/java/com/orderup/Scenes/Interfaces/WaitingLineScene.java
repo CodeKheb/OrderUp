@@ -3,15 +3,14 @@ package com.orderup.Scenes.Interfaces;
 import java.util.List;
 
 import com.almasb.fxgl.dsl.FXGL;
+import com.almasb.fxgl.entity.Entity;
 import com.orderup.Handlers.AudioManager;
 import com.orderup.Models.CustomerProcess;
+import com.orderup.Models.CustomerProcess.CharacterType;
 import com.orderup.Models.GanttCell;
 import com.orderup.Models.GanttChart;
-import com.orderup.Scenes.Components.GanttOverlay;
-
-import com.almasb.fxgl.entity.Entity;
-import com.orderup.Models.CustomerProcess.CharacterType;
 import com.orderup.Models.MenuItem;
+import com.orderup.Scenes.Components.GanttOverlay;
 
 import javafx.scene.layout.Pane;
 
@@ -63,13 +62,14 @@ public class WaitingLineScene extends Pane {
      * Generates the chart from the original process list and displays
      * the visual bar chart with scheduling metrics.
      *
-     * @param processes the original customer processes (with full BT)
+     * @param processes    the original customer processes (with full BT)
+     * @param gameFinished true if all processes are done, false if paused mid-game
      */
-    public void showGanttOverlay(List<CustomerProcess> processes) {
+    public void showGanttOverlay(List<CustomerProcess> processes, boolean gameFinished) {
         GanttChart chart = new GanttChart();
         List<GanttCell> cells = chart.generateGanttChart(processes);
 
-        ganttOverlay = new GanttOverlay(cells, processes, this::hideGanttOverlay);
+        ganttOverlay = new GanttOverlay(cells, processes, this::hideGanttOverlay, gameFinished);
         FXGL.getGameScene().addUINode(ganttOverlay);
     }
 
