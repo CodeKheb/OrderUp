@@ -91,6 +91,7 @@
                     <input>target</input>
                     <mainJar>orderup-1.0-SNAPSHOT.jar</mainJar>
                     <mainClass>com.orderup.Application</mainClass>
+                    <icon>src/main/resources/icon.ico</icon>
                     <type>MSI</type>
                     <winMenu>true</winMenu>
                     <winDirChooser>true</winDirChooser>
