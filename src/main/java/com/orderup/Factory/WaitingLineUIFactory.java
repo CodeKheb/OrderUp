@@ -27,7 +27,7 @@ public class WaitingLineUIFactory implements EntityFactory {
 
     @Spawns("background")
     public Entity background(SpawnData data) {
-        Rectangle rect = new Rectangle(1280, 1000, Color.BLACK);
+        Rectangle rect = new Rectangle(1280, 1000, Color.web("#181410"));
         return FXGL.entityBuilder(data)
                 .type(WaitingUIType.BACKGROUND)
                 .viewWithBBox(rect)

@@ -131,6 +131,24 @@ public class Application extends GameApplication {
         return originalProcesses;
     }
 
+    /**
+     * Restores the process queue to its original state (full burst times,
+     * original list) and restarts the game, replaying the same day from 7:00 AM.
+     */
+    public static void resetDay() {
+        if (processQueue == null) {
+            return;
+        }
+
+        java.util.List<CustomerProcess> restored = new java.util.ArrayList<>();
+        for (CustomerProcess p : originalProcesses) {
+            restored.add(new CustomerProcess(p));
+        }
+        processQueue.setProcessList(restored);
+
+        FXGL.getGameController().startNewGame();
+    }
+
     /** Returns the process queue for the current game session. */
     public static ProcessQueue getProcessQueue() {
         return processQueue;
