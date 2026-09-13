@@ -67,22 +67,15 @@ public class SceneManager {
             return;
 
         Text clockText = gameClock.getClockText();
-        clockText.setFill(Color.WHITE);
+        clockText.setFill(Color.web("#181410"));
 
-        Rectangle clockBg = new Rectangle(260, 70);
-        clockBg.setArcWidth(10);
-        clockBg.setArcHeight(10);
-        clockBg.setFill(Color.web("#50452c"));
-        clockBg.setStroke(Color.web("#000000"));
-        clockBg.setStrokeWidth(2);
-        clockBg.setStrokeType(StrokeType.INSIDE);
 
-        StackPane clockPane = new StackPane(clockBg, clockText);
-        clockPane.setScaleX(0.6);
-        clockPane.setScaleY(0.6);
+        StackPane clockPane = new StackPane(clockText);
+        clockPane.setScaleX(1.25);
+        clockPane.setScaleY(1.25);
 
         Entity clockEntity = FXGL.entityBuilder()
-                .at(880, 65)
+                .at(925, 590)
                 .view(clockPane)
                 .zIndex(0)
                 .build();

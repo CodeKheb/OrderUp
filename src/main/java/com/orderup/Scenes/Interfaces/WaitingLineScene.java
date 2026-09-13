@@ -55,6 +55,7 @@ public class WaitingLineScene extends Pane {
         FXGL.spawn("background");
         FXGL.spawn("waiting_line");
         FXGL.spawn("rhythm_background");
+        FXGL.spawn("clock");
     }
 
     /**
