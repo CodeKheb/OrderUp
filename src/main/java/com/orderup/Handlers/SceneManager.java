@@ -4,17 +4,17 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.orderup.Models.GameClock;
 import com.orderup.Models.RhythmScore;
+import com.orderup.Uitility.LoadFont;
 
 import javafx.beans.binding.Bindings;
-import javafx.scene.Node;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
@@ -69,13 +69,16 @@ public class SceneManager {
         Text clockText = gameClock.getClockText();
         clockText.setFill(Color.web("#181410"));
 
-
         StackPane clockPane = new StackPane(clockText);
+        clockPane.setAlignment(Pos.CENTER);
+        clockPane.setPrefSize(390, 200);
+        clockPane.setMinSize(390, 200);
+        clockPane.setMaxSize(390, 200);
         clockPane.setScaleX(1.25);
         clockPane.setScaleY(1.25);
 
         Entity clockEntity = FXGL.entityBuilder()
-                .at(925, 590)
+                .at(850, 520)
                 .view(clockPane)
                 .zIndex(0)
                 .build();
@@ -92,7 +95,7 @@ public class SceneManager {
                 Bindings.createStringBinding(
                         () -> "Score " + RhythmScore.getScore(),
                         RhythmScore.scoreProperty()));
-        scoreText.setFont(Font.font("Monospace", FontWeight.BOLD, 30));
+        scoreText.setFont(LoadFont.loadPixelFont(20));
         scoreText.setFill(Color.WHITE);
 
         Rectangle scoreBg = new Rectangle(200, 70);
@@ -112,7 +115,7 @@ public class SceneManager {
                         () -> "×" + RhythmScore.formatMultiplier(
                                 RhythmScore.multiplierFor(RhythmScore.getCombo())),
                         RhythmScore.comboProperty()));
-        comboText.setFont(Font.font("Monospace", FontWeight.BOLD, 26));
+        comboText.setFont(LoadFont.loadPixelFont(16));
         comboText.setFill(Color.web("#D9A45B"));
 
         Rectangle comboBg = new Rectangle(70, 50);

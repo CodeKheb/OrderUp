@@ -2,10 +2,10 @@ package com.orderup.Handlers;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
-
 import com.orderup.Models.CustomerProcess.CharacterType;
 import com.orderup.Models.RhythmScore;
 import com.orderup.Scenes.Components.RhythmComponent;
+import com.orderup.Uitility.LoadFont;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -13,8 +13,6 @@ import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -116,7 +114,7 @@ public class ClickHandler {
         }
 
         Text text = new Text(label);
-        text.setFont(Font.font("Monospace", FontWeight.BOLD, fontSize));
+        text.setFont(LoadFont.loadPixelFont(fontSize));
         text.setFill(color);
         // Center the text on the popup's position.
         text.setTranslateX(-text.getLayoutBounds().getWidth() / 2);
@@ -152,7 +150,6 @@ public class ClickHandler {
                 Duration.seconds(POPUP_DURATION));
         lifetime.setOnFinished(e -> popup.removeFromWorld());
 
-        new ParallelTransition(rise, fade, lifetime).play();
-    }
+        new ParallelTransition(rise, fade, lifetime).play();    }
 
 }

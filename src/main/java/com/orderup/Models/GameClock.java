@@ -1,10 +1,10 @@
 package com.orderup.Models;
 
+import com.orderup.Uitility.LoadFont;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
@@ -50,7 +50,7 @@ public class GameClock {
         this.lastNano = 0;
         this.accumulator = 0.0;
         this.clockText = new Text(formatTime(time.get()));
-        this.clockText.setFont(Font.font("Monospace", FontWeight.BOLD, 48));
+        this.clockText.setFont(LoadFont.loadPixelFont(24));
         this.clockText.setFill(Color.BLACK);
     }
 
@@ -158,4 +158,5 @@ public class GameClock {
     public String toString() {
         return "GameClock{time=" + time.get() + ", display='" + clockText.getText() + "'}";
     }
+
 }
