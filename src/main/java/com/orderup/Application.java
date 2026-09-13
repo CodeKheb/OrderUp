@@ -395,7 +395,9 @@ public class Application extends GameApplication {
                         MenuItem order = frontEntity != null
                                 ? frontEntity.<MenuItem>getPropertyOptional("order").orElse(null)
                                 : null;
-                        waitingLineScene.spawnRhythmCircle(front.getBurstTime(), order);
+                        AudioManager.playIntro(front.getCharacterType());
+                        waitingLineScene.spawnRhythmCircle(front.getBurstTime(), order,
+                                front.getCharacterType());
                         rhythmCustomerId = front.getCustomerId();
                     }
                 }

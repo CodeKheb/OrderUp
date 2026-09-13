@@ -1,5 +1,6 @@
 package com.orderup.Scenes.Components;
 
+import com.orderup.Handlers.AudioManager;
 import com.orderup.Models.CustomerProcess.CharacterType;
 
 import javafx.animation.KeyFrame;
@@ -385,6 +386,7 @@ public class CustomerCard extends VBox {
         }
 
         CharacterType type = characterTypes[currentIndex];
+        AudioManager.playIntro(type);
         String spriteFile = type.getSpriteFile("idle.png");
         int idleFrames = type.getIdleFrameCount();
 
