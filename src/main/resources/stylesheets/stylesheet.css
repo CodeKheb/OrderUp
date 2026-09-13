@@ -25,16 +25,14 @@
 .subtitle {
     -fx-font-size: 50px;
     -fx-font-weight: bold;
-    -fx-fill: black;
-}
-
-.subtitle.paused {
-    -fx-fill: #ffffff;
+    -fx-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 12, 0.2, 0, 4);
 }
 
 .placeholder-text {
     -fx-font-size: 16px;
-    -fx-fill: black;
+    -fx-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 12, 0.2, 0, 4);
 }
 
 .btn {
@@ -89,6 +87,18 @@
 .btn-manual:hover {
     -fx-background-color: #cc5114;
     -fx-border-color: #cc5114;
+}
+
+.btn-manual.start {
+    -fx-background-color: #cc5114;
+    -fx-border-color: #cc5114;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 12, 0.2, 0, 4);
+}
+
+.btn-manual.start:hover {
+    -fx-background-color: #ff6925;
+    -fx-border-color: white;
 }
 
 .pause-overlay {
