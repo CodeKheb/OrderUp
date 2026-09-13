@@ -47,9 +47,6 @@ public class ProcessDisplay {
     /** Individual process text lines. */
     private final List<Text> processLines = new ArrayList<>();
 
-    /** Reference to the game clock for time conversion. */
-    private final GameClock gameClock;
-
     /**
      * Creates a ProcessDisplay.
      *
@@ -57,11 +54,12 @@ public class ProcessDisplay {
      * @param maxBurstTime unused, kept for future progress bar
      */
     public ProcessDisplay(GameClock gameClock, int maxBurstTime) {
-        this.gameClock = gameClock;
-
         this.headerText = new Text("ORDER UP    Arrival Time   Patience");
         this.headerText.setFont(HEADER_FONT);
         this.headerText.setFill(Color.web("#cc5114"));
+
+        displayGroup.setLayoutX(300);
+
         displayGroup.getChildren().add(headerText);
     }
 

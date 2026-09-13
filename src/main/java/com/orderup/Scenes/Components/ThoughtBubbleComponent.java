@@ -53,14 +53,14 @@ public class ThoughtBubbleComponent extends Component {
     private static final double BUBBLE_TO_DOT_GAP = 3.0;
 
     /** Distance from the entity center up to the lowest point of the thought chain. */
-    private static final double HEAD_ABOVE_ORIGIN = 76.0;
+    private static final double HEAD_ABOVE_ORIGIN = 84.0;
 
     /**
      * Horizontal distance the bubble center leans away from the character's
      * head (px) — the diagonal offset. Positive leans left, negative leans
      * right; the thought-dot trail always angles back toward the head.
      */
-    private static final double BUBBLE_SIDE_OFFSET = 15.0;
+    private static final double BUBBLE_SIDE_OFFSET = 30.0;
 
     /**
      * Curve exponent of the thought-dot trail: 1.0 = straight diagonal line,
@@ -71,7 +71,7 @@ public class ThoughtBubbleComponent extends Component {
 
     // ── Styling ─────────────────────────────────────────────
     private static final Color BUBBLE_FILL = Color.web("#FFF8E7");
-    private static final Color BUBBLE_BORDER = Color.web("#D9A45B");
+    private static final Color BUBBLE_BORDER = Color.web("#000000");
     private static final Color TEXT_COLOR = Color.web("#6B3E16");
 
     private static final double CLOUD_STROKE_WIDTH = 2.0;
@@ -140,7 +140,7 @@ public class ThoughtBubbleComponent extends Component {
      * toward the head (see the drift in {@link #buildBubble()}).
      */
     private void reposition() {
-        bubbleGroup.setTranslateX(entity.getX() - BUBBLE_SIDE_OFFSET - contentWidth - 2 / 2.0);
+        bubbleGroup.setTranslateX(entity.getX() - BUBBLE_SIDE_OFFSET - contentWidth - 100 / 2.0);
         bubbleGroup.setTranslateY(entity.getY() - HEAD_ABOVE_ORIGIN - contentHeight);
     }
 

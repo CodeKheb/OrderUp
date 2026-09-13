@@ -20,7 +20,8 @@ import javafx.scene.shape.Rectangle;
 public class WaitingLineUIFactory implements EntityFactory {
     public enum WaitingUIType {
         WAITING_LINE,
-        BACKGROUND
+        BACKGROUND,
+        RHYTHM_BACKGROUN
     }
 
     @Spawns("background")
@@ -38,7 +39,22 @@ public class WaitingLineUIFactory implements EntityFactory {
         return FXGL.entityBuilder(data)
                 .type(WaitingUIType.WAITING_LINE)
                 .view(FXGL.texture("waiting_line.png", 950, 480))
-                .zIndex(-10)
+                .at(330, 0)
+                .zIndex(-90)
                 .build();
     }
+
+    @Spawns("rhythm_background")
+    public Entity rhythmBackground(SpawnData data) {
+        return FXGL.entityBuilder(data)
+                .type(WaitingUIType.RHYTHM_BACKGROUN)
+                .view(FXGL.texture("rhythm_background.png", 330, 780))
+                .at(0, 0)
+                .zIndex(-100)
+                .build();
+    }
+
+
+
+
 }

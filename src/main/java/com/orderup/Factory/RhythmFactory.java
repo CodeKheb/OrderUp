@@ -16,7 +16,8 @@ import javafx.scene.Group;
 
 /**
  * Entity factory for the rhythm minigame.
- * <br><br>
+ * <br>
+ * <br>
  * Spawns a single "rhythm pair" entity: a small filled inner circle and a
  * stroke-only outer ring stacked at the same position. The outer ring
  * closes in on the inner circle over a duration derived from the front
@@ -32,23 +33,25 @@ public class RhythmFactory implements EntityFactory {
         FRIES,
     }
 
-    private static final double INNER_RADIUS = 40;
+    private static final double INNER_RADIUS = 55;
+    private static final double INNER_STROKE_RADIUS = 60;
     private static final double RADIUS_PER_BT = 8;
-    private static final double MAX_OUTER_RADIUS = 150;
+    private static final double MAX_OUTER_RADIUS = 180;
     private static final double ICON_SCALE = 1; // DO NOT TOUCH, IF YOU WANT CENTERED
 
     /**
      * Spawns the rhythm pair (inner circle + closing outer ring) at the
      * position given in {@code data}.
-     * <br><br>
+     * <br>
+     * <br>
      * The outer ring's starting radius scales with the customer's BT, and
      * the closing duration equals the BT in seconds, so the ring always
      * reaches the inner circle exactly when patience (BT) hits 0.
      *
      * data keys:
      * <ul>
-     *   <li>{@code x}, {@code y} — center position of the pair</li>
-     *   <li>{@code burstTime} — customer's patience (BT)</li>
+     * <li>{@code x}, {@code y} — center position of the pair</li>
+     * <li>{@code burstTime} — customer's patience (BT)</li>
      * </ul>
      */
     @Spawns("rhythm_pair")
@@ -60,14 +63,19 @@ public class RhythmFactory implements EntityFactory {
                 INNER_RADIUS + burstTime * RADIUS_PER_BT,
                 MAX_OUTER_RADIUS);
 
-        Circle inner = new Circle(innerRadius, Color.web("#cc5114"));
+        Circle inner = new Circle(innerRadius);
+        inner.setFill(Color.web("#cc5114"));
+
+        Circle innerStroke = new Circle(INNER_STROKE_RADIUS);
+        innerStroke.setFill(Color.web("#D9A45B"));
+
         Circle outer = new Circle(startOuterRadius);
         outer.setFill(null);
         outer.setStroke(Color.web("#D9A45B"));
         outer.setStrokeWidth(4);
 
         // Center the icon
-        Group view = new Group(inner, outer);
+        Group view = new Group(innerStroke, inner, outer);
         MenuItem order = data.get("order");
         if (order != null) {
             var icon = FXGL.texture(order.name().toLowerCase() + ".png");

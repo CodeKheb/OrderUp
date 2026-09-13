@@ -25,10 +25,10 @@ public class CustomerAnimationComponent extends Component {
     private static final int FRAME_HEIGHT = 128;
 
     /** Scale multiplier for the sprite on screen. */
-    private static final double SPRITE_SCALE = 2.5;
+    private static final double SPRITE_SCALE = 4;
 
     /** Scale multiplier for male sprites (larger to match girl proportions). */
-    private static final double MAN_SPRITE_SCALE = 2.8;
+    private static final double MAN_SPRITE_SCALE = 4.3;
 
     /** Walk frame counts are the same for all variants of each gender */
     private static final int GIRL_WALK_FRAMES = 12;
