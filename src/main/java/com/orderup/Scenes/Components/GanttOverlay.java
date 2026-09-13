@@ -15,7 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
@@ -92,9 +91,23 @@ public class GanttOverlay extends Pane {
     private static final double TABLE_LEFT = CONTENT_LEFT;
     private static final double COL_W = CONTENT_WIDTH / 5;
     private static final double CELL_PAD = 8;
-    private static final Font HEADER_FONT = Font.font("Monospace", FontWeight.BOLD, 14);
-    private static final Font LABEL_FONT = Font.font("Monospace", FontWeight.NORMAL, 13);
-    private static final Font METRIC_FONT = Font.font("Monospace", FontWeight.BOLD, 13);
+    private static final String PIXEL_FONT = loadPixelFont();
+    private static final Font HEADER_FONT = Font.font(PIXEL_FONT, 10);
+    private static final Font LABEL_FONT = Font.font(PIXEL_FONT, 8);
+    private static final Font METRIC_FONT = Font.font(PIXEL_FONT, 8);
+
+    private static String loadPixelFont() {
+        try {
+            var url = GanttOverlay.class.getResource("/assets/fonts/PressStart2P-Regular.ttf");
+            if (url != null) {
+                Font.loadFont(url.toExternalForm(), 16);
+                return "Press Start 2P";
+            }
+        } catch (Exception e) {
+            // fall through
+        }
+        return "Courier New";
+    }
 
     private final Group chartGroup = new Group();
 
@@ -129,14 +142,14 @@ public class GanttOverlay extends Pane {
 
         // Title — large orange heading
         Text title = new Text("GANTT CHART");
-        title.setFont(Font.font("Monospace", FontWeight.BOLD, 24));
+        title.setFont(Font.font(PIXEL_FONT, 18));
         title.setFill(ACCENT_COLOR);
         title.setX((1280 - title.getBoundsInLocal().getWidth()) / 2);
         title.setY(TITLE_Y);
 
         // Subtitle
         Text subtitle = new Text("Order Results — FCFS Scheduling");
-        subtitle.setFont(Font.font("Monospace", FontWeight.NORMAL, 12));
+        subtitle.setFont(Font.font(PIXEL_FONT, 8));
         subtitle.setFill(Color.web("#B89A6A"));
         subtitle.setX((1280 - subtitle.getBoundsInLocal().getWidth()) / 2);
         subtitle.setY(SUBTITLE_Y);
@@ -153,7 +166,7 @@ public class GanttOverlay extends Pane {
         actions.setAlignment(javafx.geometry.Pos.CENTER);
 
         Button continueBtn = new Button("Continue");
-        continueBtn.setFont(Font.font("Monospace", FontWeight.BOLD, 20));
+        continueBtn.setFont(Font.font(PIXEL_FONT, 12));
         continueBtn.setTextFill(Color.WHITE);
         continueBtn.setStyle("-fx-background-color: #cc5114; -fx-background-radius: 15; "
                 + "-fx-border-color: #D9A45B; -fx-border-width: 2; -fx-border-radius: 15; "
@@ -161,7 +174,7 @@ public class GanttOverlay extends Pane {
         continueBtn.setOnMouseClicked(e -> Application.resetDay());
 
         Button mainMenuBtn = new Button("Back to Main Menu");
-        mainMenuBtn.setFont(Font.font("Monospace", FontWeight.BOLD, 20));
+        mainMenuBtn.setFont(Font.font(PIXEL_FONT, 12));
         mainMenuBtn.setTextFill(Color.WHITE);
         mainMenuBtn.setStyle("-fx-background-color: #555555; -fx-background-radius: 15; "
                 + "-fx-border-color: #999999; -fx-border-width: 2; -fx-border-radius: 15; "
@@ -443,7 +456,7 @@ public class GanttOverlay extends Pane {
             // Label inside the bar
             if (w > 30) {
                 Text barLabel = new Text(label);
-                barLabel.setFont(Font.font("Monospace", FontWeight.BOLD, 12));
+                barLabel.setFont(Font.font(PIXEL_FONT, 8));
                 barLabel.setFill(Color.web("#FFF8E7"));
                 barLabel.setX(x + w / 2 - barLabel.getBoundsInLocal().getWidth() / 2);
                 barLabel.setY(BAR_Y + 2 + BAR_H / 2 + 4);
