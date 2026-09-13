@@ -14,13 +14,20 @@
     -fx-border-color: #333;
     -fx-border-width: 2;
     -fx-border-radius: 8;
-    -fx-background-color: #f9f9f9;
+    -fx-background-color: rgba(249, 249, 249, 0.6);
     -fx-background-radius: 8;
     -fx-padding: 5 30 10 30;
     -fx-alignment: CENTER;
     -fx-spacing: 0;
     -fx-min-width: 900;
     -fx-max-width: 900;
+}
+
+.customer-card-root {
+    -fx-padding: 0;
+    -fx-min-width: 900;
+    -fx-max-width: 900;
+    -fx-alignment: CENTER;
 }
 
 /* ── Card Header ─────────────────────────────────────────────

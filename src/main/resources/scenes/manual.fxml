@@ -5,6 +5,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import java.lang.String?>
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       prefWidth="1280.0" prefHeight="720.0"
       stylesheets="@../stylesheets/stylesheet.css,@../stylesheets/manual.css"
@@ -12,8 +16,16 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.orderup.Scenes.Controllers.ManualController">
 
+    <ImageView fitWidth="1440.0" fitHeight="810.0" preserveRatio="false"
+               translateX="-80.0" translateY="-45.0"
+               smooth="false" cache="true">
+        <image>
+            <Image url="@../assets/textures/menu_animation.gif" />
+        </image>
+    </ImageView>
 
-    <VBox alignment="CENTER" spacing="20.0"
+
+    <VBox alignment="CENTER" spacing="12.0"
           prefWidth="1280.0" prefHeight="720.0">
 
         <Text text="Manual Setup" styleClass="subtitle" />
@@ -21,8 +33,15 @@
 
         <VBox fx:id="cardContainer" alignment="CENTER" spacing="15.0" />
 
-        <Button text="Back to Menu" styleClass="btn-manual" onAction="#onBack" />
-        <Button text="Start Game" styleClass="btn-manual" onAction="#onPlay" />
+        <HBox alignment="CENTER" spacing="20.0">
+            <Button text="Back to Menu" styleClass="btn-manual" onAction="#onBack" />
 
+            <Button text="Start Game" onAction="#onPlay">
+            <styleClass>
+                <String fx:value="btn-manual" />
+                <String fx:value="start" />
+            </styleClass>
+            </Button>
+        </HBox>
     </VBox>
 </Pane>

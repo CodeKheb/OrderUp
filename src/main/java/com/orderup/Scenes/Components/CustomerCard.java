@@ -13,9 +13,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -34,15 +36,15 @@ import java.util.Map;
  *
  * <pre>
  * ┌──────────────────────────────────────────────┐
- * │              Customer 1                       │
- * │   [<]    [animated sprite]    [>]              │
- * │   Arrival (AT):  [====slider====]  7:00 A.M.  │
- * │   Patience (BT): [====slider====]  3           │
- * │                  [Add]                         │
+ * │                   Customer 1                 │
+ * │        [<]    [animated sprite]    [>]       │
+ * │   Arrival (AT):  [====slider====]  7:00 A.M. │
+ * │   Patience (BT): [====slider====]  3         │
+ * │                    [Add]                     │
  * └──────────────────────────────────────────────┘
  * </pre>
  */
-public class CustomerCard extends VBox {
+public class CustomerCard extends StackPane {
 
     private static final int CUSTOMER_COUNT = 6;
 
@@ -63,7 +65,7 @@ public class CustomerCard extends VBox {
     private static final int FRAME_HEIGHT = 128;
 
     /** Display size for the character sprite in the card (pixels). */
-    private static final int SPRITE_DISPLAY_SIZE = 200;
+    private static final int SPRITE_DISPLAY_SIZE = 300;
 
     /** Fill color for the slider progress bar. */
     private static final Color SLIDER_FILL_COLOR = Color.web("#4a90d9");
@@ -155,7 +157,7 @@ public class CustomerCard extends VBox {
 
         HBox characterRow = new HBox(15, prevCharBtn, spriteBox, nextCharBtn);
         characterRow.setAlignment(Pos.CENTER);
-        characterRow.setPadding(new Insets(4, 0, 4, 0));
+        characterRow.setPadding(new Insets(0, 0, 2, 0));
         VBox.setMargin(characterRow, new Insets(0, 0, 0, 0));
 
         // ── 3. Sliders with value labels and fill bars ───────
@@ -203,10 +205,27 @@ public class CustomerCard extends VBox {
         addBtn.getStyleClass().add("add-btn");
         addBtn.setOnAction(e -> addCustomer());
 
-        // -- 5. Assemble ---------------------------------------
-        this.getChildren().addAll(header, characterRow, atRow, btRow, addBtn);
-        this.setAlignment(Pos.CENTER);
-        this.getStyleClass().add("customer-card");
+        // -- 5. Assemble into a layered layout ----------------
+        VBox contentBox = new VBox(0, header, characterRow, atRow, btRow, addBtn);
+        contentBox.setAlignment(Pos.CENTER);
+        contentBox.getStyleClass().add("customer-card");
+
+        // Blurred background image (same asset as the manual scene background)
+        ImageView bgView = new ImageView(new Image(getClass().getResourceAsStream("/assets/textures/menu_animation.gif")));
+        bgView.setEffect(new GaussianBlur(25));
+        bgView.setPreserveRatio(false);
+        bgView.setSmooth(true);
+
+        this.getChildren().addAll(bgView, contentBox);
+        this.getStyleClass().add("customer-card-root");
+
+        // Bind the blurred image to fill the card once layout is computed
+        this.widthProperty().addListener((obs, oldVal, newVal) -> {
+            bgView.setFitWidth(newVal.doubleValue());
+        });
+        this.heightProperty().addListener((obs, oldVal, newVal) -> {
+            bgView.setFitHeight(newVal.doubleValue());
+        });
 
         updateTitle();
         loadCharacterSprite();
