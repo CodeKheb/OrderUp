@@ -81,8 +81,12 @@ public class AudioManager {
     }
 
     private static void playSfx(String name) {
-        Sound sound = FXGL.getAssetLoader().loadSound(name);
-        sound.getAudio().setVolume(soundVolume);
-        FXGL.getAudioPlayer().playSound(sound);
+        try {
+            Sound sound = FXGL.getAssetLoader().loadSound(name);
+            sound.getAudio().setVolume(soundVolume);
+            FXGL.getAudioPlayer().playSound(sound);
+        } catch (Exception e) {
+            System.err.println("[AudioManager] Missing sound file: " + name);
+        }
     }
 }

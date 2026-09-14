@@ -91,11 +91,13 @@
                     <input>target</input>
                     <mainJar>orderup-1.0-SNAPSHOT.jar</mainJar>
                     <mainClass>com.orderup.Application</mainClass>
-                    <icon>src/main/resources/icon.ico</icon>
+                    <icon>src/main/resources/assets/appIcon/AppIcon.ico</icon>
                     <type>MSI</type>
-                    <winMenu>true</winMenu>
+                    <winPerUserInstall>true</winPerUserInstall>
                     <winDirChooser>true</winDirChooser>
+                    <winMenu>true</winMenu>
                     <winShortcut>true</winShortcut>
+                    <winShortcutPrompt>true</winShortcutPrompt>
                 </configuration>
                 <executions>
                     <execution>
