@@ -124,7 +124,7 @@
 
 .confirm-text {
     -fx-font-size: 48px;
-    -fx-fill: black;
+    -fx-fill: WHITE;
 }
 
 .confirm-btn {

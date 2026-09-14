@@ -85,6 +85,21 @@ public class RhythmScore {
         return score.get();
     }
 
+    /**
+     * Formats an amount as dollars for display (e.g. {@code "$250"}).
+     * <br><br>
+     * Placeholder formatting for the current "points shown as dollars"
+     * approach — the raw score stays a plain integer here. A full money
+     * system would replace this with a dedicated wallet/cents model and
+     * keep all dollar formatting in one place (this method).
+     *
+     * @param amount amount in whole dollars
+     * @return the formatted money string
+     */
+    public static String formatMoney(int amount) {
+        return "$" + amount;
+    }
+
     /** Returns the score property for JavaFX binding (same pattern as {@link GameClock}). */
     public static IntegerProperty scoreProperty() {
         return score;

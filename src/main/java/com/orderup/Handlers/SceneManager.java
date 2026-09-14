@@ -14,7 +14,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Text;
 
 /**
@@ -93,18 +92,15 @@ public class SceneManager {
         Text scoreText = new Text();
         scoreText.textProperty().bind(
                 Bindings.createStringBinding(
-                        () -> "Score " + RhythmScore.getScore(),
+                        () -> RhythmScore.formatMoney(RhythmScore.getScore()),
                         RhythmScore.scoreProperty()));
         scoreText.setFont(LoadFont.loadPixelFont(20));
-        scoreText.setFill(Color.WHITE);
+        scoreText.setFill(Color.LIMEGREEN);
 
         Rectangle scoreBg = new Rectangle(200, 70);
         scoreBg.setArcWidth(10);
         scoreBg.setArcHeight(10);
         scoreBg.setFill(Color.web("#1a1a1a"));
-        scoreBg.setStroke(Color.web("#cc5114"));
-        scoreBg.setStrokeWidth(2);
-        scoreBg.setStrokeType(StrokeType.INSIDE);
 
         StackPane scorePane = new StackPane(scoreBg, scoreText);
 
@@ -116,15 +112,12 @@ public class SceneManager {
                                 RhythmScore.multiplierFor(RhythmScore.getCombo())),
                         RhythmScore.comboProperty()));
         comboText.setFont(LoadFont.loadPixelFont(16));
-        comboText.setFill(Color.web("#D9A45B"));
+        comboText.setFill(Color.LIMEGREEN);
 
         Rectangle comboBg = new Rectangle(70, 50);
         comboBg.setArcWidth(10);
         comboBg.setArcHeight(10);
         comboBg.setFill(Color.web("#1a1a1a"));
-        comboBg.setStroke(Color.web("#D9A45B"));
-        comboBg.setStrokeWidth(2);
-        comboBg.setStrokeType(StrokeType.INSIDE);
 
         StackPane comboBadge = new StackPane(comboBg, comboText);
 

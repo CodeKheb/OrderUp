@@ -2,6 +2,7 @@ package com.orderup.Scenes.Components;
 
 import com.orderup.Handlers.AudioManager;
 import com.orderup.Models.CustomerProcess.CharacterType;
+import com.orderup.Uitility.ImageCache;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -210,8 +211,9 @@ public class CustomerCard extends StackPane {
         contentBox.setAlignment(Pos.CENTER);
         contentBox.getStyleClass().add("customer-card");
 
-        // Blurred background image (same asset as the manual scene background)
-        ImageView bgView = new ImageView(new Image(getClass().getResourceAsStream("/assets/textures/menu_animation.gif")));
+        // Blurred background image (same asset as the manual scene background).
+        // Uses the shared cache so this never decodes a second copy of the GIF.
+        ImageView bgView = new ImageView(ImageCache.get("/assets/textures/menu_animation.gif"));
         bgView.setEffect(new GaussianBlur(25));
         bgView.setPreserveRatio(false);
         bgView.setSmooth(true);
@@ -255,6 +257,9 @@ public class CustomerCard extends StackPane {
 
         if (currentIndex < CUSTOMER_COUNT - 1) {
             currentIndex++;
+            characterTypes[currentIndex] = characterTypes[currentIndex - 1];
+            spriteIndices[currentIndex] = spriteIndices[currentIndex - 1];
+            btSliders[currentIndex].setValue(btSliders[currentIndex - 1].getValue());
             swapSliders();
             snapCurrentSliderIfDuplicate();
             updateTitle();
